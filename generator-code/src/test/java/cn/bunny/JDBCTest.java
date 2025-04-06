@@ -6,7 +6,6 @@ import cn.bunny.dao.entity.TableMetaData;
 import cn.bunny.utils.ConvertUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.sql.DataSource;
@@ -21,9 +20,13 @@ import java.util.List;
 public class JDBCTest {
 
     DatabaseMetaData metaData;
-    
-    @Autowired
-    private DataSource dataSource;
+
+    private final DataSource dataSource;
+
+    public JDBCTest(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -40,15 +43,15 @@ public class JDBCTest {
 
         // 获取表的注释信息
         if (tables.next()) {
-            String remarks = tables.getString("REMARKS" );
-            String tableCat = tables.getString("TABLE_CAT" );
-            String tableSchem = tables.getString("TABLE_SCHEM" );
-            String tableType = tables.getString("TABLE_TYPE" );
-            String typeCat = tables.getString("TYPE_CAT" );
-            String typeSchem = tables.getString("TYPE_SCHEM" );
-            String typeName = tables.getString("TYPE_NAME" );
-            String selfReferencingColName = tables.getString("SELF_REFERENCING_COL_NAME" );
-            String refGeneration = tables.getString("REF_GENERATION" );
+            String remarks = tables.getString("REMARKS");
+            String tableCat = tables.getString("TABLE_CAT");
+            String tableSchem = tables.getString("TABLE_SCHEM");
+            String tableType = tables.getString("TABLE_TYPE");
+            String typeCat = tables.getString("TYPE_CAT");
+            String typeSchem = tables.getString("TYPE_SCHEM");
+            String typeName = tables.getString("TYPE_NAME");
+            String selfReferencingColName = tables.getString("SELF_REFERENCING_COL_NAME");
+            String refGeneration = tables.getString("REF_GENERATION");
 
             tableMetaData = TableMetaData.builder()
                     .tableName(tableName)
@@ -69,20 +72,20 @@ public class JDBCTest {
 
     @Test
     void testAllTableComment() throws SQLException {
-        ResultSet tables = metaData.getTables(null, null, "%" , new String[]{"TABLE"});
+        ResultSet tables = metaData.getTables(null, null, "%", new String[]{"TABLE"});
         List<TableMetaData> list = new ArrayList<>();
 
         while (tables.next()) {
-            String tableName = tables.getString("TABLE_NAME" );
-            String remarks = tables.getString("REMARKS" );
-            String tableCat = tables.getString("TABLE_CAT" );
-            String tableSchem = tables.getString("TABLE_SCHEM" );
-            String tableType = tables.getString("TABLE_TYPE" );
-            String typeCat = tables.getString("TYPE_CAT" );
-            String typeSchem = tables.getString("TYPE_SCHEM" );
-            String typeName = tables.getString("TYPE_NAME" );
-            String selfReferencingColName = tables.getString("SELF_REFERENCING_COL_NAME" );
-            String refGeneration = tables.getString("REF_GENERATION" );
+            String tableName = tables.getString("TABLE_NAME");
+            String remarks = tables.getString("REMARKS");
+            String tableCat = tables.getString("TABLE_CAT");
+            String tableSchem = tables.getString("TABLE_SCHEM");
+            String tableType = tables.getString("TABLE_TYPE");
+            String typeCat = tables.getString("TYPE_CAT");
+            String typeSchem = tables.getString("TYPE_SCHEM");
+            String typeName = tables.getString("TYPE_NAME");
+            String selfReferencingColName = tables.getString("SELF_REFERENCING_COL_NAME");
+            String refGeneration = tables.getString("REF_GENERATION");
 
             TableMetaData tableMetaData = TableMetaData.builder()
                     .tableName(tableName).comment(remarks)
@@ -105,14 +108,14 @@ public class JDBCTest {
     void testColumnInfo() throws SQLException {
         List<ColumnMetaData> columns = new ArrayList<>();
 
-        try (ResultSet columnsRs = metaData.getColumns(null, null, "sys_i18n" , null)) {
+        try (ResultSet columnsRs = metaData.getColumns(null, null, "sys_i18n", null)) {
             while (columnsRs.next()) {
                 ColumnMetaData column = new ColumnMetaData();
-                column.setColumnName(columnsRs.getString("COLUMN_NAME" ));
+                column.setColumnName(columnsRs.getString("COLUMN_NAME"));
                 column.setFieldName(ConvertUtil.convertToFieldName(column.getColumnName()));
-                column.setJdbcType(columnsRs.getString("TYPE_NAME" ));
+                column.setJdbcType(columnsRs.getString("TYPE_NAME"));
                 column.setJavaType(ConvertUtil.convertToJavaType(column.getJdbcType()));
-                column.setComment(columnsRs.getString("REMARKS" ));
+                column.setComment(columnsRs.getString("REMARKS"));
 
                 columns.add(column);
                 System.out.println(column);

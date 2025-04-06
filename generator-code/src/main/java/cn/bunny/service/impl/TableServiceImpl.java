@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-
 public class TableServiceImpl implements TableService {
 
     private final DbInfoUtil dbInfoUtil;

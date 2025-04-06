@@ -12,7 +12,7 @@ public class VmsHolder {
     @PostConstruct
     public void init() {
         Properties prop = new Properties();
-        prop.put("file.resource.loader.class" , "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
+        prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         Velocity.init(prop);
     }
 }

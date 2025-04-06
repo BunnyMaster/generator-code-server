@@ -16,22 +16,22 @@ public class Knife4jConfig {
     @Bean
     public OpenAPI openAPI() {
         // 作者等信息
-        Contact contact = new Contact().name("Bunny" ).email("1319900154@qq.com" ).url("http://localhost:9999" );
+        Contact contact = new Contact().name("Bunny").email("1319900154@qq.com").url("http://localhost:9999");
         // 使用协议
-        License license = new License().name("MIT" ).url("https://mit-license.org" );
+        License license = new License().name("MIT").url("https://mit-license.org");
         // 相关信息
-        Info info = new Info().title("Bunny-Admin" )
+        Info info = new Info().title("Bunny-Admin")
                 .contact(contact).license(license)
-                .description("Bunny代码生成器" )
-                .summary("Bunny的代码生成器" )
-                .termsOfService("http://localhost:9999" )
-                .version("v1.0.0" );
+                .description("Bunny代码生成器")
+                .summary("Bunny的代码生成器")
+                .termsOfService("http://localhost:9999")
+                .version("v1.0.0");
 
         return new OpenAPI().info(info).externalDocs(new ExternalDocumentation());
     }
 
     @Bean
     public GroupedOpenApi all() {
-        return GroupedOpenApi.builder().group("全部请求接口" ).pathsToMatch("/api/**" ).build();
+        return GroupedOpenApi.builder().group("全部请求接口").pathsToMatch("/api/**").build();
     }
 }
