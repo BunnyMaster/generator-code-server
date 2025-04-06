@@ -5,8 +5,6 @@ target/
 !**/src/test/**/target/
 logs/
 
-application-prod.yml
-
 ### STS ###
 .apt_generated
 .classpath
