@@ -9,14 +9,24 @@ import cn.bunny.service.TableService;
 import cn.bunny.service.VmsService;
 import cn.bunny.utils.ResourceFileUtil;
 import cn.bunny.utils.VmsUtil;
+import cn.hutool.crypto.digest.MD5;
 import lombok.SneakyThrows;
 import org.apache.velocity.VelocityContext;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 
@@ -87,10 +97,64 @@ public class VmsServiceImpl implements VmsService {
         List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
 
         return vmsRelativeFiles.stream().map(vmFile -> {
-            String[] filepathList = vmFile.split("/");
-            String filename = filepathList[filepathList.length - 1].replace(".vm", "");
+                    String[] filepathList = vmFile.split("/");
+                    String filename = filepathList[filepathList.length - 1].replace(".vm", "");
 
-            return VmsPathVo.builder().name(vmFile).label(filename).type(filepathList[0]).build();
-        }).collect(Collectors.groupingBy(VmsPathVo::getType));
+                    return VmsPathVo.builder().name(vmFile).label(filename).type(filepathList[0]).build();
+                })
+                .collect(Collectors.groupingBy(VmsPathVo::getType));
+    }
+
+    /**
+     * 打包成zip下载
+     *
+     * @param dto VmsArgumentDto
+     * @return zip 文件
+     */
+    @Override
+    public ResponseEntity<byte[]> downloadByZip(VmsArgumentDto dto) {
+        // 需要下载的数据
+        List<GeneratorVo> generatorVoList = generator(dto);
+
+        // 1. 创建临时ZIP文件
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream)) {
+            // 2. 遍历并创建
+            generatorVoList.forEach(generatorVo -> {
+                // zip中的路径
+                String path = generatorVo.getPath().replace(".vm", "");
+
+                // zip中的文件
+                String code = generatorVo.getCode();
+
+                ZipEntry zipEntry = new ZipEntry(path);
+                try {
+                    // 如果有 / 会转成文件夹
+                    zipOutputStream.putNextEntry(zipEntry);
+
+                    // 写入文件
+                    zipOutputStream.write(code.getBytes(StandardCharsets.UTF_8));
+                    zipOutputStream.closeEntry();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // 2.1 文件不重名
+        long currentTimeMillis = System.currentTimeMillis();
+        String digestHex = MD5.create().digestHex(currentTimeMillis + "");
+
+        // 3. 准备响应
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=" + "vms-" + digestHex + ".zip");
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        return new ResponseEntity<>(byteArrayInputStream.readAllBytes(), headers, HttpStatus.OK);
     }
 }

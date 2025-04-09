@@ -8,6 +8,7 @@ import cn.bunny.service.VmsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,10 +32,16 @@ public class VmsController {
         return Result.success(list);
     }
 
-    @Operation(summary = "生成控制器", description = "生成控制器代码")
+    @Operation(summary = "生成代码", description = "生成代码")
     @PostMapping("generator")
     public Result<List<GeneratorVo>> generator(@Valid @RequestBody VmsArgumentDto dto) {
         List<GeneratorVo> list = vmsService.generator(dto);
         return Result.success(list);
+    }
+
+    @Operation(summary = "打包成zip下载", description = "打包成zip下载")
+    @PostMapping("downloadByZip")
+    public ResponseEntity<byte[]> downloadByZip(@Valid @RequestBody VmsArgumentDto dto) {
+        return vmsService.downloadByZip(dto);
     }
 }

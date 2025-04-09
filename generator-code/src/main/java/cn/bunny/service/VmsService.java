@@ -3,6 +3,8 @@ package cn.bunny.service;
 import cn.bunny.dao.dto.VmsArgumentDto;
 import cn.bunny.dao.vo.GeneratorVo;
 import cn.bunny.dao.vo.VmsPathVo;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -22,4 +24,12 @@ public interface VmsService {
      * @return vms下的文件路径
      */
     Map<String, List<VmsPathVo>> getVmsPathList();
+
+    /**
+     * 打包成zip下载
+     *
+     * @param dto VmsArgumentDto
+     * @return zip 文件
+     */
+    ResponseEntity<byte[]> downloadByZip(@Valid VmsArgumentDto dto);
 }
