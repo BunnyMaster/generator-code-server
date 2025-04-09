@@ -16,6 +16,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
 public class ResourceFileUtil {
+
     /**
      * 获取目标文件夹下所有文件完整路径
      *
@@ -25,6 +26,8 @@ public class ResourceFileUtil {
      */
     public static List<String> getAbsoluteFiles(String dirname) throws IOException {
         List<String> fileNames = new ArrayList<>();
+
+        // 加载当前类
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> urls = classLoader.getResources(dirname);
 

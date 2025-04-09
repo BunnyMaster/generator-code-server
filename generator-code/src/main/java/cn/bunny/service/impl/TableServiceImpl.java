@@ -38,14 +38,15 @@ public class TableServiceImpl implements TableService {
     }
 
     /**
-     * 获取所有表
+     * 获取[当前/所有]数据库表
      *
      * @return 所有表信息
      */
     @SneakyThrows
     @Override
-    public List<TableInfoVo> getAllTableMetaData() {
-        List<TableMetaData> allTableInfo = dbInfoUtil.getAllTableInfo();
+    public List<TableInfoVo> getDbTables(String dbName) {
+        // 当前数据库数据库所有的表
+        List<TableMetaData> allTableInfo = dbInfoUtil.getDbTableList(dbName);
 
         return allTableInfo.stream().map(tableMetaData -> {
             TableInfoVo tableInfoVo = new TableInfoVo();
@@ -56,7 +57,7 @@ public class TableServiceImpl implements TableService {
     }
 
     /**
-     * 获取列属性
+     * 获取当前表的列属性
      *
      * @param tableName 表名称
      * @return 当前表所有的列内容

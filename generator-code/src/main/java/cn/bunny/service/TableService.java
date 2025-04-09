@@ -16,11 +16,11 @@ public interface TableService {
     TableInfoVo getTableMetaData(String tableName);
 
     /**
-     * 获取所有表
+     * 获取所有数据库
      *
      * @return 所有表信息
      */
-    List<TableInfoVo> getAllTableMetaData();
+    List<TableInfoVo> getDbTables(String tableName);
 
     /**
      * 获取列属性

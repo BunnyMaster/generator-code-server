@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "数据库表控制器", description = "数据库表信息接口")
 @RestController
@@ -23,11 +24,27 @@ public class TableController {
         this.tableService = tableService;
     }
 
+    @Operation(summary = "数据库所有的表", description = "获取[当前/所有]数据库表")
+    @GetMapping("getDbTables")
+    public Result<List<TableInfoVo>> getDbTables(String dbName) {
+        List<TableInfoVo> list = tableService.getDbTables(dbName);
+        return Result.success(list);
+    }
 
-    @Operation(summary = "获取所有表", description = "获取所有表")
-    @GetMapping("getAllTableMetaData")
-    public Result<List<TableInfoVo>> getAllTableMetaData() {
-        List<TableInfoVo> list = tableService.getAllTableMetaData();
+    @Operation(summary = "所有的数据库", description = "所有的数据库")
+    @GetMapping("getDbList")
+    public Result<List<TableInfoVo>> getDbList() {
+        List<TableInfoVo> allDb = tableService.getDbTables(null);
+
+        List<TableInfoVo> list = allDb.stream()
+                .collect(Collectors.groupingBy(TableInfoVo::getTableCat))
+                .values().stream()
+                .map(tableInfoVos -> {
+                    TableInfoVo tableInfoVo = tableInfoVos.get(0);
+                    tableInfoVo.setTableName(null);
+                    return tableInfoVo;
+                }).toList();
+
         return Result.success(list);
     }
 

@@ -45,25 +45,11 @@ public class JDBCTest {
         if (tables.next()) {
             String remarks = tables.getString("REMARKS");
             String tableCat = tables.getString("TABLE_CAT");
-            String tableSchem = tables.getString("TABLE_SCHEM");
-            String tableType = tables.getString("TABLE_TYPE");
-            String typeCat = tables.getString("TYPE_CAT");
-            String typeSchem = tables.getString("TYPE_SCHEM");
-            String typeName = tables.getString("TYPE_NAME");
-            String selfReferencingColName = tables.getString("SELF_REFERENCING_COL_NAME");
-            String refGeneration = tables.getString("REF_GENERATION");
 
             tableMetaData = TableMetaData.builder()
                     .tableName(tableName)
                     .comment(remarks)
                     .tableCat(tableCat)
-                    .tableSchem(tableSchem)
-                    .tableType(tableType)
-                    .typeCat(typeCat)
-                    .typeSchem(typeSchem)
-                    .typeName(typeName)
-                    .selfReferencingColName(selfReferencingColName)
-                    .refGeneration(refGeneration)
                     .build();
 
             System.out.println(tableMetaData);
@@ -79,24 +65,10 @@ public class JDBCTest {
             String tableName = tables.getString("TABLE_NAME");
             String remarks = tables.getString("REMARKS");
             String tableCat = tables.getString("TABLE_CAT");
-            String tableSchem = tables.getString("TABLE_SCHEM");
-            String tableType = tables.getString("TABLE_TYPE");
-            String typeCat = tables.getString("TYPE_CAT");
-            String typeSchem = tables.getString("TYPE_SCHEM");
-            String typeName = tables.getString("TYPE_NAME");
-            String selfReferencingColName = tables.getString("SELF_REFERENCING_COL_NAME");
-            String refGeneration = tables.getString("REF_GENERATION");
 
             TableMetaData tableMetaData = TableMetaData.builder()
                     .tableName(tableName).comment(remarks)
                     .tableCat(tableCat)
-                    .tableSchem(tableSchem)
-                    .tableType(tableType)
-                    .typeCat(typeCat)
-                    .typeSchem(typeSchem)
-                    .typeName(typeName)
-                    .selfReferencingColName(selfReferencingColName)
-                    .refGeneration(refGeneration)
                     .build();
             list.add(tableMetaData);
         }

@@ -63,6 +63,7 @@ public class VmsServiceImpl implements VmsService {
             // 数据库sql列
             context.put("baseColumnList", String.join(",", list));
 
+            // 生成模板
             VmsUtil.commonVms(writer, context, "vms/" + path, dto);
 
             return GeneratorVo.builder()
@@ -82,9 +83,8 @@ public class VmsServiceImpl implements VmsService {
     @SneakyThrows
     @Override
     public Map<String, List<VmsPathVo>> getVmsPathList() {
-        List<String> vmsRelativeFiles;
-
-        vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
+        // 读取当前项目中所有的 vm 模板发给前端
+        List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
 
         return vmsRelativeFiles.stream().map(vmFile -> {
             String[] filepathList = vmFile.split("/");
