@@ -148,7 +148,7 @@ public class DbInfoUtil {
                     // 设置列字段
                     column.setColumnName(columnName);
                     // 列字段转成 下划线 -> 小驼峰
-                    column.setFieldName(ConvertUtil.convertToFieldName(column.getColumnName()));
+                    column.setFieldName(ConvertUtil.convertToCamelCase(column.getColumnName()));
 
                     // 字段类型
                     column.setJdbcType(columnsRs.getString("TYPE_NAME"));
@@ -166,7 +166,6 @@ public class DbInfoUtil {
                         boolean isPrimaryKey = primaryKeyColumns.contains(columnName);
                         column.setIsPrimaryKey(isPrimaryKey);
                     }
-
                     columns.add(column);
                 }
             }

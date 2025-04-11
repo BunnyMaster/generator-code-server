@@ -95,11 +95,19 @@
             <artifactId>fastjson2</artifactId>
         </dependency>
 
+        <!-- 小驼峰 和 大驼峰之间互转 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.4.7-jre</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
             <version>2.3</version>
         </dependency>
+
 
     </dependencies>
 </project>

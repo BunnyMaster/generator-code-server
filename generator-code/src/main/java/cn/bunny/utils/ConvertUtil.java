@@ -1,6 +1,12 @@
 package cn.bunny.utils;
 
+import com.google.common.base.CaseFormat;
+import org.assertj.core.util.introspection.CaseFormatUtils;
+
+import java.util.regex.Pattern;
+
 public class ConvertUtil {
+
     /**
      * 将数据库类型转换为Java类型
      */
@@ -9,17 +15,17 @@ public class ConvertUtil {
 
         columnType = columnType.toLowerCase();
         return switch (columnType) {
-            case "varchar" , "char" , "text" , "longtext" , "mediumtext" , "tinytext" -> "String";
-            case "int" , "integer" , "tinyint" , "smallint" -> "Integer";
+            case "varchar", "char", "text", "longtext", "mediumtext", "tinytext" -> "String";
+            case "int", "integer", "tinyint", "smallint" -> "Integer";
             case "bigint" -> "Long";
-            case "decimal" , "numeric" -> "BigDecimal";
+            case "decimal", "numeric" -> "BigDecimal";
             case "float" -> "Float";
             case "double" -> "Double";
-            case "boolean" , "bit" , "tinyint unsigned" -> "Boolean";
-            case "date" , "year" -> "Date";
+            case "boolean", "bit", "tinyint unsigned" -> "Boolean";
+            case "date", "year" -> "Date";
             case "time" -> "Time";
-            case "datetime" , "timestamp" -> "LocalDateTime";
-            case "blob" , "longblob" , "mediumblob" , "tinyblob" -> "byte[]";
+            case "datetime", "timestamp" -> "LocalDateTime";
+            case "blob", "longblob", "mediumblob", "tinyblob" -> "byte[]";
             default -> "Object";
         };
     }
@@ -34,45 +40,35 @@ public class ConvertUtil {
     /**
      * 下划线命名转驼峰命名
      *
-     * @param name               原始名称
+     * @param name               原始名称，传入的值可以是
+     *                           `xxx_xxx` `CaseFormat`
+     *                           `caseFormat`
      * @param firstLetterCapital 首字母是否大写
      */
     public static String convertToCamelCase(String name, boolean firstLetterCapital) {
         if (name == null || name.isEmpty()) return name;
 
-        StringBuilder result = new StringBuilder();
-        String[] parts = name.split("_" );
+        // 首字母不大写
+        if (!firstLetterCapital) return CaseFormatUtils.toCamelCase(name);
 
-        for (int i = 0; i < parts.length; i++) {
-            String part = parts[i];
-            if (part.isEmpty()) {
-                continue;
-            }
-
-            if (i == 0 && !firstLetterCapital) {
-                result.append(part.toLowerCase());
-            } else {
-                result.append(Character.toUpperCase(part.charAt(0)))
-                        .append(part.substring(1).toLowerCase());
-            }
+        // 检查是否全大写带下划线 (UPPER_UNDERSCORE)
+        if (Pattern.matches("^[A-Z]+(_[A-Z]+)*$", name)) {
+            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
         }
 
-        return result.toString();
-    }
-
-    /**
-     * 辅助方法：将列名转换为字段名(如user_name -> userName)
-     *
-     * @param columnName 列名称
-     * @return 列名称
-     */
-    public static String convertToFieldName(String columnName) {
-        String[] parts = columnName.split("_" );
-        StringBuilder fieldName = new StringBuilder(parts[0].toLowerCase());
-        for (int i = 1; i < parts.length; i++) {
-            fieldName.append(parts[i].substring(0, 1).toUpperCase())
-                    .append(parts[i].substring(1).toLowerCase());
+        // 检查是否小写带下划线 (LOWER_UNDERSCORE)
+        if (Pattern.matches("^[a-z]+(_[a-z]+)*$", name)) {
+            return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
         }
-        return fieldName.toString();
+
+        // 检查是否大驼峰 (UpperCamelCase)
+        if (Character.isUpperCase(name.charAt(0)) &&
+                !name.contains("_") &&
+                name.chars().anyMatch(Character::isLowerCase)) {
+            return CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_CAMEL, name);
+        }
+
+        // 默认认为是小驼峰 (lowerCamelCase)
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, name);
     }
 }

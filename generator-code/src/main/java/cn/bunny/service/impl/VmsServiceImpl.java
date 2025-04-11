@@ -76,6 +76,9 @@ public class VmsServiceImpl implements VmsService {
             // 生成模板
             VmsUtil.commonVms(writer, context, "vms/" + path, dto);
 
+            // 处理 vm 文件名
+            path = VmsUtil.handleVmFilename(path, dto.getClassName());
+
             return GeneratorVo.builder()
                     .code(writer.toString())
                     .comment(tableMetaData.getComment())
