@@ -52,26 +52,26 @@ public class VmsServiceImpl implements VmsService {
 
             // 表格属性名 和 列信息
             TableInfoVo tableMetaData = tableService.getTableMetaData(tableName);
-            List<ColumnMetaData> columnInfoList = tableService.getColumnInfo(tableName);
+            List<ColumnMetaData> columnInfoList = tableService.getColumnInfo(tableName).stream().distinct().toList();
             List<String> list = columnInfoList.stream().map(ColumnMetaData::getColumnName).toList();
 
             // 添加要生成的属性
             VelocityContext context = new VelocityContext();
 
             // 当前的表名
-            context.put("tableName", tableMetaData.getTableName());
+            context.put("tableName" , tableMetaData.getTableName());
 
             // 表字段的注释内容
-            context.put("comment", tableMetaData.getComment());
+            context.put("comment" , tableMetaData.getComment());
 
             // 设置包名称
-            context.put("package", dto.getPackageName());
+            context.put("package" , dto.getPackageName());
 
             // 当前表的列信息
-            context.put("columnInfoList", columnInfoList);
+            context.put("columnInfoList" , columnInfoList);
 
             // 数据库sql列
-            context.put("baseColumnList", String.join(",", list));
+            context.put("baseColumnList" , String.join("," , list));
 
             // 生成模板
             VmsUtil.commonVms(writer, context, "vms/" + path, dto);
@@ -97,11 +97,11 @@ public class VmsServiceImpl implements VmsService {
     @Override
     public Map<String, List<VmsPathVo>> getVmsPathList() {
         // 读取当前项目中所有的 vm 模板发给前端
-        List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
+        List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms" );
 
         return vmsRelativeFiles.stream().map(vmFile -> {
-                    String[] filepathList = vmFile.split("/");
-                    String filename = filepathList[filepathList.length - 1].replace(".vm", "");
+                    String[] filepathList = vmFile.split("/" );
+                    String filename = filepathList[filepathList.length - 1].replace(".vm" , "" );
 
                     return VmsPathVo.builder().name(vmFile).label(filename).type(filepathList[0]).build();
                 })
@@ -125,7 +125,7 @@ public class VmsServiceImpl implements VmsService {
             // 2. 遍历并创建
             generatorVoList.forEach(generatorVo -> {
                 // zip中的路径
-                String path = generatorVo.getPath().replace(".vm", "");
+                String path = generatorVo.getPath().replace(".vm" , "" );
 
                 // zip中的文件
                 String code = generatorVo.getCode();
@@ -148,14 +148,14 @@ public class VmsServiceImpl implements VmsService {
 
         // 2.1 文件不重名
         long currentTimeMillis = System.currentTimeMillis();
-        String digestHex = MD5.create().digestHex(currentTimeMillis + "");
+        String digestHex = MD5.create().digestHex(currentTimeMillis + "" );
 
         // 3. 准备响应
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=" + "vms-" + digestHex + ".zip");
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
+        headers.add("Content-Disposition" , "attachment; filename=" + "vms-" + digestHex + ".zip" );
+        headers.add("Cache-Control" , "no-cache, no-store, must-revalidate" );
+        headers.add("Pragma" , "no-cache" );
+        headers.add("Expires" , "0" );
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         return new ResponseEntity<>(byteArrayInputStream.readAllBytes(), headers, HttpStatus.OK);

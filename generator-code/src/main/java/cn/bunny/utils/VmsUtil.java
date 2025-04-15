@@ -15,11 +15,11 @@ import java.util.concurrent.atomic.AtomicReference;
 public class VmsUtil {
 
     private static final Map<String, String> TYPE_MAPPINGS = Map.of(
-            "controller", "Controller",
-            "service", "Service",
-            "serviceImpl", "ServiceImpl",
-            "mapper", "Mapper",
-            "resourceMapper", "Mapper"
+            "controller" , "Controller" ,
+            "service" , "Service" ,
+            "serviceImpl" , "ServiceImpl" ,
+            "mapper" , "Mapper" ,
+            "resourceMapper" , "Mapper"
     );
 
     /**
@@ -45,33 +45,33 @@ public class VmsUtil {
 
         // 将 表前缀  转成数组
         AtomicReference<String> replaceTableName = new AtomicReference<>(className);
-        for (String prefix : tablePrefixes.split("[,，]")) {
-            replaceTableName.set(className.replace(prefix, ""));
+        for (String prefix : tablePrefixes.split("[,，]" )) {
+            replaceTableName.set(className.replace(prefix, "" ));
         }
 
         String date = new SimpleDateFormat(dto.getSimpleDateFormat()).format(new Date());
         // vm 不能直接写 `{` 需要转换下
-        context.put("leftBrace", "{");
+        context.put("leftBrace" , "{" );
 
         // 当前日期
-        context.put("date", date);
+        context.put("date" , date);
 
         // 作者名字
-        context.put("author", author);
+        context.put("author" , author);
 
         // 每个 Controller 上的请求前缀
-        context.put("requestMapping", requestMapping);
+        context.put("requestMapping" , requestMapping);
 
         // 将类名称转成小驼峰
         String toCamelCase = ConvertUtil.convertToCamelCase(replaceTableName.get());
-        context.put("classLowercaseName", toCamelCase);
+        context.put("classLowercaseName" , toCamelCase);
 
         // 将类名称转成大驼峰
         String convertToCamelCase = ConvertUtil.convertToCamelCase(replaceTableName.get(), true);
-        context.put("classUppercaseName", convertToCamelCase);
+        context.put("classUppercaseName" , convertToCamelCase);
 
         // Velocity 生成模板
-        Template servicePathTemplate = Velocity.getTemplate(templateName, "UTF-8");
+        Template servicePathTemplate = Velocity.getTemplate(templateName, "UTF-8" );
         servicePathTemplate.merge(context, writer);
     }
 
@@ -82,7 +82,7 @@ public class VmsUtil {
      * @param className 类名
      */
     public static String handleVmFilename(String path, String className) {
-        String[] splitPaths = path.split("/");
+        String[] splitPaths = path.split("/" );
         int splitPathsSize = splitPaths.length - 1;
 
         // 大驼峰名称
@@ -92,23 +92,27 @@ public class VmsUtil {
 
         // 当前文件名
         String filename = splitPaths[splitPathsSize];
-        filename = filename.replace(".vm", "");
+        filename = filename.replace(".vm" , "" );
 
+        String[] split = filename.split("\\." );
         // 文件名称
-        String name = filename.split("\\.")[0];
+        String name = split[0];
         // 文件扩展名
-        String extension = filename.split("\\.")[1];
+        String extension = "";
+        if (split.length >= 2) {
+            extension = split[1];
+        }
 
         // 判断是否是 Java 或者 xml 文件
-        if (filename.contains("java") || filename.contains("xml")) {
+        if (filename.contains("java" ) || filename.contains("xml" )) {
             filename = CamelCase + TYPE_MAPPINGS.get(name) + "." + extension;
         }
 
-        if (filename.contains("vue") && !filename.contains("index")) {
+        if (filename.contains("vue" ) && !filename.contains("index" )) {
             filename = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, camelCase) + "-" + name + "." + extension;
         }
 
         splitPaths[splitPathsSize] = filename;
-        return String.join("/", splitPaths);
+        return String.join("/" , splitPaths);
     }
 }

@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="${classUppercaseName}">
         #foreach($field in ${columnInfoList})
-            <id column="${field.column}" property="${field.fieldName}"/>
+            <id column="${field.columnName}" property="${field.fieldName}"/>
         #end
     </resultMap>
 
