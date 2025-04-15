@@ -26,15 +26,15 @@ public class VmsArgumentDto {
     String requestMapping = "/api";
 
     /* 类名称，格式为：xxx xxx_xxx */
-    @NotBlank(message = "类名称不能为空")
-    @NotNull(message = "类名称不能为空")
-    @Pattern(regexp = "^(?:[a-z][a-z0-9_]*|[_a-z][a-z0-9_]*)$", message = "类名称不合法")
+    @NotBlank(message = "类名称不能为空" )
+    @NotNull(message = "类名称不能为空" )
+    @Pattern(regexp = "^(?:[a-z][a-z0-9_]*|[_a-z][a-z0-9_]*)$" , message = "类名称不合法" )
     private String className;
 
     /* 表名称 */
-    @NotBlank(message = "表名称不能为空")
-    @NotNull(message = "表名称不能为空")
-    @Pattern(regexp = "^(?:[a-z][a-z0-9_]*|[_a-z][a-z0-9_]*)$", message = "表名称不合法")
+    @NotBlank(message = "表名称不能为空" )
+    @NotNull(message = "表名称不能为空" )
+    @Pattern(regexp = "^(?:[a-z][a-z0-9_]*|[_a-z][a-z0-9_]*)$" , message = "表名称不合法" )
     private String tableName;
 
     /* 时间格式  */
@@ -42,6 +42,9 @@ public class VmsArgumentDto {
 
     /* 去除表前缀 */
     private String tablePrefixes = "t_,sys_,qrtz_,log_";
+
+    /* 注释内容 */
+    private String comment;
 
     /* 路径 */
     private List<String> path;

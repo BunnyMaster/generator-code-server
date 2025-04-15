@@ -62,7 +62,7 @@ public class VmsServiceImpl implements VmsService {
             context.put("tableName" , tableMetaData.getTableName());
 
             // 表字段的注释内容
-            context.put("comment" , tableMetaData.getComment());
+            context.put("comment" , dto.getComment());
 
             // 设置包名称
             context.put("package" , dto.getPackageName());

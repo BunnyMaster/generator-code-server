@@ -104,8 +104,10 @@ public class VmsUtil {
         }
 
         // 判断是否是 Java 或者 xml 文件
+        String typeMappingsFilename = TYPE_MAPPINGS.get(name);
+        typeMappingsFilename = typeMappingsFilename == null ? "" : typeMappingsFilename;
         if (filename.contains("java" ) || filename.contains("xml" )) {
-            filename = CamelCase + TYPE_MAPPINGS.get(name) + "." + extension;
+            filename = CamelCase + typeMappingsFilename + "." + extension;
         }
 
         if (filename.contains("vue" ) && !filename.contains("index" )) {
