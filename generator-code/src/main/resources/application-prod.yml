@@ -5,7 +5,7 @@ bunny:
     database: auth_admin
     username: root
     password: "123456"
-  connect:
-    url: jdbc:sqlite::resource:database.sqlite
-    username: root
-    password: "123456"
+  # connect:
+  #   url: jdbc:sqlite::resource:database.sqlite
+  #   username: root
+  #   password: "123456"

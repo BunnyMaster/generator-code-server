@@ -2,12 +2,14 @@
 
 ## 功能展示
 
-点击 表名 或 注释内容 跳转到另一个页面
+点击 `表名` 或 `注释内容` 跳转到另一个页面
 
-![屏幕截图_6-4-2025_1486_localhost](./images/屏幕截图_6-4-2025_1486_localhost.jpeg)
+![image-20250419132154669](./images/image-20250419132154669.png)
 
-![image-20250406140934864](./images/image-20250406140934864.png)
+![image-20250419132338126](./images/image-20250419132338126.png)
 
-![屏幕截图_6-4-2025_1486_localhost](./images/屏幕截图_6-4-2025_1486_localhost-1743920303637-1.jpeg)
+![image-20250419132254620](./images/image-20250419132254620.png)
 
-<video src="./images/QQ202546-141117.mp4"></video>
+![image-20250419132310618](./images/image-20250419132310618.png)
+
+![wx+alipay](./images/wx+alipay.png)
