@@ -23,7 +23,7 @@ public interface VmsService {
      *
      * @return vms下的文件路径
      */
-    Map<String, List<VmsPathVo>> getVmsPathList();
+    Map<String, List<VmsPathVo>> vmsResourcePathList();
 
     /**
      * 打包成zip下载

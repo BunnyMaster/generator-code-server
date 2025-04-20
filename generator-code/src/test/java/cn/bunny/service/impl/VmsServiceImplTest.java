@@ -15,7 +15,7 @@ class VmsServiceImplTest {
 
 
     @Test
-    void getVmsPathList() throws IOException, URISyntaxException {
+    void vmsResourcePathList() throws IOException, URISyntaxException {
         List<String> vmsFiles = ResourceFileUtil.getAbsoluteFiles("vms");
         System.out.println(vmsFiles);
 

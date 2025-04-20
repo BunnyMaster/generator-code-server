@@ -5,6 +5,7 @@ import cn.bunny.dao.entity.TableMetaData;
 import cn.bunny.dao.vo.TableInfoVo;
 import cn.bunny.service.TableService;
 import cn.bunny.utils.DbInfoUtil;
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,8 @@ import java.util.List;
 @Service
 public class TableServiceImpl implements TableService {
 
-    private final DbInfoUtil dbInfoUtil;
-
-    public TableServiceImpl(DbInfoUtil dbInfoUtil) {
-        this.dbInfoUtil = dbInfoUtil;
-    }
+    @Resource
+    private DbInfoUtil dbInfoUtil;
 
     /**
      * 获取表属性
@@ -28,7 +26,7 @@ public class TableServiceImpl implements TableService {
      */
     @SneakyThrows
     @Override
-    public TableInfoVo getTableMetaData(String tableName) {
+    public TableInfoVo tableMetaData(String tableName) {
         TableInfoVo tableInfoVo = new TableInfoVo();
 
         TableMetaData tableMetaData = dbInfoUtil.tableInfo(tableName);
@@ -44,7 +42,7 @@ public class TableServiceImpl implements TableService {
      */
     @SneakyThrows
     @Override
-    public List<TableInfoVo> getDbTables(String dbName) {
+    public List<TableInfoVo> databaseTableList(String dbName) {
         // 当前数据库数据库所有的表
         List<TableMetaData> allTableInfo = dbInfoUtil.getDbTableList(dbName);
 
@@ -64,7 +62,7 @@ public class TableServiceImpl implements TableService {
      */
     @SneakyThrows
     @Override
-    public List<ColumnMetaData> getColumnInfo(String tableName) {
+    public List<ColumnMetaData> tableColumnInfo(String tableName) {
         return dbInfoUtil.columnInfo(tableName);
     }
 }

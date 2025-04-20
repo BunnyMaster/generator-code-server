@@ -10,8 +10,8 @@ import cn.bunny.service.VmsService;
 import cn.bunny.utils.ResourceFileUtil;
 import cn.bunny.utils.VmsUtil;
 import cn.hutool.crypto.digest.MD5;
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
-import org.apache.velocity.VelocityContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +29,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Service
-
 public class VmsServiceImpl implements VmsService {
-    private final TableService tableService;
 
-    public VmsServiceImpl(TableService tableService) {
-        this.tableService = tableService;
-    }
+    @Resource
+    private TableService tableService;
 
     /**
      * 生成服务端代码
@@ -48,33 +45,12 @@ public class VmsServiceImpl implements VmsService {
         String tableName = dto.getTableName();
 
         return dto.getPath().stream().map(path -> {
-            StringWriter writer = new StringWriter();
-
             // 表格属性名 和 列信息
-            TableInfoVo tableMetaData = tableService.getTableMetaData(tableName);
-            List<ColumnMetaData> columnInfoList = tableService.getColumnInfo(tableName).stream().distinct().toList();
-            List<String> list = columnInfoList.stream().map(ColumnMetaData::getColumnName).toList();
-
-            // 添加要生成的属性
-            VelocityContext context = new VelocityContext();
-
-            // 当前的表名
-            context.put("tableName" , tableMetaData.getTableName());
-
-            // 表字段的注释内容
-            context.put("comment" , dto.getComment());
-
-            // 设置包名称
-            context.put("package" , dto.getPackageName());
-
-            // 当前表的列信息
-            context.put("columnInfoList" , columnInfoList);
-
-            // 数据库sql列
-            context.put("baseColumnList" , String.join("," , list));
+            TableInfoVo tableMetaData = tableService.tableMetaData(tableName);
+            List<ColumnMetaData> columnInfoList = tableService.tableColumnInfo(tableName).stream().distinct().toList();
 
             // 生成模板
-            VmsUtil.commonVms(writer, context, "vms/" + path, dto);
+            StringWriter writer = VmsUtil.buildGeneratorCodeTemplate(dto, path, tableMetaData, columnInfoList);
 
             // 处理 vm 文件名
             path = VmsUtil.handleVmFilename(path, dto.getClassName());
@@ -95,13 +71,13 @@ public class VmsServiceImpl implements VmsService {
      */
     @SneakyThrows
     @Override
-    public Map<String, List<VmsPathVo>> getVmsPathList() {
+    public Map<String, List<VmsPathVo>> vmsResourcePathList() {
         // 读取当前项目中所有的 vm 模板发给前端
-        List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms" );
+        List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
 
         return vmsRelativeFiles.stream().map(vmFile -> {
-                    String[] filepathList = vmFile.split("/" );
-                    String filename = filepathList[filepathList.length - 1].replace(".vm" , "" );
+                    String[] filepathList = vmFile.split("/");
+                    String filename = filepathList[filepathList.length - 1].replace(".vm", "");
 
                     return VmsPathVo.builder().name(vmFile).label(filename).type(filepathList[0]).build();
                 })
@@ -125,7 +101,7 @@ public class VmsServiceImpl implements VmsService {
             // 2. 遍历并创建
             generatorVoList.forEach(generatorVo -> {
                 // zip中的路径
-                String path = generatorVo.getPath().replace(".vm" , "" );
+                String path = generatorVo.getPath().replace(".vm", "");
 
                 // zip中的文件
                 String code = generatorVo.getCode();
@@ -148,14 +124,14 @@ public class VmsServiceImpl implements VmsService {
 
         // 2.1 文件不重名
         long currentTimeMillis = System.currentTimeMillis();
-        String digestHex = MD5.create().digestHex(currentTimeMillis + "" );
+        String digestHex = MD5.create().digestHex(currentTimeMillis + "");
 
         // 3. 准备响应
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition" , "attachment; filename=" + "vms-" + digestHex + ".zip" );
-        headers.add("Cache-Control" , "no-cache, no-store, must-revalidate" );
-        headers.add("Pragma" , "no-cache" );
-        headers.add("Expires" , "0" );
+        headers.add("Content-Disposition", "attachment; filename=" + "vms-" + digestHex + ".zip");
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         return new ResponseEntity<>(byteArrayInputStream.readAllBytes(), headers, HttpStatus.OK);
