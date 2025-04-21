@@ -1,7 +1,5 @@
 package cn.bunny.utils;
 
-import cn.bunny.core.DatabaseInfoCore;
-import cn.bunny.dao.entity.ColumnMetaData;
 import cn.bunny.dao.entity.TableMetaData;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -12,7 +10,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,25 +19,11 @@ class DatabaseInfoCoreTest {
     String tableName = "sys_i18n";
 
     @Autowired
-    private DatabaseInfoCore databaseInfoCore;
-
-    @Autowired
     private DataSource dataSource;
 
-    @Test
-    void columnInfo() throws SQLException {
-        List<ColumnMetaData> columnMetaDataList = databaseInfoCore.columnInfo(tableName);
-        columnMetaDataList.forEach(System.out::println);
-    }
 
     @Test
-    void dbInfo() throws SQLException {
-        TableMetaData tableMetaData = databaseInfoCore.dbInfo(tableName);
-        System.out.println(tableMetaData);
-    }
-
-    @Test
-    void testTableInfo() {
+    void testTableInfoMetaData() {
         TableMetaData tableMetaData;
 
         try (Connection connection = dataSource.getConnection()) {
@@ -51,13 +34,7 @@ class DatabaseInfoCoreTest {
             if (tables.next()) {
                 String remarks = tables.getString("REMARKS");
                 String tableCat = tables.getString("TABLE_CAT");
-                String tableSchem = tables.getString("TABLE_SCHEM");
                 String tableType = tables.getString("TABLE_TYPE");
-                String typeCat = tables.getString("TYPE_CAT");
-                String typeSchem = tables.getString("TYPE_SCHEM");
-                String typeName = tables.getString("TYPE_NAME");
-                String selfReferencingColName = tables.getString("SELF_REFERENCING_COL_NAME");
-                String refGeneration = tables.getString("REF_GENERATION");
 
                 tableMetaData = TableMetaData.builder()
                         .tableName(tableName)

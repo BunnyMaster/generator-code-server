@@ -1,6 +1,7 @@
 package cn.bunny.service;
 
 import cn.bunny.dao.entity.ColumnMetaData;
+import cn.bunny.dao.entity.DatabaseInfoMetaData;
 import cn.bunny.dao.vo.TableInfoVo;
 
 import java.util.List;
@@ -29,4 +30,11 @@ public interface TableService {
      * @return 当前表所有的列内容
      */
     List<ColumnMetaData> tableColumnInfo(String tableName);
+
+    /**
+     * 数据库所有的信息
+     *
+     * @return 当前连接的数据库信息属性
+     */
+    DatabaseInfoMetaData databaseInfoMetaData();
 }

@@ -1,6 +1,7 @@
 package cn.bunny.controller;
 
 import cn.bunny.dao.entity.ColumnMetaData;
+import cn.bunny.dao.entity.DatabaseInfoMetaData;
 import cn.bunny.dao.result.Result;
 import cn.bunny.dao.vo.TableInfoVo;
 import cn.bunny.service.TableService;
@@ -25,6 +26,13 @@ public class TableController {
 
     @Resource
     private TableService tableService;
+
+    @Operation(summary = "当前数据库信息", description = "当前连接的数据库信息")
+    @GetMapping("databaseInfoMetaData")
+    public Result<DatabaseInfoMetaData> databaseInfoMetaData() {
+        DatabaseInfoMetaData databaseInfoMetaData = tableService.databaseInfoMetaData();
+        return Result.success(databaseInfoMetaData);
+    }
 
     @Operation(summary = "当前配置的数据库", description = "当前配置的数据库")
     @GetMapping("currentDatabaseName")

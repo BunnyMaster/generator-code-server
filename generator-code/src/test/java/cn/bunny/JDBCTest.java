@@ -84,7 +84,7 @@ public class JDBCTest {
             while (columnsRs.next()) {
                 ColumnMetaData column = new ColumnMetaData();
                 column.setColumnName(columnsRs.getString("COLUMN_NAME"));
-                column.setFieldName(TypeConvertCore.convertToCamelCase(column.getColumnName()));
+                column.setLowercaseName(TypeConvertCore.convertToCamelCase(column.getColumnName()));
                 column.setJdbcType(columnsRs.getString("TYPE_NAME"));
                 column.setJavaType(TypeConvertCore.convertToJavaType(column.getJdbcType()));
                 column.setComment(columnsRs.getString("REMARKS"));

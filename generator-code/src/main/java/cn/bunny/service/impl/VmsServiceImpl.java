@@ -1,5 +1,6 @@
 package cn.bunny.service.impl;
 
+import cn.bunny.core.DatabaseInfoCore;
 import cn.bunny.core.ResourceFileCore;
 import cn.bunny.dao.dto.VmsArgumentDto;
 import cn.bunny.dao.entity.ColumnMetaData;
@@ -33,6 +34,9 @@ public class VmsServiceImpl implements VmsService {
 
     @Resource
     private TableService tableService;
+
+    @Resource
+    private DatabaseInfoCore databaseInfoCore;
 
     /**
      * 生成服务端代码
