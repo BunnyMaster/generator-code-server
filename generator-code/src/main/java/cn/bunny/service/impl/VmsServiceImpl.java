@@ -1,5 +1,6 @@
 package cn.bunny.service.impl;
 
+import cn.bunny.core.ResourceFileCore;
 import cn.bunny.dao.dto.VmsArgumentDto;
 import cn.bunny.dao.entity.ColumnMetaData;
 import cn.bunny.dao.vo.GeneratorVo;
@@ -7,7 +8,6 @@ import cn.bunny.dao.vo.TableInfoVo;
 import cn.bunny.dao.vo.VmsPathVo;
 import cn.bunny.service.TableService;
 import cn.bunny.service.VmsService;
-import cn.bunny.utils.ResourceFileUtil;
 import cn.bunny.utils.VmsUtil;
 import cn.hutool.crypto.digest.MD5;
 import jakarta.annotation.Resource;
@@ -73,7 +73,7 @@ public class VmsServiceImpl implements VmsService {
     @Override
     public Map<String, List<VmsPathVo>> vmsResourcePathList() {
         // 读取当前项目中所有的 vm 模板发给前端
-        List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
+        List<String> vmsRelativeFiles = ResourceFileCore.getRelativeFiles("vms");
 
         return vmsRelativeFiles.stream().map(vmFile -> {
                     String[] filepathList = vmFile.split("/");

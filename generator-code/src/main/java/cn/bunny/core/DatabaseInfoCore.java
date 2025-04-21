@@ -1,7 +1,8 @@
-package cn.bunny.utils;
+package cn.bunny.core;
 
 import cn.bunny.dao.entity.ColumnMetaData;
 import cn.bunny.dao.entity.TableMetaData;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +16,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/* 数据库信息内容 */
 @Component
-public class DbInfoUtil {
+public class DatabaseInfoCore {
 
-    private final DataSource dataSource;
-
-    public DbInfoUtil(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    @Resource
+    private DataSource dataSource;
 
     /**
      * 获取表的所有主键列名
@@ -143,12 +142,12 @@ public class DbInfoUtil {
                     String columnName = columnsRs.getString("COLUMN_NAME");
 
                     // 将当前表的列类型转成 Java 类型
-                    String javaType = ConvertUtil.convertToJavaType(column.getJdbcType());
+                    String javaType = TypeConvertCore.convertToJavaType(column.getJdbcType());
 
                     // 设置列字段
                     column.setColumnName(columnName);
                     // 列字段转成 下划线 -> 小驼峰
-                    column.setFieldName(ConvertUtil.convertToCamelCase(column.getColumnName()));
+                    column.setFieldName(TypeConvertCore.convertToCamelCase(column.getColumnName()));
 
                     // 字段类型
                     column.setJdbcType(columnsRs.getString("TYPE_NAME"));

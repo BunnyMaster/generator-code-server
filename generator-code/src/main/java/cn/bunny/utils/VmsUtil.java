@@ -1,5 +1,6 @@
 package cn.bunny.utils;
 
+import cn.bunny.core.TypeConvertCore;
 import cn.bunny.dao.dto.VmsArgumentDto;
 import cn.bunny.dao.entity.ColumnMetaData;
 import cn.bunny.dao.vo.TableInfoVo;
@@ -72,10 +73,10 @@ public class VmsUtil {
         }
 
         // 将类名称转成小驼峰
-        String toCamelCase = ConvertUtil.convertToCamelCase(replaceTableName);
+        String toCamelCase = TypeConvertCore.convertToCamelCase(replaceTableName);
         context.put("classLowercaseName", toCamelCase);
         // 将类名称转成大驼峰
-        String convertToCamelCase = ConvertUtil.convertToCamelCase(replaceTableName, true);
+        String convertToCamelCase = TypeConvertCore.convertToCamelCase(replaceTableName, true);
         context.put("classUppercaseName", convertToCamelCase);
         // Velocity 生成模板
         Template servicePathTemplate = Velocity.getTemplate("vms/" + path, "UTF-8");
@@ -95,9 +96,9 @@ public class VmsUtil {
         int splitPathsSize = splitPaths.length - 1;
 
         // 大驼峰名称
-        String CamelCase = ConvertUtil.convertToCamelCase(className, true);
+        String CamelCase = TypeConvertCore.convertToCamelCase(className, true);
         // 小驼峰名称
-        String camelCase = ConvertUtil.convertToCamelCase(className);
+        String camelCase = TypeConvertCore.convertToCamelCase(className);
 
         // 当前文件名
         String filename = splitPaths[splitPathsSize];

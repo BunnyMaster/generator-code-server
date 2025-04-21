@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.nio.file.AccessDeniedException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,15 +86,6 @@ public class GlobalExceptionHandler {
         log.error("GlobalExceptionHandler===>特定异常信息：{}", exception.getMessage());
 
         return Result.error(null, 500, exception.getMessage());
-    }
-
-    // spring security异常
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseBody
-    public Result<String> error(AccessDeniedException exception) throws AccessDeniedException {
-        log.error("GlobalExceptionHandler===>spring security异常：{}", exception.getMessage());
-
-        return Result.error(ResultCodeEnum.SERVICE_ERROR);
     }
 
     // 处理SQL异常

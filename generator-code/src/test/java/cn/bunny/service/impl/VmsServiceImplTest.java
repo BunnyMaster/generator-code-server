@@ -1,7 +1,7 @@
 package cn.bunny.service.impl;
 
+import cn.bunny.core.ResourceFileCore;
 import cn.bunny.dao.vo.VmsPathVo;
-import cn.bunny.utils.ResourceFileUtil;
 import com.alibaba.fastjson2.JSON;
 import org.junit.jupiter.api.Test;
 
@@ -16,12 +16,12 @@ class VmsServiceImplTest {
 
     @Test
     void vmsResourcePathList() throws IOException, URISyntaxException {
-        List<String> vmsFiles = ResourceFileUtil.getAbsoluteFiles("vms");
+        List<String> vmsFiles = ResourceFileCore.getAbsoluteFiles("vms");
         System.out.println(vmsFiles);
 
         System.out.println("--------------------------------------------------------------");
 
-        List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
+        List<String> vmsRelativeFiles = ResourceFileCore.getRelativeFiles("vms");
         System.out.println(vmsRelativeFiles);
 
         System.out.println("--------------------------集合对象模式------------------------------------");

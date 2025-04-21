@@ -20,7 +20,6 @@ public class GeneratorCodeException extends RuntimeException {
     // 返回结果状态
     ResultCodeEnum resultCodeEnum;
 
-
     public GeneratorCodeException(Integer code, String message) {
         super(message);
         this.code = code;
