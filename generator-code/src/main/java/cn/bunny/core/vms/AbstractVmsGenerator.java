@@ -21,7 +21,7 @@ public abstract class AbstractVmsGenerator {
     /**
      * Velocity 生成模板
      *
-     * @param context
+     * @param context VelocityContext
      * @param writer  StringWriter 写入
      */
     abstract void templateMerge(VelocityContext context, StringWriter writer);

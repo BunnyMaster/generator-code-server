@@ -30,6 +30,8 @@ public class VmsArgumentDtoBaseVmsGenerator extends AbstractVmsGenerator {
 
     /**
      * 添加生成内容
+     *
+     * @param context VelocityContext
      */
     @Override
     void addContext(VelocityContext context) {
@@ -43,18 +45,16 @@ public class VmsArgumentDtoBaseVmsGenerator extends AbstractVmsGenerator {
         // 每个 Controller 上的请求前缀
         context.put("requestMapping", dto.getRequestMapping());
 
-        // 类名称如果是小驼峰，需要 [手写] 为 [下划线] 之后由 [代码 -> 小驼峰/大驼峰]
-        String className = dto.getClassName();
-
-        // 去除表开头前缀
-        String tablePrefixes = dto.getTablePrefixes();
-
         // 表字段的注释内容
         context.put("comment", dto.getComment());
 
         // 设置包名称
         context.put("package", dto.getPackageName());
 
+        // 类名称如果是小驼峰，需要 [手写] 为 [下划线] 之后由 [代码 -> 小驼峰/大驼峰]
+        String className = dto.getClassName();
+        // 去除表开头前缀
+        String tablePrefixes = dto.getTablePrefixes();
         // 将 表前缀  转成数组
         String replaceTableName = "";
         for (String prefix : tablePrefixes.split("[,，]")) {
@@ -73,7 +73,8 @@ public class VmsArgumentDtoBaseVmsGenerator extends AbstractVmsGenerator {
     /**
      * Velocity 生成模板
      *
-     * @param writer StringWriter 写入
+     * @param context VelocityContext
+     * @param writer  StringWriter 写入
      */
     @Override
     void templateMerge(VelocityContext context, StringWriter writer) {
