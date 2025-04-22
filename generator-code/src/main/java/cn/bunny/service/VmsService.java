@@ -32,4 +32,6 @@ public interface VmsService {
      * @return zip 文件
      */
     ResponseEntity<byte[]> downloadByZip(@Valid VmsArgumentDto dto);
+
+
 }

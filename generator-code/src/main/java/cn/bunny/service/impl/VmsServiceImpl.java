@@ -2,12 +2,13 @@ package cn.bunny.service.impl;
 
 import cn.bunny.core.DatabaseInfoCore;
 import cn.bunny.core.ResourceFileCore;
+import cn.bunny.core.SqlParserCore;
+import cn.bunny.core.vms.VmsArgumentDtoBaseVmsGenerator;
 import cn.bunny.dao.dto.VmsArgumentDto;
 import cn.bunny.dao.entity.ColumnMetaData;
+import cn.bunny.dao.entity.TableMetaData;
 import cn.bunny.dao.vo.GeneratorVo;
-import cn.bunny.dao.vo.TableInfoVo;
 import cn.bunny.dao.vo.VmsPathVo;
-import cn.bunny.service.TableService;
 import cn.bunny.service.VmsService;
 import cn.bunny.utils.VmsUtil;
 import cn.hutool.crypto.digest.MD5;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,9 +35,6 @@ import java.util.zip.ZipOutputStream;
 public class VmsServiceImpl implements VmsService {
 
     @Resource
-    private TableService tableService;
-
-    @Resource
     private DatabaseInfoCore databaseInfoCore;
 
     /**
@@ -47,14 +46,25 @@ public class VmsServiceImpl implements VmsService {
     @Override
     public List<GeneratorVo> generator(VmsArgumentDto dto) {
         String tableName = dto.getTableName();
+        String sql = dto.getSql();
+
+        // 表格属性名 和 列信息
+        TableMetaData tableMetaData;
+        List<ColumnMetaData> columnInfoList;
+
+        // 判断是否有 SQL 如果有SQL 优先解析并生成SQL相关内容
+        if (StringUtils.hasText(sql)) {
+            tableMetaData = SqlParserCore.parserTableInfo(sql);
+            columnInfoList = SqlParserCore.parserColumnInfo(sql);
+        } else {
+            tableMetaData = databaseInfoCore.tableInfoMetaData(tableName);
+            columnInfoList = databaseInfoCore.tableColumnInfo(tableName).stream().distinct().toList();
+        }
 
         return dto.getPath().stream().map(path -> {
-            // 表格属性名 和 列信息
-            TableInfoVo tableMetaData = tableService.tableMetaData(tableName);
-            List<ColumnMetaData> columnInfoList = tableService.tableColumnInfo(tableName).stream().distinct().toList();
-
             // 生成模板
-            StringWriter writer = VmsUtil.buildGeneratorCodeTemplate(dto, path, tableMetaData, columnInfoList);
+            VmsArgumentDtoBaseVmsGenerator vmsArgumentDtoBaseVmsGenerator = new VmsArgumentDtoBaseVmsGenerator(dto, path);
+            StringWriter writer = vmsArgumentDtoBaseVmsGenerator.generatorCodeTemplate(tableMetaData, columnInfoList);
 
             // 处理 vm 文件名
             path = VmsUtil.handleVmFilename(path, dto.getClassName());

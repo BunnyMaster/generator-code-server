@@ -64,6 +64,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>5.1</version>
+        </dependency>
 
         <!-- lombok -->
         <dependency>
@@ -74,7 +79,7 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
-        
+
         <!-- knife4j -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
