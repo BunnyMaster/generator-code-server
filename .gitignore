@@ -4,6 +4,42 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 logs/
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+.eslintcache
+report.html
+vite.config.*.timestamp*
+
+bunny-web.site.csr
+bunny-web.site.key
+bunny-web.site_bundle.crt
+bunny-web.site_bundle.pem
+
+yarn.lock
+npm-debug.log*
+.pnpm-error.log*
+.pnpm-debug.log
+tests/**/coverage/
+# Logs
+logs
+*.log
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 ### STS ###
 .apt_generated
@@ -15,7 +51,6 @@ logs/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
 *.iws
 *.iml
 *.ipr
@@ -32,3 +67,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Editor directories and files
+tsconfig.tsbuildinfo
