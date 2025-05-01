@@ -1,8 +1,8 @@
 package cn.bunny.service.impl;
 
 import cn.bunny.core.SqlParserCore;
-import cn.bunny.dao.entity.TableMetaData;
-import cn.bunny.dao.vo.TableInfoVo;
+import cn.bunny.domain.entity.TableMetaData;
+import cn.bunny.domain.vo.TableInfoVo;
 import cn.bunny.service.SqlParserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

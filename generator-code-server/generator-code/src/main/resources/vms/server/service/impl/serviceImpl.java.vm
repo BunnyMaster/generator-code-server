@@ -1,6 +1,6 @@
 package ${package}.service.impl;
 
-import cn.bunny.dao.pojo.result.PageResult;
+import cn.bunny.domain.pojo.result.PageResult;
 import ${package}.mapper.${classUppercaseName}Mapper;
 import ${package}.service.${classUppercaseName}Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;

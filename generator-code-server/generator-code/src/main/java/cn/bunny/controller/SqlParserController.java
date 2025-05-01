@@ -1,9 +1,9 @@
 package cn.bunny.controller;
 
 import cn.bunny.core.SqlParserCore;
-import cn.bunny.dao.entity.ColumnMetaData;
-import cn.bunny.dao.result.Result;
-import cn.bunny.dao.vo.TableInfoVo;
+import cn.bunny.domain.entity.ColumnMetaData;
+import cn.bunny.domain.result.Result;
+import cn.bunny.domain.vo.TableInfoVo;
 import cn.bunny.service.SqlParserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

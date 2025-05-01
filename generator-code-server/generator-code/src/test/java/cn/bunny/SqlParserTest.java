@@ -1,8 +1,8 @@
 package cn.bunny;
 
 import cn.bunny.core.TypeConvertCore;
-import cn.bunny.dao.entity.ColumnMetaData;
-import cn.bunny.dao.entity.TableMetaData;
+import cn.bunny.domain.entity.ColumnMetaData;
+import cn.bunny.domain.entity.TableMetaData;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;

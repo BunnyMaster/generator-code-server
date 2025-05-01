@@ -1,7 +1,7 @@
 package cn.bunny.service.impl;
 
 import cn.bunny.core.ResourceFileCore;
-import cn.bunny.dao.vo.VmsPathVo;
+import cn.bunny.domain.vo.VmsPathVo;
 import com.alibaba.fastjson2.JSON;
 import org.junit.jupiter.api.Test;
 

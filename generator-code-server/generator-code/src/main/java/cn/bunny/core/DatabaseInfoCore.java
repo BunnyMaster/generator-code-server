@@ -1,8 +1,8 @@
 package cn.bunny.core;
 
-import cn.bunny.dao.entity.ColumnMetaData;
-import cn.bunny.dao.entity.DatabaseInfoMetaData;
-import cn.bunny.dao.entity.TableMetaData;
+import cn.bunny.domain.entity.ColumnMetaData;
+import cn.bunny.domain.entity.DatabaseInfoMetaData;
+import cn.bunny.domain.entity.TableMetaData;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;

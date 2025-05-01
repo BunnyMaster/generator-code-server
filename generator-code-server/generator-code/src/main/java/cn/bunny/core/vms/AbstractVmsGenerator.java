@@ -1,7 +1,7 @@
 package cn.bunny.core.vms;
 
-import cn.bunny.dao.entity.ColumnMetaData;
-import cn.bunny.dao.entity.TableMetaData;
+import cn.bunny.domain.entity.ColumnMetaData;
+import cn.bunny.domain.entity.TableMetaData;
 import org.apache.velocity.VelocityContext;
 
 import java.io.StringWriter;

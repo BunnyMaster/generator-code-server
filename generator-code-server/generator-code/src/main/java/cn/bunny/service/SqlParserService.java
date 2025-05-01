@@ -1,6 +1,6 @@
 package cn.bunny.service;
 
-import cn.bunny.dao.vo.TableInfoVo;
+import cn.bunny.domain.vo.TableInfoVo;
 
 public interface SqlParserService {
     /**

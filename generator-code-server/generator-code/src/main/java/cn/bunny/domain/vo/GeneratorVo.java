@@ -1,4 +1,4 @@
-package cn.bunny.dao.vo;
+package cn.bunny.domain.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

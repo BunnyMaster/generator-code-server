@@ -1,7 +1,7 @@
 package cn.bunny.core;
 
-import cn.bunny.dao.entity.ColumnMetaData;
-import cn.bunny.dao.entity.TableMetaData;
+import cn.bunny.domain.entity.ColumnMetaData;
+import cn.bunny.domain.entity.TableMetaData;
 import lombok.SneakyThrows;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;

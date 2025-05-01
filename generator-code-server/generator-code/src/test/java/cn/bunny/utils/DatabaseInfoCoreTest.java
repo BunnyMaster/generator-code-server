@@ -1,6 +1,6 @@
 package cn.bunny.utils;
 
-import cn.bunny.dao.entity.TableMetaData;
+import cn.bunny.domain.entity.TableMetaData;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

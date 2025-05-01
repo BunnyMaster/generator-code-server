@@ -2,8 +2,8 @@ package cn.bunny;
 
 
 import cn.bunny.core.TypeConvertCore;
-import cn.bunny.dao.entity.ColumnMetaData;
-import cn.bunny.dao.entity.TableMetaData;
+import cn.bunny.domain.entity.ColumnMetaData;
+import cn.bunny.domain.entity.TableMetaData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

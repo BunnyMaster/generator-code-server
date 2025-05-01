@@ -1,4 +1,4 @@
-package cn.bunny.dao.result;
+package cn.bunny.domain.result;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -16,19 +16,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(name = "PageResult 对象" , title = "分页返回结果" , description = "分页返回结果" )
+@Schema(name = "PageResult 对象", title = "分页返回结果", description = "分页返回结果")
 public class PageResult<T> implements Serializable {
 
-    @Schema(name = "pageNo" , title = "当前页" )
+    @Schema(name = "pageNo", title = "当前页")
     private Long pageNo;
 
-    @Schema(name = "pageSize" , title = "每页记录数" )
+    @Schema(name = "pageSize", title = "每页记录数")
     private Long pageSize;
 
-    @Schema(name = "total" , title = "总记录数" )
+    @Schema(name = "total", title = "总记录数")
     private Long total;
 
-    @Schema(name = "list" , title = "当前页数据集合" )
+    @Schema(name = "list", title = "当前页数据集合")
     private List<T> list;
 
 }

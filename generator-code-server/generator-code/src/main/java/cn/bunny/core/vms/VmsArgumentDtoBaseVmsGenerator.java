@@ -1,7 +1,7 @@
 package cn.bunny.core.vms;
 
 import cn.bunny.core.TypeConvertCore;
-import cn.bunny.dao.dto.VmsArgumentDto;
+import cn.bunny.domain.dto.VmsArgumentDto;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;

@@ -1,8 +1,8 @@
 package cn.bunny.service;
 
-import cn.bunny.dao.entity.ColumnMetaData;
-import cn.bunny.dao.entity.DatabaseInfoMetaData;
-import cn.bunny.dao.vo.TableInfoVo;
+import cn.bunny.domain.entity.ColumnMetaData;
+import cn.bunny.domain.entity.DatabaseInfoMetaData;
+import cn.bunny.domain.vo.TableInfoVo;
 
 import java.util.List;
 

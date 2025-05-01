@@ -1,12 +1,11 @@
 package ${package}.service;
 
-import cn.bunny.dao.entity.system.MenuIcon;
-import cn.bunny.dao.pojo.result.PageResult;
+import cn.bunny.domain.entity.system.MenuIcon;
+import cn.bunny.domain.pojo.result.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.validation.Valid;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
