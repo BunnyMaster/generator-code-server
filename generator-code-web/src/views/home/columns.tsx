@@ -3,8 +3,8 @@ import { NTag, NTooltip } from 'naive-ui';
 import type { TableColumns } from 'naive-ui/es/data-table/src/interface';
 import type { VNode } from 'vue';
 import { h } from 'vue';
-import type { JSX } from 'vue/jsx-runtime';
 import { useRouter } from 'vue-router';
+import type { JSX } from 'vue/jsx-runtime';
 
 /* 表格列字段 */
 export function columns(): TableColumns<any> {

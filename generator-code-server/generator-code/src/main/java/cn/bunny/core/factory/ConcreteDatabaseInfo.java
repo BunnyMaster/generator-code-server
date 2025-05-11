@@ -1,64 +1,56 @@
-package cn.bunny.core;
+package cn.bunny.core.factory;
 
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.DatabaseInfoMetaData;
 import cn.bunny.domain.entity.TableMetaData;
-import jakarta.annotation.Resource;
+import cn.bunny.utils.TypeConvertUtil;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-/* 数据库信息内容 */
 @Component
-public class DatabaseInfoCore {
+public class ConcreteDatabaseInfo extends AbstractDatabaseInfo {
 
-    @Resource
-    private DataSource dataSource;
+    @Value("${bunny.master.database}")
+    private String currentDatabase;
 
     /**
-     * 获取表的所有主键列名
+     * 数据库所有的信息
      *
-     * @param tableName 表名
-     * @return 主键列名的集合
+     * @return 当前连接的数据库信息属性
      */
     @SneakyThrows
-    public Set<String> getPrimaryKeyColumns(String tableName) {
-        // 主键的key
-        Set<String> primaryKeys = new HashSet<>();
-
+    public DatabaseInfoMetaData databaseInfoMetaData() {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
 
-            // 当前表的主键
-            ResultSet pkResultSet = metaData.getPrimaryKeys(null, null, tableName);
-
-            while (pkResultSet.next()) {
-                // 列字段
-                String columnName = pkResultSet.getString("COLUMN_NAME").toLowerCase();
-                primaryKeys.add(columnName);
-            }
-
-            return primaryKeys;
+            return DatabaseInfoMetaData.builder()
+                    .databaseProductName(metaData.getDatabaseProductName())
+                    .databaseProductVersion(metaData.getDatabaseProductVersion())
+                    .driverName(metaData.getDriverName())
+                    .driverVersion(metaData.getDriverVersion())
+                    .url(metaData.getURL())
+                    .username(metaData.getUserName())
+                    .currentDatabase(currentDatabase)
+                    .build();
         }
     }
 
     /**
-     * 获取表注释信息
+     * 解析 sql 表信息
      *
-     * @param tableName 数据库表名
-     * @return 表信息
+     * @param tableName 表名称或sql
+     * @return 表西悉尼
      */
     @SneakyThrows
-    public TableMetaData tableInfoMetaData(String tableName) {
+    @Override
+    public TableMetaData getTableMetadata(String tableName) {
         TableMetaData tableMetaData;
 
         try (Connection connection = dataSource.getConnection()) {
@@ -111,7 +103,7 @@ public class DatabaseInfoCore {
                 dbName = tables.getString("TABLE_NAME");
 
                 // 设置表信息
-                TableMetaData tableMetaData = tableInfoMetaData(dbName);
+                TableMetaData tableMetaData = getTableMetadata(dbName);
 
                 allTableInfo.add(tableMetaData);
             }
@@ -123,14 +115,15 @@ public class DatabaseInfoCore {
     /**
      * 获取当前表的列属性
      *
-     * @param tableName 表名称
+     * @param tableName 表名称或sql
      * @return 当前表所有的列内容
      */
     @SneakyThrows
+    @Override
     public List<ColumnMetaData> tableColumnInfo(String tableName) {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
-            List<ColumnMetaData> columns = new ArrayList<>();
+            Map<String, ColumnMetaData> map = new LinkedHashMap<>();
             // 当前表的主键
             Set<String> primaryKeyColumns = getPrimaryKeyColumns(tableName);
 
@@ -140,18 +133,19 @@ public class DatabaseInfoCore {
                     ColumnMetaData column = new ColumnMetaData();
                     // 列字段
                     String columnName = columnsRs.getString("COLUMN_NAME");
-                    // 将当前表的列类型转成 Java 类型
-                    String javaType = TypeConvertCore.convertToJavaType(column.getJdbcType());
+                    // 数据库类型
+                    String typeName = columnsRs.getString("TYPE_NAME");
 
                     // 设置列字段
                     column.setColumnName(columnName);
                     // 列字段转成 下划线 -> 小驼峰
-                    column.setLowercaseName(TypeConvertCore.convertToCamelCase(column.getColumnName()));
+                    column.setLowercaseName(TypeConvertUtil.convertToCamelCase(column.getColumnName()));
                     // 列字段转成 下划线 -> 大驼峰名称
-                    column.setUppercaseName(TypeConvertCore.convertToCamelCase(column.getColumnName(), true));
+                    column.setUppercaseName(TypeConvertUtil.convertToCamelCase(column.getColumnName(), true));
                     // 字段类型
-                    column.setJdbcType(columnsRs.getString("TYPE_NAME"));
+                    column.setJdbcType(typeName);
                     // 字段类型转 Java 类型
+                    String javaType = TypeConvertUtil.convertToJavaType(typeName);
                     column.setJavaType(javaType);
                     // 字段类型转 JavaScript 类型
                     column.setJavascriptType(StringUtils.uncapitalize(javaType));
@@ -164,33 +158,12 @@ public class DatabaseInfoCore {
                         boolean isPrimaryKey = primaryKeyColumns.contains(columnName);
                         column.setIsPrimaryKey(isPrimaryKey);
                     }
-                    columns.add(column);
+
+                    map.putIfAbsent(column.getColumnName(), column);
                 }
             }
 
-            columns.get(0).setIsPrimaryKey(true);
-            return columns;
-        }
-    }
-
-    /**
-     * 数据库所有的信息
-     *
-     * @return 当前连接的数据库信息属性
-     */
-    @SneakyThrows
-    public DatabaseInfoMetaData databaseInfoMetaData() {
-        try (Connection connection = dataSource.getConnection()) {
-            DatabaseMetaData metaData = connection.getMetaData();
-
-            return DatabaseInfoMetaData.builder()
-                    .databaseProductName(metaData.getDatabaseProductName())
-                    .databaseProductVersion(metaData.getDatabaseProductVersion())
-                    .driverName(metaData.getDriverName())
-                    .driverVersion(metaData.getDriverVersion())
-                    .url(metaData.getURL())
-                    .username(metaData.getUserName())
-                    .build();
+            return new ArrayList<>(map.values());
         }
     }
 }

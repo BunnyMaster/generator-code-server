@@ -5,11 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class DatabaseInfoMetaData {
+
+    /* 数据库所有的数据库 */
+    List<TableMetaData> databaseList;
 
     /* 数据库产品名称 */
     private String databaseProductName;
@@ -28,4 +33,8 @@ public class DatabaseInfoMetaData {
 
     /* 数据库用户 */
     private String username;
+
+    /* 当前数据库名称 */
+    private String currentDatabase;
+
 }

@@ -9,7 +9,7 @@ const tableStore = useTableStore();
 const { databaseInfoMeta } = storeToRefs(tableStore);
 
 onMounted(() => {
-  tableStore.getDatabaseInfoMeta();
+  tableStore.loadDatabaseInfoMeta();
 });
 </script>
 

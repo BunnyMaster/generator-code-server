@@ -1,14 +1,17 @@
 package cn.bunny.service.impl;
 
-import cn.bunny.core.SqlParserCore;
+import cn.bunny.core.factory.ConcreteSqlParserDatabaseInfo;
 import cn.bunny.domain.entity.TableMetaData;
-import cn.bunny.domain.vo.TableInfoVo;
 import cn.bunny.service.SqlParserService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SqlParserServiceImpl implements SqlParserService {
+
+    @Resource
+    private ConcreteSqlParserDatabaseInfo sqlParserDatabaseInfo;
 
     /**
      * 解析SQL内容
@@ -17,10 +20,10 @@ public class SqlParserServiceImpl implements SqlParserService {
      * @return 表信息内容
      */
     @Override
-    public TableInfoVo tableInfo(String sql) {
-        TableInfoVo tableInfoVo = new TableInfoVo();
+    public TableMetaData tableInfo(String sql) {
+        TableMetaData tableInfoVo = new TableMetaData();
 
-        TableMetaData tableMetaData = SqlParserCore.parserTableInfo(sql);
+        TableMetaData tableMetaData = sqlParserDatabaseInfo.getTableMetadata(sql);
         BeanUtils.copyProperties(tableMetaData, tableInfoVo);
         return tableInfoVo;
     }

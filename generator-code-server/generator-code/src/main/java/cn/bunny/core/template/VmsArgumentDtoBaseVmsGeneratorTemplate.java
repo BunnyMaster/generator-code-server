@@ -1,7 +1,7 @@
-package cn.bunny.core.vms;
+package cn.bunny.core.template;
 
-import cn.bunny.core.TypeConvertCore;
 import cn.bunny.domain.dto.VmsArgumentDto;
+import cn.bunny.utils.TypeConvertUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -14,7 +14,7 @@ import java.util.Date;
  * 使用模板方法，方便扩展
  * 如果需要继承 AbstractVmsGenerator
  */
-public class VmsArgumentDtoBaseVmsGenerator extends AbstractVmsGenerator {
+public class VmsArgumentDtoBaseVmsGeneratorTemplate extends AbstractVmsGeneratorTemplate {
 
     private final VmsArgumentDto dto;
     private final String path;
@@ -23,7 +23,7 @@ public class VmsArgumentDtoBaseVmsGenerator extends AbstractVmsGenerator {
      * @param dto  类名称可以自定义，格式为 xxx_xxx
      * @param path 当前路径
      */
-    public VmsArgumentDtoBaseVmsGenerator(VmsArgumentDto dto, String path) {
+    public VmsArgumentDtoBaseVmsGeneratorTemplate(VmsArgumentDto dto, String path) {
         this.dto = dto;
         this.path = path;
     }
@@ -62,11 +62,11 @@ public class VmsArgumentDtoBaseVmsGenerator extends AbstractVmsGenerator {
         }
 
         // 将类名称转成小驼峰
-        String toCamelCase = TypeConvertCore.convertToCamelCase(replaceTableName);
+        String toCamelCase = TypeConvertUtil.convertToCamelCase(replaceTableName);
         context.put("classLowercaseName", toCamelCase);
 
         // 将类名称转成大驼峰
-        String convertToCamelCase = TypeConvertCore.convertToCamelCase(replaceTableName, true);
+        String convertToCamelCase = TypeConvertUtil.convertToCamelCase(replaceTableName, true);
         context.put("classUppercaseName", convertToCamelCase);
     }
 

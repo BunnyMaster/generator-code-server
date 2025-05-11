@@ -1,33 +1,46 @@
 <script lang="tsx" setup>
-import { NCard, NDataTable, NSelect, NTag } from 'naive-ui';
+import { NCard, NDataTable, NInput, NSelect, NTag } from 'naive-ui';
 import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
-import { getCurrentDatabaseName } from '@/api/table';
 import { useTableStore } from '@/store/modules/table';
 import { columns, renderOptions } from '@/views/home/columns';
 
 const tableStore = useTableStore();
-const { tableList, dbList, tableListLoading, currentDatabaseName } = storeToRefs(tableStore);
+const { tableList, tableListLoading, databaseInfoMeta } = storeToRefs(tableStore);
 
-/* 更新数据库名称 */
-const onUpdateCurrentDatabaseName = (databaseName: string) => {
-  tableStore.currentDatabaseName = databaseName ?? undefined;
-  tableStore.getDatabaseTableList();
-};
+// 表格数据
+const datalist = ref([]);
 
 /* 数据库所有的表 */
-const initDatabaseTables = async () => {
-  const result = await getCurrentDatabaseName();
-  if (result.code === 200) {
-    tableStore.currentDatabaseName = result.data;
+const onSearch = async (databaseName: string) => {
+  // 加载数据库基础信息，包含当前连接的数据库名称
+  await tableStore.loadDatabaseInfoMeta();
+
+  // 如果名称不存在就获取默认的数据库名称
+  if (databaseName) {
+    databaseInfoMeta.value.currentDatabase = databaseName;
   }
-  await tableStore.getDatabaseTableList();
+
+  // 获取完数据库名称开始加载当前数据库所有的表
+  await tableStore.loadDatabaseTableList();
+
+  // 将当前的数据库列表放到可以搜索的列表中
+  datalist.value = tableList.value;
+};
+
+/* 当查询数据表 */
+const onChangeQueryText = (val: string) => {
+  if (val.trim() == '') {
+    datalist.value = tableList.value;
+    return;
+  }
+
+  datalist.value = datalist.value.filter(({ tableName }) => tableName.includes(val));
 };
 
 onMounted(() => {
-  initDatabaseTables();
-  tableStore.getDatabaseList();
+  onSearch(undefined);
 });
 </script>
 
@@ -46,23 +59,34 @@ onMounted(() => {
       张表
     </p>
 
-    <!-- 选择数据库 -->
-    <n-select
-      :on-update-value="onUpdateCurrentDatabaseName"
-      :options="dbList"
-      :render-option="renderOptions"
-      :value="currentDatabaseName"
-      class="mt-2 w-[200px]"
-      clear-filter-after-select
-      clearable
-      placeholder="选择数据库"
-    />
+    <div class="flex">
+      <!-- 选择数据库 -->
+      <n-select
+        :on-update-value="onSearch"
+        :options="databaseInfoMeta?.databaseList"
+        :render-option="renderOptions"
+        :value="databaseInfoMeta?.currentDatabase"
+        class="mt-2 w-[200px]"
+        clear-filter-after-select
+        clearable
+        label-field="tableCat"
+        placeholder="选择数据库"
+        value-field="tableCat"
+      />
+
+      <n-input
+        class="mt-2 ml-2"
+        placeholder="输入数据表名称"
+        style="width: 220px"
+        @input="onChangeQueryText"
+      />
+    </div>
   </n-card>
 
   <n-data-table
     :bordered="true"
     :columns="columns()"
-    :data="tableList"
+    :data="datalist"
     :loading="tableListLoading"
   />
 </template>

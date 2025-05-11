@@ -1,8 +1,8 @@
 package cn.bunny;
 
-import cn.bunny.core.TypeConvertCore;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
+import cn.bunny.utils.TypeConvertUtil;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
@@ -76,16 +76,16 @@ public class SqlParserTest {
                     columnInfo.setJdbcType(dataType);
 
                     // 设置 Java 类型
-                    String javaType = TypeConvertCore.convertToJavaType(dataType.contains("varchar") ? "varchar" : dataType);
+                    String javaType = TypeConvertUtil.convertToJavaType(dataType.contains("varchar") ? "varchar" : dataType);
                     columnInfo.setJavaType(javaType);
 
                     // 设置 JavaScript 类型
                     columnInfo.setJavascriptType(StringUtils.uncapitalize(javaType));
 
                     // 列字段转成 下划线 -> 小驼峰
-                    columnInfo.setLowercaseName(TypeConvertCore.convertToCamelCase(column.getColumnName()));
+                    columnInfo.setLowercaseName(TypeConvertUtil.convertToCamelCase(column.getColumnName()));
                     // 列字段转成 下划线 -> 大驼峰名称
-                    columnInfo.setUppercaseName(TypeConvertCore.convertToCamelCase(column.getColumnName(), true));
+                    columnInfo.setUppercaseName(TypeConvertUtil.convertToCamelCase(column.getColumnName(), true));
 
                     // 解析注释
                     List<String> columnSpecs = column.getColumnSpecs();

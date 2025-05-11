@@ -2,7 +2,7 @@ package cn.bunny.service;
 
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.DatabaseInfoMetaData;
-import cn.bunny.domain.vo.TableInfoVo;
+import cn.bunny.domain.entity.TableMetaData;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ public interface TableService {
      * @param tableName 表名称
      * @return 表属性
      */
-    TableInfoVo tableMetaData(String tableName);
+    TableMetaData tableMetaData(String tableName);
 
     /**
      * 获取所有数据库
      *
      * @return 所有表信息
      */
-    List<TableInfoVo> databaseTableList(String tableName);
+    List<TableMetaData> databaseTableList(String tableName);
 
     /**
      * 获取列属性

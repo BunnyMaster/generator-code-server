@@ -19,28 +19,28 @@ import java.util.List;
 public interface ${classUppercaseName}Service extends IService<${classUppercaseName}> {
 
     /**
-     * * 获取${comment}列表
+     * 分页查询${comment}
      *
-     * @return ${comment}返回列表
+     * @return {@link ${classUppercaseName}Vo}
      */
-    PageResult<${classUppercaseName}Vo> get${classUppercaseName}List(Page<${classUppercaseName}> pageParams, ${classUppercaseName}Dto dto);
+    PageResult<${classUppercaseName}Vo> get${classUppercaseName}Page(Page<${classUppercaseName}> pageParams, ${classUppercaseName}Dto dto);
 
     /**
-     * * 添加${comment}
+     * 添加${comment}
      *
      * @param dto 添加表单
      */
-    void add${classUppercaseName}(@Valid ${classUppercaseName}AddDto dto);
+    void add${classUppercaseName}(${classUppercaseName}AddDto dto);
 
     /**
-     * * 更新${comment}
+     * 更新${comment}
      *
-     * @param dto 更新表单
+     * @param dto {@link ${classUppercaseName}UpdateDto}
      */
-    void update${classUppercaseName}(@Valid ${classUppercaseName}UpdateDto dto);
+    void update${classUppercaseName}(${classUppercaseName}UpdateDto dto);
 
     /**
-     * * 删除|批量删除${comment}类型
+     * 删除|批量删除${comment}类型
      *
      * @param ids 删除id列表
      */

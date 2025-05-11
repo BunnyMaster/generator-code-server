@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="${classUppercaseName}">
         #foreach($field in ${columnInfoList})
-            <id column="${field.columnName}" property="${field.fieldName}"/>
+            <id column="${field.columnName}" property="${field.lowercaseName}"/>
         #end
     </resultMap>
 
@@ -26,8 +26,8 @@
         <where>
             base.is_deleted = 0
             #foreach($field in $columnInfoList)
-                <if test="dto.${field.fieldName} != null and dto.${field.fieldName} != ''">
-                    and base.${field.columnName} like CONCAT('%',#{dto.${field.fieldName}},'%')
+                <if test="dto.${field.lowercaseName} != null and dto.${field.lowercaseName} != ''">
+                    and base.${field.columnName} like CONCAT('%',#{dto.${field.lowercaseName}},'%')
                 </if>
             #end
         </where>

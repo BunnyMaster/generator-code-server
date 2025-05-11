@@ -6,16 +6,6 @@ export const getDatabaseInfoMetaData = () => {
   return request<any, BaseResult<any>>({ url: '/table/databaseInfoMetaData', method: 'GET' });
 };
 
-/* 当前配置的数据库 */
-export const getCurrentDatabaseName = () => {
-  return request<any, BaseResult<any>>({ url: '/table/currentDatabaseName', method: 'GET' });
-};
-
-/* 所有的数据库 */
-export const getDatabaseList = () => {
-  return request<any, BaseResult<any>>({ url: '/table/databaseList', method: 'GET' });
-};
-
 /* 数据库所有的表 */
 export const getDatabaseTableList = (params: any) => {
   return request<any, BaseResult<any>>({ url: '/table/databaseTableList', method: 'get', params });

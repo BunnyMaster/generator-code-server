@@ -9,6 +9,7 @@ export const fetchTableInfo = (params: any) => {
     params,
   });
 };
+
 /* 当前数据库信息 */
 export const fetchColumnMetaData = (params: any) => {
   return request<any, BaseResult<any>>({

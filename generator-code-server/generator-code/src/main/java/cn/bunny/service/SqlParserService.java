@@ -1,6 +1,6 @@
 package cn.bunny.service;
 
-import cn.bunny.domain.vo.TableInfoVo;
+import cn.bunny.domain.entity.TableMetaData;
 
 public interface SqlParserService {
     /**
@@ -9,5 +9,5 @@ public interface SqlParserService {
      * @param sql Sql语句
      * @return 表信息内容
      */
-    TableInfoVo tableInfo(String sql);
+    TableMetaData tableInfo(String sql);
 }

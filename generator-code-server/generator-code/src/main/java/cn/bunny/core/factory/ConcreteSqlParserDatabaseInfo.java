@@ -1,28 +1,29 @@
-package cn.bunny.core;
+package cn.bunny.core.factory;
 
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
-import lombok.SneakyThrows;
+import cn.bunny.utils.TypeConvertUtil;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SqlParserCore {
-
+@Component
+public class ConcreteSqlParserDatabaseInfo extends AbstractDatabaseInfo {
     /**
      * 解析 sql 表信息
      *
-     * @param sql sql字符串
+     * @param sql 表名称或sql
      * @return 表西悉尼
      */
-    @SneakyThrows
-    public static TableMetaData parserTableInfo(String sql) {
+    @Override
+    public TableMetaData getTableMetadata(String sql) {
         TableMetaData tableInfo = new TableMetaData();
 
         // 解析sql
@@ -53,13 +54,13 @@ public class SqlParserCore {
     }
 
     /**
-     * 解析 sql 列信息
+     * 获取当前表的列属性
      *
-     * @param sql sql字符串
-     * @return 列属性列表
+     * @param sql 表名称或sql
+     * @return 当前表所有的列内容
      */
-    @SneakyThrows
-    public static List<ColumnMetaData> parserColumnInfo(String sql) {
+    @Override
+    public List<ColumnMetaData> tableColumnInfo(String sql) {
         // 解析sql
         Statement statement;
         try {
@@ -85,16 +86,16 @@ public class SqlParserCore {
                     columnInfo.setJdbcType(dataType);
 
                     // 设置 Java 类型
-                    String javaType = TypeConvertCore.convertToJavaType(dataType.contains("varchar") ? "varchar" : dataType);
+                    String javaType = TypeConvertUtil.convertToJavaType(dataType.contains("varchar") ? "varchar" : dataType);
                     columnInfo.setJavaType(javaType);
 
                     // 设置 JavaScript 类型
                     columnInfo.setJavascriptType(StringUtils.uncapitalize(javaType));
 
                     // 列字段转成 下划线 -> 小驼峰
-                    columnInfo.setLowercaseName(TypeConvertCore.convertToCamelCase(column.getColumnName()));
+                    columnInfo.setLowercaseName(TypeConvertUtil.convertToCamelCase(column.getColumnName()));
                     // 列字段转成 下划线 -> 大驼峰名称
-                    columnInfo.setUppercaseName(TypeConvertCore.convertToCamelCase(column.getColumnName(), true));
+                    columnInfo.setUppercaseName(TypeConvertUtil.convertToCamelCase(column.getColumnName(), true));
 
                     // 解析注释
                     List<String> columnSpecs = column.getColumnSpecs();

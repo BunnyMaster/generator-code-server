@@ -1,10 +1,10 @@
-package cn.bunny.core;
+package cn.bunny.utils;
 
 import com.google.common.base.CaseFormat;
 import org.assertj.core.util.introspection.CaseFormatUtils;
 
 /* 类型转换，数据库转Java类型等 */
-public class TypeConvertCore {
+public class TypeConvertUtil {
 
     /**
      * 将数据库类型转换为Java类型
@@ -14,17 +14,17 @@ public class TypeConvertCore {
 
         columnType = columnType.toLowerCase();
         return switch (columnType) {
-            case "varchar" , "char" , "text" , "longtext" , "mediumtext" , "tinytext" -> "String";
-            case "int" , "integer" , "tinyint" , "smallint" -> "Integer";
+            case "varchar", "char", "text", "longtext", "mediumtext", "tinytext" -> "String";
+            case "int", "integer", "tinyint", "smallint" -> "Integer";
             case "bigint" -> "Long";
-            case "decimal" , "numeric" -> "BigDecimal";
+            case "decimal", "numeric" -> "BigDecimal";
             case "float" -> "Float";
             case "double" -> "Double";
-            case "boolean" , "bit" , "tinyint unsigned" -> "Boolean";
-            case "date" , "year" -> "Date";
+            case "boolean", "bit", "tinyint unsigned" -> "Boolean";
+            case "date", "year" -> "Date";
             case "time" -> "Time";
-            case "datetime" , "timestamp" -> "LocalDateTime";
-            case "blob" , "longblob" , "mediumblob" , "tinyblob" -> "byte[]";
+            case "datetime", "timestamp" -> "LocalDateTime";
+            case "blob", "longblob", "mediumblob", "tinyblob" -> "byte[]";
             default -> "Object";
         };
     }

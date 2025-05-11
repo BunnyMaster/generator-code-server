@@ -1,4 +1,4 @@
-package cn.bunny.core.vms;
+package cn.bunny.core.template;
 
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
@@ -11,7 +11,7 @@ import java.util.List;
  * 模板方法模式
  * 如果需要继承 AbstractVmsGenerator
  */
-public abstract class AbstractVmsGenerator {
+public abstract class AbstractVmsGeneratorTemplate {
 
     /**
      * 添加生成内容
@@ -38,7 +38,7 @@ public abstract class AbstractVmsGenerator {
 
         // 添加要生成的属性
         StringWriter writer = new StringWriter();
-        List<String> list = columnInfoList.stream().map(ColumnMetaData::getColumnName).toList();
+        List<String> list = columnInfoList.stream().map(ColumnMetaData::getColumnName).distinct().toList();
 
         // vm 不能直接写 `{` 需要转换下
         context.put("leftBrace", "{");

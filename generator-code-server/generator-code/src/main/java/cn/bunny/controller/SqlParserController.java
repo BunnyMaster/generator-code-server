@@ -1,9 +1,9 @@
 package cn.bunny.controller;
 
-import cn.bunny.core.SqlParserCore;
+import cn.bunny.core.factory.ConcreteSqlParserDatabaseInfo;
 import cn.bunny.domain.entity.ColumnMetaData;
+import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.domain.result.Result;
-import cn.bunny.domain.vo.TableInfoVo;
 import cn.bunny.service.SqlParserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,15 +24,16 @@ public class SqlParserController {
 
     @Operation(summary = "解析SQL成表信息", description = "解析SQL成表信息")
     @PostMapping("tableInfo")
-    public Result<TableInfoVo> tableInfo(String sql) {
-        TableInfoVo vo = sqlParserService.tableInfo(sql);
+    public Result<TableMetaData> tableInfo(String sql) {
+        TableMetaData vo = sqlParserService.tableInfo(sql);
         return Result.success(vo);
     }
 
     @Operation(summary = "解析SQL成列数据", description = "解析SQL成列数据")
     @PostMapping("columnMetaData")
     public Result<List<ColumnMetaData>> columnMetaData(String sql) {
-        List<ColumnMetaData> vo = SqlParserCore.parserColumnInfo(sql);
+        ConcreteSqlParserDatabaseInfo databaseInfoCore = new ConcreteSqlParserDatabaseInfo();
+        List<ColumnMetaData> vo = databaseInfoCore.tableColumnInfo(sql);
         return Result.success(vo);
     }
 }

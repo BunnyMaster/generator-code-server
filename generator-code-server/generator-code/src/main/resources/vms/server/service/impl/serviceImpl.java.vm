@@ -30,7 +30,7 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      * @return 查询分页${comment}返回对象
      */
     @Override
-    public PageResult<${classUppercaseName}Vo> get${classUppercaseName}List(Page<${classUppercaseName}> pageParams, ${classUppercaseName}Dto dto) {
+    public PageResult<${classUppercaseName}Vo> get${classUppercaseName}Page(Page<${classUppercaseName}> pageParams, ${classUppercaseName}Dto dto) {
         IPage<${classUppercaseName}Vo> page = baseMapper.selectListByPage(pageParams, dto);
 
         return PageResult.<${classUppercaseName}Vo>builder()
@@ -48,7 +48,6 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      */
     @Override
     public void add${classUppercaseName}(@Valid ${classUppercaseName}AddDto dto) {
-        // 保存数据
         ${classUppercaseName} ${classLowercaseName} =new ${classUppercaseName}();
         BeanUtils.copyProperties(dto, ${classLowercaseName});
         save(${classLowercaseName});
@@ -61,7 +60,6 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      */
     @Override
     public void update${classUppercaseName}(@Valid ${classUppercaseName}UpdateDto dto) {
-        // 更新内容
         ${classUppercaseName} ${classLowercaseName} =new ${classUppercaseName}();
         BeanUtils.copyProperties(dto, ${classLowercaseName});
         updateById(${classLowercaseName});
@@ -74,6 +72,6 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      */
     @Override
     public void delete${classUppercaseName}(List<Long> ids) {
-        baseMapper.deleteBatchIdsWithPhysics(ids);
+        removeByIds(ids);
     }
 }

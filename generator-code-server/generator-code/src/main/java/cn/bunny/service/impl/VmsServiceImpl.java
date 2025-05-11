@@ -1,15 +1,15 @@
 package cn.bunny.service.impl;
 
-import cn.bunny.core.DatabaseInfoCore;
-import cn.bunny.core.ResourceFileCore;
-import cn.bunny.core.SqlParserCore;
-import cn.bunny.core.vms.VmsArgumentDtoBaseVmsGenerator;
+import cn.bunny.core.factory.ConcreteDatabaseInfo;
+import cn.bunny.core.factory.ConcreteSqlParserDatabaseInfo;
+import cn.bunny.core.template.VmsArgumentDtoBaseVmsGeneratorTemplate;
 import cn.bunny.domain.dto.VmsArgumentDto;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.domain.vo.GeneratorVo;
 import cn.bunny.domain.vo.VmsPathVo;
 import cn.bunny.service.VmsService;
+import cn.bunny.utils.ResourceFileUtil;
 import cn.bunny.utils.VmsUtil;
 import cn.hutool.crypto.digest.MD5;
 import jakarta.annotation.Resource;
@@ -35,7 +35,10 @@ import java.util.zip.ZipOutputStream;
 public class VmsServiceImpl implements VmsService {
 
     @Resource
-    private DatabaseInfoCore databaseInfoCore;
+    ConcreteDatabaseInfo databaseInfoCore;
+
+    @Resource
+    ConcreteSqlParserDatabaseInfo sqlParserDatabaseInfo;
 
     /**
      * 生成服务端代码
@@ -54,16 +57,16 @@ public class VmsServiceImpl implements VmsService {
 
         // 判断是否有 SQL 如果有SQL 优先解析并生成SQL相关内容
         if (StringUtils.hasText(sql)) {
-            tableMetaData = SqlParserCore.parserTableInfo(sql);
-            columnInfoList = SqlParserCore.parserColumnInfo(sql);
+            tableMetaData = sqlParserDatabaseInfo.getTableMetadata(sql);
+            columnInfoList = sqlParserDatabaseInfo.tableColumnInfo(sql);
         } else {
-            tableMetaData = databaseInfoCore.tableInfoMetaData(tableName);
+            tableMetaData = databaseInfoCore.getTableMetadata(tableName);
             columnInfoList = databaseInfoCore.tableColumnInfo(tableName).stream().distinct().toList();
         }
 
         return dto.getPath().stream().map(path -> {
             // 生成模板
-            VmsArgumentDtoBaseVmsGenerator vmsArgumentDtoBaseVmsGenerator = new VmsArgumentDtoBaseVmsGenerator(dto, path);
+            VmsArgumentDtoBaseVmsGeneratorTemplate vmsArgumentDtoBaseVmsGenerator = new VmsArgumentDtoBaseVmsGeneratorTemplate(dto, path);
             StringWriter writer = vmsArgumentDtoBaseVmsGenerator.generatorCodeTemplate(tableMetaData, columnInfoList);
 
             // 处理 vm 文件名
@@ -87,7 +90,7 @@ public class VmsServiceImpl implements VmsService {
     @Override
     public Map<String, List<VmsPathVo>> vmsResourcePathList() {
         // 读取当前项目中所有的 vm 模板发给前端
-        List<String> vmsRelativeFiles = ResourceFileCore.getRelativeFiles("vms");
+        List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
 
         return vmsRelativeFiles.stream().map(vmFile -> {
                     String[] filepathList = vmFile.split("/");
