@@ -16,7 +16,7 @@ export const use${classUppercaseName}Store = defineStore('${lowercaseName}Store'
             form: {
                 #foreach($item in $columnInfoList)
                     // $!{item.comment}
-                        $!{item.fieldName}: undefined,
+                        $!{item.columnName}: undefined,
                 #end
             },
             // 分页查询结果

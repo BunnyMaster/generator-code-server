@@ -3,9 +3,9 @@ export interface FormItemProps {
     #foreach($field in $columnInfoList)
         // $field.comment
         #if($field.javascriptType == "object")
-                $field.fieldName: any
+                $field.columnName: any
         #else
-                $field.fieldName:  $field.javascriptType
+                $field.columnName:  $field.javascriptType
         #end
     #end
 }

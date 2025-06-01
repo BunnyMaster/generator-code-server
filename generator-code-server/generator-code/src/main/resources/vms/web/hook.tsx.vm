@@ -23,7 +23,7 @@ export function onAdd() {
         props: {
             formInline: {
                 #foreach($item in $columnInfoList)
-                        $!{item.fieldName}: undefined,
+                        $!{item.columnName}: undefined,
                 #end
             },
         },
@@ -53,7 +53,7 @@ export function onUpdate(row: any) {
         props: {
             formInline: {
                 #foreach($item in $columnInfoList)
-                        $!{item.fieldName}: row.$!{item.fieldName},
+                        $!{item.columnName}: row.$!{item.fieldName},
                 #end
             }
         },

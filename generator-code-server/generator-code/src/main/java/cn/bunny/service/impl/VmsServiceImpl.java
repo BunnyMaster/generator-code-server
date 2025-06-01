@@ -52,17 +52,14 @@ public class VmsServiceImpl implements VmsService {
         String sql = dto.getSql();
 
         // 表格属性名 和 列信息
-        TableMetaData tableMetaData;
-        List<ColumnMetaData> columnInfoList;
+        TableMetaData tableMetaData = StringUtils.hasText(dto.getSql())
+                ? sqlParserDatabaseInfo.getTableMetadata(dto.getSql())
+                : databaseInfoCore.getTableMetadata(dto.getTableName());
 
-        // 判断是否有 SQL 如果有SQL 优先解析并生成SQL相关内容
-        if (StringUtils.hasText(sql)) {
-            tableMetaData = sqlParserDatabaseInfo.getTableMetadata(sql);
-            columnInfoList = sqlParserDatabaseInfo.tableColumnInfo(sql);
-        } else {
-            tableMetaData = databaseInfoCore.getTableMetadata(tableName);
-            columnInfoList = databaseInfoCore.tableColumnInfo(tableName).stream().distinct().toList();
-        }
+        List<ColumnMetaData> columnInfoList = StringUtils.hasText(sql)
+                ? sqlParserDatabaseInfo.tableColumnInfo(sql)
+                : databaseInfoCore.tableColumnInfo(tableName).stream().distinct().toList();
+
 
         return dto.getPath().stream().map(path -> {
             // 生成模板
