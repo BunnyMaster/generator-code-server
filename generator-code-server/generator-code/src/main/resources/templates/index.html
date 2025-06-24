@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>代码生成器前端</title>
+    <!-- 本地引入 Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/lib/css/bootstrap.min.css}">
+    <!-- 本地引入 Bootstrap Icons -->
+    <link rel="stylesheet" th:href="@{/lib/css/bootstrap-icons.min.css}">
+    <!-- 本地引入 Vue.js -->
+    <script th:src="@{/lib/js/vue/vue.global.js}"></script>
+    <!-- 本地引入 Bootstrap JS -->
+    <script th:src="@{/lib/js/bootstrap.bundle.min.js}"></script>
+    <!-- 本地引入 axios JS -->
+    <script th:src="@{/lib/js/axios/axios.min.js}"></script>
+    <!-- 加载全局axios配置 -->
+    <script th:src="@{/lib/js/axios/axios-global.js}"></script>
+</head>
+<body>
+<div id="app">
+    <div class="container my-4">
+        <!-- 主标题 -->
+        <div class="text-center mb-4">
+            <h2 class="text-primary fw-bold">
+                <i class="bi bi-code-square me-2"></i>
+                代码生成器
+            </h2>
+            <p class="text-muted">快速生成数据库表对应的代码</p>
+        </div>
+
+        <!-- 主卡片 -->
+        <div class="card shadow-sm">
+            <!-- 卡片头部 -->
+            <div class="card-header bg-primary bg-opacity-10 border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-info-circle-fill text-primary me-2"></i>使用提示
+                        </h5>
+                    </div>
+                    <div>
+                    <span class="badge bg-primary rounded-pill me-2">
+                        <i class="bi bi-database me-1"></i>数据库: <span class="fw-normal">{{dbCount}}</span>
+                    </span>
+                        <span class="badge bg-primary rounded-pill">
+                        <i class="bi bi-table me-1"></i>数据库表: <span class="fw-normal">{{tableCount}}</span>
+                    </span>
+                    </div>
+                </div>
+                <p class="card-subtitle mt-2 text-muted">
+                    <i class="bi bi-mouse me-1"></i>点击 <code class="bg-primary bg-opacity-10">表名</code> 或 <code
+                        class="bg-primary bg-opacity-10">生成</code> 进行跳转
+                </p>
+            </div>
+
+            <!-- 卡片主体 -->
+            <div class="card-body">
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                    <!-- GitHub 链接 -->
+                    <a class="btn btn-outline-dark d-flex align-items-center gap-2"
+                       href="https://github.com/BunnyMaster/generator-code-server">
+                        <svg class="feather feather-github" fill="none" height="20" stroke="currentColor"
+                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                             width="20"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                        GitHub 仓库
+                    </a>
+
+                    <!-- Gitee 链接 -->
+                    <a class="btn btn-outline-danger d-flex align-items-center gap-2"
+                       href="https://gitee.com/BunnyBoss/generator-code-server">
+                        <svg height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.984 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12a12 12 0 0 0 12-12A12 12 0 0 0 12 0zm6.09 5.333c.328 0 .593.266.592.593v1.482a.594.594 0 0 1-.593.592H9.777c-.982 0-1.778.796-1.778 1.778v5.63c0 .327.266.592.593.592h5.63c.982 0 1.778-.796 1.778-1.778v-.296a.593.593 0 0 0-.592-.593h-4.15a.59.59 0 0 1-.592-.592v-1.482a.593.593 0 0 1 .593-.592h6.815c.327 0 .593.265.593.592v3.408a4 4 0 0 1-4 4H5.926a.593.593 0 0 1-.593-.593V9.778a4.444 4.444 0 0 1 4.445-4.444h8.296Z"
+                                  fill="currentColor"/>
+                        </svg>
+                        Gitee 仓库
+                    </a>
+                </div>
+            </div>
+
+            <!-- 卡片底部 - 数据库选择 -->
+            <div class="card-footer bg-light">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label fw-semibold" for="databaseSelect">
+                            <i class="bi bi-database me-1"></i>数据库选择
+                        </label>
+                        <select class="form-select shadow-sm" id="databaseSelect" v-model="dbSelect">
+                            <option disabled selected>请选择数据库...</option>
+                            <option :key="index" :title="db.comment" :value="db.tableCat"
+                                    v-for="(db,index) in databaseList">
+                                {{db.tableCat}}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-5">
+                        <label class="form-label fw-semibold" for="tableSelect">
+                            <i class="bi bi-table me-1"></i>
+                            数据库表选择
+                        </label>
+                        <input class="form-control shadow-sm" id="tableSelect" v-model="tableSelect"/>
+                    </div>
+
+                    <div class="col-md-2 d-grid">
+                        <button class="btn btn-primary shadow-sm">
+                            <i class="bi bi-search me-1"></i>
+                            查询
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 表格显示 -->
+        <div class="card mt-4 shadow-sm">
+            <div class="card-header bg-primary bg-opacity-10">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-table me-2"></i>数据表列表
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th scope="col" width="5%">#</th>
+                            <th scope="col" width="25%">表名</th>
+                            <th scope="col" width="35%">注释</th>
+                            <th scope="col" width="20%">所属数据库</th>
+                            <th scope="col" width="15%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr :key="index" v-for="(table,index) in tableList">
+                            <th scope="row">{{index + 1}}</th>
+                            <td><a class="text-decoration-none" href="#">{{ table.tableName}}</a></td>
+                            <td>{{ table.comment }}</td>
+                            <td>{{ table.tableCat }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-gear"></i> 生成
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    const {createApp, ref} = Vue
+
+    createApp({
+        setup() {
+            return {
+                // 数据库个数
+                dbCount: ref(0),
+                // 数据库表个数
+                tableCount: ref(0),
+                // 数据库选择
+                dbSelect: ref(""),
+                // 数据库表过滤
+                tableSelect: ref(""),
+                // 所有数据库列表
+                databaseList: ref([]),
+                // 数据库表列表
+                tableList: ref([]),
+            }
+        },
+        methods: {
+            /* 当前连接的数据库信息 */
+            async getDatabaseInfoMetaData() {
+                const response = await axios.get("/table/databaseInfoMetaData")
+
+                const {data, code} = response.data
+                if (code !== 200) return
+
+                // 设置当前数据库有几个
+                this.dbCount = data.databaseList.length
+
+                // 设置返回的所有的数据库列表
+                this.databaseList = data.databaseList
+
+                // 设置当前的数据库
+                this.dbSelect = data.currentDatabase
+            },
+
+            /* 获取[当前/所有]数据库表 */
+            async getDatabaseTableList() {
+                const response = await axios.get("/table/databaseTableList", {params: {dbName: this.dbSelect}})
+
+                const {data, code} = response.data
+                if (code !== 200) return
+
+                this.tableList = data
+            }
+        },
+        async mounted() {
+            // 当前连接的数据库信息
+            await this.getDatabaseInfoMetaData()
+            // 获取[当前/所有]数据库表
+            await this.getDatabaseTableList()
+        }
+    }).mount('#app')
+</script>
+</html>
