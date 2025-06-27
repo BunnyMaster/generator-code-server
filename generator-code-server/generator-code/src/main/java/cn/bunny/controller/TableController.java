@@ -22,6 +22,7 @@ public class TableController {
     @Resource
     private TableService tableService;
 
+
     @Operation(summary = "当前数据库信息", description = "当前连接的数据库信息")
     @GetMapping("databaseInfoMetaData")
     public Result<DatabaseInfoMetaData> databaseInfoMetaData() {

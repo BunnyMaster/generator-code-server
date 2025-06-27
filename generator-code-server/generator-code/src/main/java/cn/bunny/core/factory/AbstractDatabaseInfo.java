@@ -2,8 +2,8 @@ package cn.bunny.core.factory;
 
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
-import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -16,8 +16,13 @@ import java.util.Set;
 
 @Component
 public abstract class AbstractDatabaseInfo {
-    @Resource
+
     public DataSource dataSource;
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     /**
      * 获取表的所有主键列名
@@ -26,7 +31,7 @@ public abstract class AbstractDatabaseInfo {
      * @return 主键列名的集合
      */
     @SneakyThrows
-    public Set<String> getPrimaryKeyColumns(String tableName) {
+    public Set<String> findPrimaryKeyColumns(String tableName) {
         // 主键的key
         Set<String> primaryKeys = new HashSet<>();
 
@@ -61,4 +66,5 @@ public abstract class AbstractDatabaseInfo {
      * @return 当前表所有的列内容
      */
     public abstract List<ColumnMetaData> tableColumnInfo(String name);
+
 }

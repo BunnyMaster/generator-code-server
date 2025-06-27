@@ -5,19 +5,18 @@ import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.DatabaseInfoMetaData;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.service.TableService;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TableServiceImpl implements TableService {
 
-    @Resource
-    private ConcreteDatabaseInfo databaseInfoCore;
+    private final ConcreteDatabaseInfo databaseInfoCore;
 
     /**
      * 获取表属性
@@ -25,15 +24,9 @@ public class TableServiceImpl implements TableService {
      * @param tableName 表名称
      * @return 表属性
      */
-    @SneakyThrows
     @Override
     public TableMetaData tableMetaData(String tableName) {
-        TableMetaData tableInfoVo = new TableMetaData();
-
-        TableMetaData tableMetaData = databaseInfoCore.getTableMetadata(tableName);
-        BeanUtils.copyProperties(tableMetaData, tableInfoVo);
-
-        return tableInfoVo;
+        return databaseInfoCore.getTableMetadata(tableName);
     }
 
     /**
@@ -41,17 +34,9 @@ public class TableServiceImpl implements TableService {
      *
      * @return 所有表信息
      */
-    @SneakyThrows
     @Override
     public List<TableMetaData> databaseTableList(String dbName) {
-        List<TableMetaData> allTableInfo = databaseInfoCore.databaseTableList(dbName);
-
-        return allTableInfo.stream().map(tableMetaData -> {
-            TableMetaData tableInfoVo = new TableMetaData();
-            BeanUtils.copyProperties(tableMetaData, tableInfoVo);
-
-            return tableInfoVo;
-        }).toList();
+        return databaseInfoCore.databaseTableList(dbName);
     }
 
     /**
@@ -60,7 +45,6 @@ public class TableServiceImpl implements TableService {
      * @param tableName 表名称
      * @return 当前表所有的列内容
      */
-    @SneakyThrows
     @Override
     public List<ColumnMetaData> tableColumnInfo(String tableName) {
         return databaseInfoCore.tableColumnInfo(tableName);

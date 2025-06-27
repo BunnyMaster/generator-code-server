@@ -12,7 +12,7 @@ import cn.bunny.service.VmsService;
 import cn.bunny.utils.ResourceFileUtil;
 import cn.bunny.utils.VmsUtil;
 import cn.hutool.crypto.digest.MD5;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,13 +32,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Service
+@RequiredArgsConstructor
 public class VmsServiceImpl implements VmsService {
 
-    @Resource
-    ConcreteDatabaseInfo databaseInfoCore;
-
-    @Resource
-    ConcreteSqlParserDatabaseInfo sqlParserDatabaseInfo;
+    private final ConcreteDatabaseInfo databaseInfoCore;
+    private final ConcreteSqlParserDatabaseInfo sqlParserDatabaseInfo;
 
     /**
      * 生成服务端代码
