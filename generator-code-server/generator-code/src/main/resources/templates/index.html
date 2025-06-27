@@ -10,7 +10,9 @@
     <!-- 本地引入 Vue.js -->
     <script th:src="@{/lib/js/vue/vue.global.js}"></script>
     <!-- 本地引入 Bootstrap JS -->
-    <script th:src="@{/lib/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/lib/js/boostrap/bootstrap.bundle.min.js}"></script>
+    <!-- 本地引入 popper JS -->
+    <script th:src="@{/lib/js/boostrap/popper.min.js}"></script>
     <!-- 本地引入 axios JS -->
     <script th:src="@{/lib/js/axios/axios.min.js}"></script>
     <!-- 加载全局axios配置 -->
@@ -28,15 +30,26 @@
                    @get-database-table-list="getDatabaseTableList"
                    v-model:db-select="dbSelect" v-model:table-select="tableSelect"></main-card>
 
+        <!-- 填写生成表单 -->
+        <main-form></main-form>
+
         <!-- 表格显示 -->
         <main-table :loading="loading" :raw-table-list="rawTableList" :table-list="tableList"></main-table>
     </div>
 </div>
 </body>
 
-<script th:src="@{/lib/vue/index/AppHeader.js}"></script>
-<script th:src="@{/lib/vue/index/MainCard.js}"></script>
-<script th:src="@{/lib/vue/index/MainTable.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 初始化所有tooltip
+        const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        [...tooltips].forEach(t => new bootstrap.Tooltip(t));
+    });
+</script>
+<script th:src="@{/views/components/AppHeader.js}"></script>
+<script th:src="@{/views/index/MainCard.js}"></script>
+<script th:src="@{/views/index/MainForm.js}"></script>
+<script th:src="@{/views/index/MainTable.js}"></script>
 <script>
     const {createApp, ref} = Vue
 
@@ -69,8 +82,6 @@
                 this.tableList = data;
                 this.rawTableList = data;
 
-                // 更新总条数
-                this.totalItems = data.length;
                 // 重置到第一页
                 this.currentPage = 1;
 
@@ -98,6 +109,7 @@
 
     app.component('AppHeader', AppHeader);
     app.component('MainCard', MainCard);
+    app.component('MainForm', MainForm);
     app.component('MainTable', MainTable);
     app.mount('#app');
 </script>

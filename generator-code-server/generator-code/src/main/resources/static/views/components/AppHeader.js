@@ -8,7 +8,7 @@ const AppHeader = defineComponent({
      <div class="text-center mb-4">
         <h2 class="text-primary fw-bold">
             <i class="bi bi-code-square me-2"></i>
-            代码生成器
+            Bunny代码生成器
         </h2>
         <p class="text-muted">快速生成数据库表对应的代码</p>
     </div>

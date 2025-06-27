@@ -2,7 +2,7 @@ const MainTable = defineComponent({
     name: "MainTable",
     props: ["tableList", "rawTableList", "loading"],
     template: `
-    <div class="card mt-4 shadow-sm">
+    <div class="card mt-2 shadow-sm">
         <div class="card-header bg-primary bg-opacity-10">
             <h5 class="card-title mb-0">
                 <i class="bi bi-table me-2"></i>数据表列表
@@ -22,15 +22,21 @@ const MainTable = defineComponent({
                 <table class="table table-striped table-bordered table-hover mb-0" v-else>
                     <thead class="table-light">
                     <tr>
+                        <th scope="col" width="2%">
+                            <input class="form-check-input border-secondary" type="checkbox" value="option2">
+                        </th>
                         <th scope="col" width="5%">#</th>
                         <th scope="col" width="30%">表名</th>
                         <th scope="col" width="35%">注释</th>
-                        <th scope="col" width="20%">所属数据库</th>
+                        <th scope="col" width="18%">所属数据库</th>
                         <th class="text-center" scope="col" width="10%">操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr :key="index" v-for="(table,index) in paginatedTableList">
+                        <th scope="row">
+                         <input class="form-check-input border-secondary" type="checkbox" value="option2">
+                       </th>
                         <th scope="row">{{index + 1}}</th>
                         <td><a class="text-decoration-none" href="#">{{ table.tableName}}</a></td>
                         <td>{{ table.comment }}</td>
@@ -49,7 +55,7 @@ const MainTable = defineComponent({
         <!-- 在表格显示卡片底部添加分页 -->
         <div class="card-footer bg-light">
             <div class="d-flex justify-content-between align-items-center">
-                <div class="form-text">共 {{ totalItems }} 条</div>
+                <div class="form-text">共 {{ rawTableList.length }} 条</div>
 
                 <nav aria-label="Page navigation">
                     <ul class="pagination mb-0">
@@ -106,8 +112,6 @@ const MainTable = defineComponent({
             currentPage: ref(1),
             // 每页数
             itemsPerPage: ref(10),
-            // 总的数据条数
-            totalItems: ref(0),
             // 表格选项
             tablePageOptions: [5, 10, 20, 50, 100, 150, 200]
         }
@@ -115,7 +119,8 @@ const MainTable = defineComponent({
     computed: {
         // 计算总页数
         totalPages() {
-            return Math.ceil(this.totalItems / this.itemsPerPage);
+            const totalItems = this.rawTableList.length;
+            return Math.ceil(totalItems / this.itemsPerPage);
         },
         // 分页后的数据
         paginatedTableList() {

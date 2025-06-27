@@ -21,9 +21,14 @@ const MainCard = defineComponent({
         }
     },
     template: `
-    <div class="card shadow-sm">
+    <div class="card shadow-sm position-relative">
         <!-- 卡片头部 -->
-        <div class="card-header bg-primary bg-opacity-10 border-bottom">
+        <div class="position-absolute top-50 start-50" v-if="dbLoading">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div class="card-header bg-primary bg-opacity-10 border-bottom" v-else>
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h5 class="card-title mb-0">
