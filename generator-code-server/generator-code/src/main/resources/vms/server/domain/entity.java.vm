@@ -1,0 +1,14 @@
+@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@Accessors(chain = true)
+@TableName("${tableName}")
+@Schema(name = "${classUppercaseName}对象", title = "${comment}", description = "${comment}的实体类对象")
+public class ${classUppercaseName} extends BaseEntity {
+
+    #foreach($field in ${columnInfoList})
+        @Schema(name = "${field.lowercaseName}", title = "${field.comment}")
+        private ${field.javaType} ${field.lowercaseName};
+
+    #end
+}
