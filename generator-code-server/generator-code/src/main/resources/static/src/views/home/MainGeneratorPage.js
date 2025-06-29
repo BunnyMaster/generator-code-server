@@ -1,11 +1,11 @@
 const MainGeneratorPage = defineComponent({
     name: "MainGeneratorPage",
     template: `
-<div :class="{'show': generatorPageFlag}" class="offcanvas offcanvas-start w-50" data-bs-scroll="false">
+<div class="offcanvas offcanvas-start" data-bs-scroll="false" tabindex="-1" ref="offcanvasElementRef">
     <!-- 侧边栏头部 -->
     <div class="offcanvas-header bg-primary text-white">
         <div>
-            <h5 class="offcanvas-title mb-1" id="offcanvasWithBothOptionsLabel">
+            <h5 class="offcanvas-title mb-1">
                 <i class="bi bi-file-earmark-code me-2"></i>模板生成页面
             </h5>
             <p class="small mb-0 opacity-75">已生成的文件列表</p>
@@ -30,7 +30,7 @@ const MainGeneratorPage = defineComponent({
                                  role="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-' + item.id" aria-expanded="false">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-bi-file-earmark-code me-2 text-primary fs-5"></i>
-                                    <span class="text-truncate" style="max-width: 80%">
+                                    <span class="text-truncate" style="max-width: 90%">
                                         【{{item.comment}}】{{item.path}}
                                     </span>
                                 </div>
@@ -73,6 +73,7 @@ const MainGeneratorPage = defineComponent({
         </div>
     </div>
 </div>
+
     `,
     props: {
         // 是否显示生成页面
@@ -83,7 +84,9 @@ const MainGeneratorPage = defineComponent({
     data() {
         return {
             // 控制图标状态的响应式变量
-            copied: false
+            copied: ref(false),
+            // 存储 offcanvas 实例
+            offcanvas: ref(null)
         }
     },
     methods: {
@@ -153,7 +156,24 @@ const MainGeneratorPage = defineComponent({
 
         /* 关闭窗口 */
         onGeneratorPageFlagClick() {
-            this.$emit("update:generatorPageFlag", !this.generatorPageFlag)
+            this.$emit("update:generatorPageFlag", !this.generatorPageFlag);
         },
     },
+    mounted() {
+        // 初始化 OffCanvas
+        this.offcanvas = new bootstrap.Offcanvas(this.$refs.offcanvasElementRef);
+        // 监听隐藏事件
+        this.$refs.offcanvasElementRef.addEventListener('hidden.bs.offcanvas', () => {
+            this.$emit("update:generatorPageFlag", false);
+        });
+    },
+    watch: {
+        generatorPageFlag(newVal) {
+            if (newVal) {
+                this.offcanvas.show();
+            } else {
+                this.offcanvas.hide();
+            }
+        },
+    }
 });

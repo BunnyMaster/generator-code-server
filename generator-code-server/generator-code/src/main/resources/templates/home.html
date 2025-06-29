@@ -30,6 +30,30 @@
     <script th:src="@{/src/lib/js/dayjs/antd.min.js}"></script>
 </head>
 
+<style>
+    /* 提高 Antd Message 的 z-index */
+    .ant-message {
+        z-index: 1100 !important;
+    }
+
+    /* 响应式 OffCanvas 宽度 */
+    .offcanvas.offcanvas-start {
+        width: 50%;
+    }
+
+    @media (max-width: 991.98px) {
+        .offcanvas.offcanvas-start {
+            width: 75%;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .offcanvas.offcanvas-start {
+            width: 100%;
+        }
+    }
+</style>
+
 <body>
 <div id="app">
     <div class="container my-4">
@@ -50,7 +74,7 @@
                     :raw-table-list="rawTableList" :table-list="tableList" v-model:form="form"></main-table>
 
         <!-- 模板生成页面 -->
-        <main-generator-page :generator-data="generatorData"
+        <main-generator-page :generator-data="generatorData" ref="mainGeneratorRef"
                              v-model:generator-page-flag="generatorPageFlag"></main-generator-page>
     </div>
 </div>
@@ -152,8 +176,8 @@
                 else antd.message.success(message);
 
                 // 显示生成的页面
-                this.generatorPageFlag = true;
                 this.generatorData = data;
+                this.generatorPageFlag = true;
 
                 // 等待 DOM 更新，之后手动更新代码高亮
                 await this.$nextTick();
@@ -181,7 +205,7 @@
                     this.tableList = this.tableList.filter(table => table.tableName.includes(val) || table.tablePrefixes.includes(val));
                 }
             },
-        }
+        },
     });
 
     // 注册组件
