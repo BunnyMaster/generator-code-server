@@ -18,14 +18,17 @@ public class VmsArgumentDtoBaseVmsGeneratorTemplate extends AbstractVmsGenerator
 
     private final VmsArgumentDto dto;
     private final String path;
+    private final String tableName;
 
     /**
-     * @param dto  类名称可以自定义，格式为 xxx_xxx
-     * @param path 当前路径
+     * @param dto       类名称可以自定义，格式为 xxx_xxx
+     * @param path      当前路径
+     * @param tableName 表名称
      */
-    public VmsArgumentDtoBaseVmsGeneratorTemplate(VmsArgumentDto dto, String path) {
+    public VmsArgumentDtoBaseVmsGeneratorTemplate(VmsArgumentDto dto, String path, String tableName) {
         this.dto = dto;
         this.path = path;
+        this.tableName = tableName;
     }
 
     /**
@@ -51,22 +54,12 @@ public class VmsArgumentDtoBaseVmsGeneratorTemplate extends AbstractVmsGenerator
         // 设置包名称
         context.put("package", dto.getPackageName());
 
-        // 类名称如果是小驼峰，需要 [手写] 为 [下划线] 之后由 [代码 -> 小驼峰/大驼峰]
-        String className = dto.getClassName();
-        // 去除表开头前缀
-        String tablePrefixes = dto.getTablePrefixes();
-        // 将 表前缀  转成数组
-        String replaceTableName = "";
-        for (String prefix : tablePrefixes.split("[,，]")) {
-            replaceTableName = className.replace(prefix, "");
-        }
-
         // 将类名称转成小驼峰
-        String toCamelCase = TypeConvertUtil.convertToCamelCase(replaceTableName);
+        String toCamelCase = TypeConvertUtil.convertToCamelCase(tableName);
         context.put("classLowercaseName", toCamelCase);
 
         // 将类名称转成大驼峰
-        String convertToCamelCase = TypeConvertUtil.convertToCamelCase(replaceTableName, true);
+        String convertToCamelCase = TypeConvertUtil.convertToCamelCase(tableName, true);
         context.put("classUppercaseName", convertToCamelCase);
     }
 
@@ -78,7 +71,6 @@ public class VmsArgumentDtoBaseVmsGeneratorTemplate extends AbstractVmsGenerator
      */
     @Override
     void templateMerge(VelocityContext context, StringWriter writer) {
-        // Velocity 生成模板
         Template servicePathTemplate = Velocity.getTemplate("vms/" + path, "UTF-8");
         servicePathTemplate.merge(context, writer);
     }

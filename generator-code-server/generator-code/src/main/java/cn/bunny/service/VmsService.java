@@ -16,7 +16,7 @@ public interface VmsService {
      * @param dto VmsArgumentDto
      * @return 生成内容
      */
-    List<GeneratorVo> generator(VmsArgumentDto dto);
+    Map<String, List<GeneratorVo>> generator(VmsArgumentDto dto);
 
     /**
      * 获取vms文件路径

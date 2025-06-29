@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class ConcreteSqlParserDatabaseInfo extends AbstractDatabaseInfo {
-    
+
     /**
      * 解析 sql 表信息
      *
