@@ -1,135 +1,264 @@
 const MainForm = {
-    name: "MainForm", template: `
+    name: "MainForm",
+    template: `
     <div class="card shadow-sm mt-2 bg-body-secondary">
+        <!-- 表单标题和折叠控制 -->
         <div class="card-header p-3">
-            <a aria-controls="generatorFormCollapse"
-               aria-expanded="false"
-               class="d-flex align-items-center text-decoration-none"
-               data-bs-toggle="collapse"
-               href="#generatorFormCollapse">
+            <a aria-controls="generatorFormCollapse" aria-expanded="false"
+                class="d-flex align-items-center text-decoration-none" data-bs-toggle="collapse"
+                href="#generatorFormCollapse">
                 <i class="bi bi-pencil me-2"></i>
                 <span class="fw-semibold">填写生成表单信息</span>
                 <i class="bi bi-chevron-down ms-auto transition-transform rotate-180"></i>
             </a>
         </div>
-
+    
+        <!-- 表单内容区域 -->
         <div class="collapse" :class="{ 'show': defaultCollapse }" id="generatorFormCollapse">
-            <form class="card-body row">
-                <!-- 基本信息输入 -->
-                <div class="col-md-4 mb-3">
+            <form class="card-body row" @submit.prevent="handleSubmit" novalidate>
+                <!-- 基本信息输入区域 -->
+                <div class="col-md-4 mb-3 has-validation">
                     <label class="form-label fw-medium" for="authorName">作者名称</label>
-                    <input class="form-control border-secondary" id="authorName" placeholder="输入作者名称" required
-                          v-model="form.authorName" type="text">
+                    <input class="form-control border-secondary" :class="{ 'is-invalid': errors.authorName }"
+                        id="authorName" placeholder="输入作者名称" v-model="form.authorName" type="text"
+                        @input="validateField('authorName')">
+                    <div class="invalid-feedback">
+                        {{ errors.authorName || '请输入作者名称' }}
+                    </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label fw-medium"
-                           for="requestMapping">requestMapping名称</label>
-                    <input class="form-control border-secondary" id="requestMapping" placeholder="输入requestMapping名称" required
-                           v-model="form.requestMapping" type="text">
+                <div class="col-md-4 mb-3 has-validation">
+                    <label class="form-label fw-medium" for="requestMapping">requestMapping名称</label>
+                    <input class="form-control border-secondary" :class="{ 'is-invalid': errors.requestMapping }"
+                        id="requestMapping" placeholder="输入requestMapping名称" v-model="form.requestMapping" type="text"
+                        @input="validateField('requestMapping')">
+                    <div class="invalid-feedback">
+                        {{ errors.requestMapping || '请输入requestMapping名称' }}
+                    </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 has-validation">
                     <label class="form-label fw-medium" for="packageName">包名称</label>
-                    <input class="form-control border-secondary" id="packageName" placeholder="输入包名称" required
-                           v-model="form.packageName" type="text">
+                    <input class="form-control border-secondary" :class="{ 'is-invalid': errors.packageName }"
+                        id="packageName" placeholder="输入包名称" v-model="form.packageName" type="text"
+                        @input="validateField('packageName')">
+                    <div class="invalid-feedback">
+                        {{ errors.packageName || '请输入包名称' }}
+                    </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 has-validation">
                     <label class="form-label fw-medium" for="simpleDateFormat">时间格式</label>
-                    <input class="form-control border-secondary" id="simpleDateFormat" placeholder="输入时间格式" required
-                           v-model="form.simpleDateFormat" type="text">
+                    <input class="form-control border-secondary" :class="{ 'is-invalid': errors.simpleDateFormat }"
+                        id="simpleDateFormat" placeholder="输入时间格式" v-model="form.simpleDateFormat" type="text"
+                        @input="validateField('simpleDateFormat')">
+                    <div class="invalid-feedback">
+                        {{ errors.simpleDateFormat || '请输入时间格式' }}
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 has-validation">
+                    <label class="form-label fw-medium" for="tablePrefixes">去除开头前缀</label>
+                    <input class="form-control border-secondary" :class="{ 'is-invalid': errors.tablePrefixes }"
+                        id="tablePrefixes" placeholder="去除开头前缀" v-model="form.tablePrefixes" type="text"
+                        @input="validateField('tablePrefixes')">
+                    <div class="invalid-feedback">
+                        {{ errors.tablePrefixes || '请输入去除开头前缀' }}
+                    </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label fw-medium" for="tablePrefixes">去除开头前缀</label>
-                    <input class="form-control border-secondary" id="tablePrefixes" placeholder="去除开头前缀" required
-                           v-model="form.tablePrefixes" type="text">
-                </div>       
-               <div class="col-md-4 mb-3">
                     <label class="form-label fw-medium" for="comment">注释内容</label>
-                    <input class="form-control border-secondary" id="comment" placeholder="注释内容" required
-                           v-model="form.comment" type="text">
+                    <input class="form-control border-secondary" id="comment" placeholder="注释内容" v-model="form.comment"
+                        type="text" />
+                </div>                
+                <div class="col-md-12" v-show="form.tableNames.length > 0">
+                    <label class="form-label fw-medium" for="comment">已选择的要生成表({{form.tableNames.length}})：</label>
+                    <span class="badge rounded-pill text-bg-dark me-1" v-for="(item,index) in form.tableNames" :ket="index">{{item}}</span>
                 </div>
-
-                <!-- 前端模板选项 -->
-                <div class="col-12 mt-3 mb-3 p-3 bg-light rounded">
-                    <label class="form-check-inline col-form-label fw-medium">生成前端模板：</label>
-                <div class="form-check form-check-inline" v-for="(web,index) in webList" :key="index">
-                        <input class="form-check-input border-secondary" :id="web.id" type="checkbox"
-                               :value="web.name" v-model="web.checked">
-                        <label class="form-check-label" :for="web.id">{{web.label}}</label>
+    
+                    <!-- 前端模板选择区域 -->
+                    <div class="col-12 mt-3 mb-3 p-3 bg-light rounded">
+                        <label class="form-check-inline col-form-label fw-medium">生成前端模板：</label>
+                        <div class="form-check form-check-inline" v-for="(web,index) in webList" :key="index">
+                            <input class="form-check-input border-secondary" :class="{ 'is-invalid': errors.webTemplates }"
+                                :id="web.id" type="checkbox" v-model="web.checked"
+                                @change="validateTemplates">
+                            <label class="form-check-label" :for="web.id" :title="web.name">{{web.label}}</label>
+                        </div>
+                        <div class="form-check form-check-inline btn-group ms-2">
+                            <button class="btn btn-outline-primary btn-sm" type="button"
+                                @click="onTableSelectAll(webList)">全选</button>
+                            <button class="btn btn-outline-secondary btn-sm" type="button"
+                                @click="onTableInvertSelection(webList)">反选</button>
+                            <button class="btn btn-outline-danger btn-sm" type="button"
+                                @click="onTableClearAll(webList)">全不选</button>
+                        </div>
+                        <div v-if="errors.webTemplates" class="invalid-feedback d-block">
+                            {{ errors.webTemplates }}
+                        </div>
                     </div>
-                    <div class="form-check form-check-inline btn-group ms-2">
-                        <button class="btn btn-outline-primary btn-sm" type="button" @click="onTableSelectAll(webList)">全选</button>
-                        <button class="btn btn-outline-secondary btn-sm" type="button" @click="onTableInvertSelection(webList)">反选</button>
-                        <button class="btn btn-outline-danger btn-sm" type="button" @click="onTableClearAll(webList)">全不选</button>
+    
+                    <!-- 后端模板选择区域 -->
+                    <div class="col-12 mt-2 mb-3 p-3 bg-light rounded">
+                        <label class="form-check-inline col-form-label fw-medium">生成后端模板：</label>
+                        <div class="form-check form-check-inline" v-for="(server,index) in serverList" :key="index">
+                            <input class="form-check-input border-secondary"
+                                :class="{ 'is-invalid': errors.serverTemplates }" :id="server.id" type="checkbox"
+                                v-model="server.checked" @change="validateTemplates">
+                            <label class="form-check-label" :title="server.name" :for="server.id">{{server.label}}</label>
+                        </div>
+                        <div class="form-check form-check-inline btn-group ms-2">
+                            <button class="btn btn-outline-primary btn-sm" type="button"
+                                @click="onTableSelectAll(serverList)">全选</button>
+                            <button class="btn btn-outline-secondary btn-sm" type="button"
+                                @click="onTableInvertSelection(serverList)">反选</button>
+                            <button class="btn btn-outline-danger btn-sm" type="button"
+                                @click="onTableClearAll(serverList)">全不选</button>
+                        </div>
+                        <div v-if="errors.serverTemplates" class="invalid-feedback d-block">
+                            {{ errors.serverTemplates }}
+                        </div>
                     </div>
-                </div>
-
-                <!-- 后端模板选项 -->
-                <div class="col-12 mt-2 mb-3 p-3 bg-light rounded">
-                    <label class="form-check-inline col-form-label fw-medium">生成后端模板：</label>
-                    <div class="form-check form-check-inline" v-for="(server,index) in serverList" :key="index">
-                        <input class="form-check-input border-secondary" :id="server.id" type="checkbox"
-                               :value="server.name" v-model="server.checked">
-                        <label class="form-check-label" :for="server.id" :data-bs-title="server.name" 
-                        data-bs-toggle="tooltip">{{server.label}}</label>
+    
+                    <!-- 操作按钮区域 -->
+                    <div class="row mt-4">
+                        <div class="col-md-4 btn-group">
+                            <button class="btn btn-outline-primary" data-bs-title="选择数据表中所有的内容" data-bs-toggle="tooltip"
+                                type="button" @click="onSelectAll">
+                                全部选择
+                            </button>
+                            <button class="btn btn-outline-secondary" data-bs-title="将选择的表格内容反向选择" data-bs-toggle="tooltip"
+                                type="button" @click="onInvertSelection">
+                                全部反选
+                            </button>
+                            <button class="btn btn-outline-danger" data-bs-title="取消全部已经选择的数据表" data-bs-toggle="tooltip"
+                                type="button" @click="onClearAll">
+                                全部取消
+                            </button>
+                        </div>
+                        <div class="col-md-4 btn-group">
+                            <button class="btn btn-primary" data-bs-title="生成全部已经选择的数据表" data-bs-toggle="tooltip"
+                                type="submit">
+                                生成选中表
+                            </button>
+                            <button class="btn btn-warning" type="button" data-bs-title="取消全部已经选择的数据表" data-bs-toggle="tooltip" 
+                             @click="onClearGeneratorData">清空生成记录</button>
+                        </div>
+                        <div class="col-md-4 d-grid gap-2">
+                            <button class="btn btn-primary text-white" type="button">下载ZIP</button>
+                        </div>
                     </div>
-                    <div class="form-check form-check-inline btn-group ms-2">
-                        <button class="btn btn-outline-primary btn-sm" type="button" @click="onTableSelectAll(serverList)">全选</button>
-                        <button class="btn btn-outline-secondary btn-sm" type="button" @click="onTableInvertSelection(serverList)">反选</button>
-                        <button class="btn btn-outline-danger btn-sm" type="button" @click="onTableClearAll(serverList)">全不选</button>
-                    </div>
-                </div>
-
-                <!-- 操作按钮 -->
-                <div class="row mt-4">
-                    <div class="col-md-4 btn-group">
-                        <button class="btn btn-outline-primary" data-bs-title="选择数据表中所有的内容"
-                                data-bs-toggle="tooltip" type="button" @click="onSelectAll">
-                            全部选择
-                        </button>
-                        <button class="btn btn-outline-secondary" data-bs-title="将选择的表格内容反向选择"
-                                data-bs-toggle="tooltip" type="button" @click="onInvertSelection">
-                            全部反选
-                        </button>
-                        <button class="btn btn-outline-danger" data-bs-title="取消全部已经选择的数据表"
-                                data-bs-toggle="tooltip" type="button" @click="onClearAll">
-                            全部取消
-                        </button>
-                    </div>
-                    <div class="col-md-4 btn-group">
-                        <button class="btn btn-primary" data-bs-title="取消全部已经选择的数据表"
-                                data-bs-toggle="tooltip" type="button">
-                            开始生成
-                        </button>
-                        <button class="btn btn-warning" type="button">清空生成记录</button>
-                        <button class="btn btn-success" type="button">下载全部</button>
-                    </div>
-                    <div class="col-md-4 d-grid gap-2">
-                        <button class="btn btn-primary text-white" type="button">下载ZIP</button>
-                    </div>
-                </div>
             </form>
         </div>
     </div>
     `,
     props: {
-        form: {
-            type: Object,
-            default: {}
-        }
+        // 表单数据对象，包含生成代码所需的各种参数
+        form: {type: Object, required: true},
+        // 生成代码的回调函数
+        onGeneratorCode: {type: Function, required: true},
+        // 清空生成记录
+        onClearGeneratorData: {type: Function, required: true},
     },
     data() {
         return {
-            // 默认是否折叠编辑表单
+            // 控制表单默认是否展开
             defaultCollapse: true,
-            // 后端路径列表
+            // 后端模板选项列表
             serverList: ref([]),
-            // 前端路径列表
+            // 前端模板选项列表
             webList: ref([]),
-
+            // 错误信息对象
+            errors: {
+                authorName: '',
+                requestMapping: '',
+                packageName: '',
+                simpleDateFormat: '',
+                tablePrefixes: '',
+                webTemplates: '',
+                serverTemplates: ''
+            }
         }
     },
     methods: {
-        /* 获取所有vms下的文件路径 */
+        /**
+         * 验证表单字段
+         * @param {string} field - 字段名
+         */
+        validateField(field) {
+            if (!this.form[field] || this.form[field].trim() === '') {
+                this.errors[field] = '此字段为必填项';
+                return false;
+            }
+            this.errors[field] = '';
+            return true;
+        },
+
+        /* 验证模板选择 */
+        validateTemplates() {
+            // 检查列表是否有一个选中的
+            const hasWebSelected = this.webList.some(item => item.checked);
+            const hasServerSelected = this.serverList.some(item => item.checked);
+
+            // 列表都没有选中
+            if (!hasWebSelected && !hasServerSelected) {
+                this.errors.webTemplates = '请至少选择一个前端或后端模板';
+                this.errors.serverTemplates = '请至少选择一个前端或后端模板';
+                return false;
+            }
+
+            // 列表选中让错误提示小时
+            this.errors.webTemplates = '';
+            this.errors.serverTemplates = '';
+
+            // 发生选择变化时，同时父级更新表单
+            this.updateForm();
+            return true;
+        },
+
+        /* 验证整个表单 */
+        validateForm() {
+            let isValid = true;
+
+            // 验证文本字段
+            const textFields = ['authorName', 'requestMapping', 'packageName', 'simpleDateFormat', 'tablePrefixes'];
+            textFields.forEach(field => {
+                if (!this.validateField(field)) {
+                    isValid = false;
+                }
+            });
+
+            // 验证模板选择
+            if (!this.validateTemplates()) {
+                isValid = false;
+            }
+
+            return isValid;
+        },
+
+        /* 更新父级表单 */
+        updateForm() {
+            const webList = this.webList.filter(item => item.checked).map(item => item.name);
+            const serverList = this.serverList.filter(item => item.checked).map(item => item.name);
+
+            const newForm = {...this.form, path: [...webList, ...serverList,]};
+            this.$emit("update:form", newForm);
+        },
+
+        /* 处理表单提交 */
+        handleSubmit() {
+            if (this.validateForm()) {
+                this.updateForm();
+                // 如果验证通过，调用父组件提供的生成代码方法
+                this.onGeneratorCode();
+            } else {
+                // 验证失败，可以在这里添加额外的处理逻辑
+                antd.message.error("表单验证失败")
+            }
+        },
+
+        /**
+         * 获取VMS资源路径列表
+         * 从服务器获取前端和后端模板的路径列表
+         * @async
+         * @returns {Promise<void>}
+         */
         async getVmsResourcePathList() {
             const response = await axiosInstance.get("/vms/vmsResourcePathList");
             const {data, code, message} = response;
@@ -138,52 +267,58 @@ const MainForm = {
                 antd.message.error(message);
                 return;
             }
-            this.serverList = data.server;
-            this.webList = data.web;
+            // 初始化模板选择状态
+            this.serverList = data.server.map(item => ({...item, checked: false}));
+            this.webList = data.web.map(item => ({...item, checked: false}));
         },
 
-        /* 表格选择全部 */
+        /**
+         * 全选指定列表
+         * @param {Array} list - 要处理的列表
+         */
         onTableSelectAll(list) {
-            list.forEach((item) => item.checked = true)
-                .filter((item) => {
-                    console.log(item);
-                })
+            list.forEach(item => item.checked = true);
+            this.validateTemplates();
         },
 
-        /* 表格反选所选的 */
+        /**
+         * 反选指定列表
+         * @param {Array} list - 要处理的列表
+         */
         onTableInvertSelection(list) {
-            list.forEach((item) => item.checked = !item.checked);
+            list.forEach(item => item.checked = !item.checked);
+            this.validateTemplates();
         },
 
-        /* 表格全不选 */
+        /**
+         * 清空指定列表的选择
+         * @param {Array} list - 要处理的列表
+         */
         onTableClearAll(list) {
-            list.forEach((item) => item.checked = false);
+            list.forEach(item => item.checked = false);
+            this.validateTemplates();
         },
 
-        /* 全部选择 */
+        /* 全选所有模板 */
         onSelectAll() {
-            this.webList.forEach((item) => item.checked = true);
-            this.serverList.forEach((item) => item.checked = true);
+            this.onTableSelectAll(this.webList);
+            this.onTableSelectAll(this.serverList);
         },
 
-        /* 反选 */
+        /* 反选所有模板 */
         onInvertSelection() {
-            this.webList.forEach((item) => item.checked = !item.checked);
-            this.serverList.forEach((item) => item.checked = !item.checked);
+            this.onTableInvertSelection(this.webList);
+            this.onTableInvertSelection(this.serverList);
         },
 
-        /* 清除所选中的 */
+        /* 清空所有模板的选择 */
         onClearAll() {
-            this.webList.forEach((item) => item.checked = false);
-            this.serverList.forEach((item) => item.checked = false);
-        },
-
-        /* 开始生成 */
-        onGenerator() {
-
-        },
+            this.onTableClearAll(this.webList);
+            this.onTableClearAll(this.serverList);
+        }
     },
     async mounted() {
+        // 组件挂载时获取模板列表
         await this.getVmsResourcePathList();
     }
 }

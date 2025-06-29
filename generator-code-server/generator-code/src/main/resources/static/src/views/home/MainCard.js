@@ -129,11 +129,8 @@ const MainCard = defineComponent({
     </div>
     `,
     props: {
-        // 原始表列表数据，由父组件传入
-        rawTableList: {
-            type: Array,
-            default: () => []
-        },
+        /* 原始表列表数据，由父组件传入 */
+        rawTableList: {type: Array,},
     },
     data() {
         return {
@@ -163,7 +160,7 @@ const MainCard = defineComponent({
             try {
                 const response = await axiosInstance.get("/table/databaseInfoMetaData");
                 const {data, code, message} = response;
-                
+
                 if (code !== 200) {
                     antd.message.error(message);
                     return
