@@ -44,7 +44,7 @@ public class VmsCodeGeneratorService {
 
                     return dto.getPath().stream()
                             .map(path -> {
-                                VmsArgumentDtoBaseVmsGeneratorTemplate generator = new VmsArgumentDtoBaseVmsGeneratorTemplate(dto, path, tableName);
+                                VmsArgumentDtoBaseVmsGeneratorTemplate generator = new VmsArgumentDtoBaseVmsGeneratorTemplate(dto, path, tableMetaData);
                                 StringWriter writer = generator.generatorCodeTemplate(tableMetaData, columnInfoList);
                                 String processedPath = VmsUtil.handleVmFilename(path, tableMetaData.getTableName());
 

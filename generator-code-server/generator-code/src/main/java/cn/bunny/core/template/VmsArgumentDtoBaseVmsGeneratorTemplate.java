@@ -1,6 +1,7 @@
 package cn.bunny.core.template;
 
 import cn.bunny.domain.dto.VmsArgumentDto;
+import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.utils.TypeConvertUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -18,17 +19,17 @@ public class VmsArgumentDtoBaseVmsGeneratorTemplate extends AbstractVmsGenerator
 
     private final VmsArgumentDto dto;
     private final String path;
-    private final String tableName;
+    private final TableMetaData tableMetaData;
 
     /**
-     * @param dto       类名称可以自定义，格式为 xxx_xxx
-     * @param path      当前路径
-     * @param tableName 表名称
+     * @param dto           类名称可以自定义，格式为 xxx_xxx
+     * @param path          当前路径
+     * @param tableMetaData 表名称
      */
-    public VmsArgumentDtoBaseVmsGeneratorTemplate(VmsArgumentDto dto, String path, String tableName) {
+    public VmsArgumentDtoBaseVmsGeneratorTemplate(VmsArgumentDto dto, String path, TableMetaData tableMetaData) {
         this.dto = dto;
         this.path = path;
-        this.tableName = tableName;
+        this.tableMetaData = tableMetaData;
     }
 
     /**
@@ -38,6 +39,11 @@ public class VmsArgumentDtoBaseVmsGeneratorTemplate extends AbstractVmsGenerator
      */
     @Override
     void addContext(VelocityContext context) {
+        // 当前的表名
+        String tableName = tableMetaData.getTableName();
+        // 表的注释内容
+        String comment = tableMetaData.getComment();
+
         // 当前日期
         String date = new SimpleDateFormat(dto.getSimpleDateFormat()).format(new Date());
         context.put("date", date);
@@ -49,7 +55,7 @@ public class VmsArgumentDtoBaseVmsGeneratorTemplate extends AbstractVmsGenerator
         context.put("requestMapping", dto.getRequestMapping());
 
         // 表字段的注释内容
-        context.put("comment", dto.getComment());
+        context.put("comment", comment);
 
         // 设置包名称
         context.put("package", dto.getPackageName());

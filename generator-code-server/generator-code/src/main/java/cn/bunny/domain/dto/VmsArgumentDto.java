@@ -36,9 +36,6 @@ public class VmsArgumentDto {
     @Schema(name = "tablePrefixes", description = "去除表前缀")
     private String tablePrefixes;
 
-    @Schema(name = "comment", description = "注释内容")
-    private String comment;
-
     @Schema(name = "path", description = "路径")
     private List<String> path;
 

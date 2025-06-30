@@ -18,12 +18,12 @@ const MainForm = {
             <form class="card-body row" @submit.prevent="handleSubmit" novalidate>
                 <!-- 基本信息输入区域 -->
                 <div class="col-md-4 mb-3 has-validation">
-                    <label class="form-label fw-medium" for="authorName">作者名称</label>
-                    <input class="form-control border-secondary" :class="{ 'is-invalid': errors.authorName }"
-                        id="authorName" placeholder="输入作者名称" v-model="form.authorName" type="text"
-                        @input="validateField('authorName')">
+                    <label class="form-label fw-medium" for="author">作者名称</label>
+                    <input class="form-control border-secondary" :class="{ 'is-invalid': errors.author }"
+                        id="author" placeholder="输入作者名称" v-model="form.author" type="text"
+                        @input="validateField('author')">
                     <div class="invalid-feedback">
-                        {{ errors.authorName || '请输入作者名称' }}
+                        {{ errors.author || '请输入作者名称' }}
                     </div>
                 </div>
                 <div class="col-md-4 mb-3 has-validation">
@@ -62,13 +62,13 @@ const MainForm = {
                         {{ errors.tablePrefixes || '请输入去除开头前缀' }}
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label fw-medium" for="comment">注释内容</label>
-                    <input class="form-control border-secondary" id="comment" placeholder="注释内容" v-model="form.comment"
-                        type="text" />
-                </div>                
+                <!-- <div class="col-md-4 mb-3"> -->
+                <!--     <label class="form-label fw-medium" for="comment">注释内容</label> -->
+                <!--     <input class="form-control border-secondary" id="comment" placeholder="注释内容" v-model="form.comment" -->
+                <!--         type="text" /> -->
+                <!-- </div>                 -->
                 <div class="col-md-12" v-show="form.tableNames.length > 0">
-                    <label class="form-label fw-medium" for="comment">已选择的要生成表({{form.tableNames.length}})：</label>
+                    <label class="form-label fw-medium" for="tableNames">已选择的要生成表({{form.tableNames.length}})：</label>
                     <span class="badge rounded-pill text-bg-dark me-1" v-for="(item,index) in form.tableNames" :ket="index">{{item}}</span>
                 </div>
     
@@ -166,7 +166,7 @@ const MainForm = {
             webList: ref([]),
             // 错误信息对象
             errors: {
-                authorName: '',
+                author: '',
                 requestMapping: '',
                 packageName: '',
                 simpleDateFormat: '',
@@ -217,7 +217,7 @@ const MainForm = {
             let isValid = true;
 
             // 验证文本字段
-            const textFields = ['authorName', 'requestMapping', 'packageName', 'simpleDateFormat', 'tablePrefixes'];
+            const textFields = ['author', 'requestMapping', 'packageName', 'simpleDateFormat', 'tablePrefixes'];
             textFields.forEach(field => {
                 if (!this.validateField(field)) {
                     isValid = false;
