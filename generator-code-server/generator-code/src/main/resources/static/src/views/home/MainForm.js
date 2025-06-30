@@ -62,11 +62,7 @@ const MainForm = {
                         {{ errors.tablePrefixes || '请输入去除开头前缀' }}
                     </div>
                 </div>
-                <!-- <div class="col-md-4 mb-3"> -->
-                <!--     <label class="form-label fw-medium" for="comment">注释内容</label> -->
-                <!--     <input class="form-control border-secondary" id="comment" placeholder="注释内容" v-model="form.comment" -->
-                <!--         type="text" /> -->
-                <!-- </div>                 -->
+
                 <div class="col-md-12" v-show="form.tableNames.length > 0">
                     <label class="form-label fw-medium" for="tableNames">已选择的要生成表({{form.tableNames.length}})：</label>
                     <span class="badge rounded-pill text-bg-dark me-1" v-for="(item,index) in form.tableNames" :ket="index">{{item}}</span>
@@ -141,7 +137,7 @@ const MainForm = {
                              @click="onClearGeneratorData">清空生成记录</button>
                         </div>
                         <div class="col-md-4 d-grid gap-2">
-                            <button class="btn btn-primary text-white" type="button">下载ZIP</button>
+                            <button class="btn btn-primary text-white" type="button" @click="onDownloadZip">下载ZIP</button>
                         </div>
                     </div>
             </form>
@@ -270,6 +266,54 @@ const MainForm = {
             // 初始化模板选择状态
             this.serverList = data.server.map(item => ({...item, checked: false}));
             this.webList = data.web.map(item => ({...item, checked: false}));
+        },
+
+        /**
+         * 下载Zip文件
+         * @returns {Promise<void>}
+         */
+        async onDownloadZip() {
+            try {
+                const response = await axiosInstance({
+                    url: "/vms/downloadByZip",
+                    method: "POST",
+                    data: this.form,
+                    responseType: 'blob' // 重要：指定响应类型为blob
+                });
+
+                // 从响应头中获取文件名
+                const contentDisposition = response.headers['content-disposition'];
+                let fileName = 'download.zip';
+                if (contentDisposition) {
+                    const fileNameMatch = contentDisposition.match(/filename=(.+)/);
+                    if (fileNameMatch && fileNameMatch[1]) {
+                        fileName = fileNameMatch[1];
+                        // 处理可能的编码文件名（如UTF-8编码）
+                        if (fileName.startsWith("UTF-8''")) {
+                            fileName = decodeURIComponent(fileName.replace("UTF-8''", ''));
+                        }
+                    }
+                }
+
+                // 创建Blob对象
+                const blob = new Blob([response.data]);
+
+                // 创建下载链接
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = fileName;
+                document.body.appendChild(link);
+
+                // 触发点击下载
+                link.click();
+
+                // 清理
+                window.URL.revokeObjectURL(downloadUrl);
+                document.body.removeChild(link);
+            } catch (error) {
+                console.error('下载失败:', error);
+            }
         },
 
         /**

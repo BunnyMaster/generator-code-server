@@ -62,7 +62,7 @@ public class VmsServiceImpl implements VmsService {
         // 下载文件名称
         long currentTimeMillis = System.currentTimeMillis();
         String digestHex = MD5.create().digestHex(currentTimeMillis + "");
-        String generateZipFilename = digestHex + ".zip";
+        String generateZipFilename = "generator-" + digestHex.substring(0, 4) + ".zip";
 
         // 设置响应头
         HttpHeaders headers = new HttpHeaders();

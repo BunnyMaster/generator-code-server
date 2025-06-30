@@ -1,7 +1,7 @@
 // axios 配置
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:8800/api',
-    timeout: 10000,
+    timeout: 16000,
     headers: {'Content-Type': 'application/json;charset=utf-8'},
 });
 
