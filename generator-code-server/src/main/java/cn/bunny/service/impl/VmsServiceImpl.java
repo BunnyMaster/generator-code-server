@@ -1,11 +1,11 @@
 package cn.bunny.service.impl;
 
+import cn.bunny.core.vms.VmsCodeGeneratorService;
+import cn.bunny.core.vms.VmsZipService;
 import cn.bunny.domain.dto.VmsArgumentDto;
 import cn.bunny.domain.vo.GeneratorVo;
 import cn.bunny.domain.vo.VmsPathVo;
 import cn.bunny.service.VmsService;
-import cn.bunny.service.impl.vms.VmsCodeGeneratorService;
-import cn.bunny.service.impl.vms.VmsZipService;
 import cn.bunny.utils.ResourceFileUtil;
 import cn.bunny.utils.VmsUtil;
 import cn.hutool.crypto.digest.MD5;

@@ -1,4 +1,4 @@
-package cn.bunny.service.impl.vms;
+package cn.bunny.core.vms;
 
 import cn.bunny.domain.dto.VmsArgumentDto;
 import cn.bunny.domain.vo.GeneratorVo;

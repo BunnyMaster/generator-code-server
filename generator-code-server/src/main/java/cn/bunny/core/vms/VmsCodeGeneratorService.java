@@ -1,4 +1,4 @@
-package cn.bunny.service.impl.vms;
+package cn.bunny.core.vms;
 
 import cn.bunny.core.provider.DatabaseMetadataProvider;
 import cn.bunny.core.provider.SqlMetadataProvider;
