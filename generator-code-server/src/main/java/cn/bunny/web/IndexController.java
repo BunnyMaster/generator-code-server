@@ -8,12 +8,12 @@ public class IndexController {
 
     @GetMapping("/")
     public String indexPage() {
-        return "redirect:/main";
+        return "redirect:/database";
     }
 
-    @GetMapping("main")
+    @GetMapping("database")
     public String databasePage() {
-        return "main";
+        return "database";
     }
 
     @GetMapping("/sql")

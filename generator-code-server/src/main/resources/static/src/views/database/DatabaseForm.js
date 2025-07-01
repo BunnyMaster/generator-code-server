@@ -1,4 +1,4 @@
-const MainForm = {
+const DatabaseForm = {
     name: "MainForm",
     template: `
     <div class="card shadow-sm mt-2 bg-body-secondary">

@@ -1,4 +1,4 @@
-const MainGeneratorPage = defineComponent({
+const DatabaseGeneratorPage = defineComponent({
     name: "MainGeneratorPage",
     template: `
 <div class="offcanvas offcanvas-start" data-bs-scroll="false" tabindex="-1" ref="offcanvasElementRef">

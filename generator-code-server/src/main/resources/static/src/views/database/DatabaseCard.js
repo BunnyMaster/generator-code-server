@@ -1,4 +1,4 @@
-const MainCard = defineComponent({
+const DatabaseCard = defineComponent({
     name: "MainCard",
     template: `
     <div class="card shadow-sm position-relative">

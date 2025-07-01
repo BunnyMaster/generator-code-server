@@ -33,20 +33,20 @@
         <app-header></app-header>
 
         <!-- 主卡片 -->
-        <main-card :raw-table-list="rawTableList" @get-database-table-list="getDatabaseTableList"
-                   v-model:db-select="dbSelect" v-model:table-select="tableSelect"></main-card>
+        <database-card :raw-table-list="rawTableList" @get-database-table-list="getDatabaseTableList"
+                       v-model:db-select="dbSelect" v-model:table-select="tableSelect"></database-card>
 
         <!-- 填写生成表单 -->
-        <main-form :generator-code-loading="generatorCodeLoading" :on-clear-generator-data="onClearGeneratorData"
-                   :on-generator-code="onGeneratorCode" ref="mainFormRef" v-model:form="form"></main-form>
+        <database-form :generator-code-loading="generatorCodeLoading" :on-clear-generator-data="onClearGeneratorData"
+                       :on-generator-code="onGeneratorCode" ref="mainFormRef" v-model:form="form"></database-form>
 
         <!-- 表格显示 -->
-        <main-table :db-select="dbSelect" :loading="loading" :on-generator-code="onGeneratorCode"
-                    :raw-table-list="rawTableList" :table-list="tableList" v-model:form="form"></main-table>
+        <database-table :db-select="dbSelect" :loading="loading" :on-generator-code="onGeneratorCode"
+                        :raw-table-list="rawTableList" :table-list="tableList" v-model:form="form"></database-table>
 
         <!-- 模板生成页面 -->
-        <main-generator-page :generator-data="generatorData" ref="mainGeneratorRef"
-                             v-model:generator-page-flag="generatorPageFlag"></main-generator-page>
+        <database-generator-page :generator-data="generatorData" ref="mainGeneratorRef"
+                                 v-model:generator-page-flag="generatorPageFlag"></database-generator-page>
     </div>
 </div>
 </body>
@@ -63,10 +63,10 @@
 
 <!-- 引入组件 -->
 <script th:src="@{/src/components/AppHeader.js}"></script>
-<script th:src="@{/src/views/main/MainCard.js}"></script>
-<script th:src="@{/src/views/main/MainForm.js}"></script>
-<script th:src="@{/src/views/main/MainTable.js}"></script>
-<script th:src="@{/src/views/main/MainGeneratorPage.js}"></script>
+<script th:src="@{/src/views/database/DatabaseCard.js}"></script>
+<script th:src="@{/src/views/database/DatabaseForm.js}"></script>
+<script th:src="@{/src/views/database/DatabaseTable.js}"></script>
+<script th:src="@{/src/views/database/DatabaseGeneratorPage.js}"></script>
 
 <script>
     const {createApp, ref} = Vue
@@ -187,10 +187,10 @@
 
     // 注册组件
     app.component('AppHeader', AppHeader);
-    app.component('MainCard', MainCard);
-    app.component('MainForm', MainForm);
-    app.component('MainTable', MainTable);
-    app.component('MainGeneratorPage', MainGeneratorPage);
+    app.component('DatabaseCard', DatabaseCard);
+    app.component('DatabaseForm', DatabaseForm);
+    app.component('DatabaseTable', DatabaseTable);
+    app.component('DatabaseGeneratorPage', DatabaseGeneratorPage);
 
     app.mount('#app');
 </script>

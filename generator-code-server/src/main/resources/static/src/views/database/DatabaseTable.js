@@ -1,4 +1,4 @@
-const MainTable = defineComponent({
+const DatabaseTable = defineComponent({
     name: "MainTable",
     template: `
 <div class="card mt-2 shadow-sm">
