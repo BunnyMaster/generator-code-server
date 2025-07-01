@@ -1,7 +1,7 @@
 package cn.bunny.service.impl.vms;
 
-import cn.bunny.core.factory.ConcreteDatabaseInfo;
-import cn.bunny.core.factory.ConcreteSqlParserDatabaseInfo;
+import cn.bunny.core.factory.ConcreteDatabaseInfoService;
+import cn.bunny.core.factory.ConcreteSqlParserDatabaseInfoService;
 import cn.bunny.core.template.VmsArgumentDtoBaseVmsGeneratorTemplate;
 import cn.bunny.domain.dto.VmsArgumentDto;
 import cn.bunny.domain.entity.ColumnMetaData;
@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VmsCodeGeneratorService {
 
-    private final ConcreteDatabaseInfo databaseInfoCore;
-    private final ConcreteSqlParserDatabaseInfo sqlParserDatabaseInfo;
+    private final ConcreteDatabaseInfoService databaseInfoCore;
+    private final ConcreteSqlParserDatabaseInfoService sqlParserDatabaseInfo;
 
     /**
      * 根据DTO生成代码模板

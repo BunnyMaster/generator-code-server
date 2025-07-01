@@ -15,7 +15,7 @@ import java.sql.ResultSet;
 import java.util.*;
 
 @Component
-public class ConcreteDatabaseInfo extends AbstractDatabaseInfo {
+public class ConcreteDatabaseInfoService extends AbstractDatabaseInfo {
 
     @Value("${bunny.master.database}")
     private String currentDatabase;

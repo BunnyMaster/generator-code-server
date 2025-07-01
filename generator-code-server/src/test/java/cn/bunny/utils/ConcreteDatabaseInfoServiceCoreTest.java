@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-class ConcreteDatabaseInfoCoreTest {
+class ConcreteDatabaseInfoServiceCoreTest {
 
     String tableName = "sys_i18n";
 

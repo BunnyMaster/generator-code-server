@@ -1,5 +1,6 @@
 package cn.bunny.domain.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,23 +12,25 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "TableMetaData", description = "表信息数据")
 public class TableMetaData {
 
-    /* 表名 */
+    @Schema(name = "tableName", description = "表名")
     private String tableName;
 
-    /* 注释内容 */
+    @Schema(name = "comment", description = "注释内容")
     private String comment;
 
-    /* 表目录 */
+    @Schema(name = "tableCats", description = "表目录")
     private String tableCat;
 
-    /* 表类型（通常是"TABLE"） */
+    @Schema(name = "tableType", description = "表类型（通常是\"TABLE\"）")
     private String tableType;
 
-    /* 类名 */
+    @Schema(name = "className", description = "类名")
     private String className;
 
-    /* 列名称 */
+    @Schema(name = "columns", description = "列名称")
     private List<ColumnMetaData> columns;
+
 }

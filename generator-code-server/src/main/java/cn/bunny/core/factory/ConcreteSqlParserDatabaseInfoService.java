@@ -2,6 +2,7 @@ package cn.bunny.core.factory;
 
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
+import cn.bunny.exception.GeneratorCodeException;
 import cn.bunny.utils.TypeConvertUtil;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -15,13 +16,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class ConcreteSqlParserDatabaseInfo extends AbstractDatabaseInfo {
+public class ConcreteSqlParserDatabaseInfoService extends AbstractDatabaseInfo {
 
     /**
      * 解析 sql 表信息
+     * 先解析SQL语句，解析列字段信息
      *
      * @param sql 表名称或sql
      * @return 表西悉尼
+     * @see CCJSqlParserUtil 使用这个工具进行SQL的解析
      */
     @Override
     public TableMetaData getTableMetadata(String sql) {
@@ -32,8 +35,9 @@ public class ConcreteSqlParserDatabaseInfo extends AbstractDatabaseInfo {
         try {
             statement = CCJSqlParserUtil.parse(sql);
         } catch (JSQLParserException e) {
-            throw new RuntimeException("SQL解析失败");
+            throw new GeneratorCodeException("SQL解析失败");
         }
+
         if (!(statement instanceof CreateTable createTable)) {
             throw new IllegalArgumentException("缺少SQL语句");
         }
