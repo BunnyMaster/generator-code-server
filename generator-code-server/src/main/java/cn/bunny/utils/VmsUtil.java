@@ -30,7 +30,7 @@ public class VmsUtil {
         // 大驼峰名称
         String CamelCase = MysqlTypeConvertUtil.convertToCamelCase(className, true);
         // 小驼峰名称
-        String camelCase = MysqlTypeConvertUtil.convertToCamelCase(className);
+        String smallCamelCase = MysqlTypeConvertUtil.convertToCamelCase(className);
 
         // 当前文件名
         String filename = splitPaths[splitPathsSize];
@@ -52,8 +52,9 @@ public class VmsUtil {
             filename = CamelCase + typeMappingsFilename + "." + extension;
         }
 
-        if (filename.contains("vue") && !filename.contains("index")) {
-            filename = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, camelCase) + "-" + name + "." + extension;
+        if ((filename.contains("vue") || filename.contains("ts") || filename.contains("js"))
+                && !filename.contains("index")) {
+            filename = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, smallCamelCase) + "-" + name + "." + extension;
         }
 
         splitPaths[splitPathsSize] = filename;

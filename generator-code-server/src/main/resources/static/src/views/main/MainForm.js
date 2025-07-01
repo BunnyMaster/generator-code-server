@@ -129,7 +129,12 @@ const MainForm = {
                             </button>
                         </div>
                         <div class="col-md-4 btn-group">
-                            <button class="btn btn-primary" data-bs-title="生成全部已经选择的数据表" data-bs-toggle="tooltip"
+                           <button class="btn btn-primary shadow-sm" disabled type="button"
+                            v-if="generatorCodeLoading">
+                                <span aria-hidden="true" class="spinner-grow spinner-grow-sm"></span>
+                                <span role="status">生成选中表...</span>
+                            </button>
+                            <button v-else class="btn btn-primary" data-bs-title="生成全部已经选择的数据表" data-bs-toggle="tooltip"
                                 type="submit">
                                 生成选中表
                             </button>
@@ -137,7 +142,13 @@ const MainForm = {
                              @click="onClearGeneratorData">清空生成记录</button>
                         </div>
                         <div class="col-md-4 d-grid gap-2">
-                            <button class="btn btn-primary text-white" type="button" @click="onDownloadZip">下载ZIP</button>
+                             <button class="btn btn-primary shadow-sm" disabled type="button"
+                                    v-if="downloadLoading">
+                                <span aria-hidden="true" class="spinner-grow spinner-grow-sm"></span>
+                                <span role="status">下载ZIP...</span>
+                            </button>
+                            
+                            <button v-else class="btn btn-primary text-white" type="button" @click="onDownloadZip">下载ZIP</button>
                         </div>
                     </div>
             </form>
@@ -151,6 +162,8 @@ const MainForm = {
         onGeneratorCode: {type: Function, required: true},
         // 清空生成记录
         onClearGeneratorData: {type: Function, required: true},
+        // 生成代码加载
+        generatorCodeLoading: {type: Boolean, required: true},
     },
     data() {
         return {
@@ -169,7 +182,8 @@ const MainForm = {
                 tablePrefixes: '',
                 webTemplates: '',
                 serverTemplates: ''
-            }
+            },
+            downloadLoading: ref(false),
         }
     },
     methods: {
@@ -273,6 +287,7 @@ const MainForm = {
          * @returns {Promise<void>}
          */
         async onDownloadZip() {
+            this.downloadLoading = true;
             try {
                 const response = await axiosInstance({
                     url: "/vms/downloadByZip",
@@ -314,6 +329,8 @@ const MainForm = {
             } catch (error) {
                 console.error('下载失败:', error);
             }
+
+            this.downloadLoading = false;
         },
 
         /**

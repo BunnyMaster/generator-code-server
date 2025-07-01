@@ -65,9 +65,8 @@
                    v-model:db-select="dbSelect" v-model:table-select="tableSelect"></main-card>
 
         <!-- 填写生成表单 -->
-        <main-form :on-clear-generator-data="onClearGeneratorData" :on-generator-code="onGeneratorCode"
-                   ref="mainFormRef"
-                   v-model:form="form"></main-form>
+        <main-form :generator-code-loading="generatorCodeLoading" :on-clear-generator-data="onClearGeneratorData"
+                   :on-generator-code="onGeneratorCode" ref="mainFormRef" v-model:form="form"></main-form>
 
         <!-- 表格显示 -->
         <main-table :db-select="dbSelect" :loading="loading" :on-generator-code="onGeneratorCode"
@@ -113,6 +112,8 @@
                 rawTableList: ref([]),
                 // 是否加载
                 loading: ref(false),
+                // 是否正在生成
+                generatorCodeLoading: ref(false),
                 // 提交的表单
                 form: ref({
                     // 作者名称
@@ -164,6 +165,7 @@
              * @returns {Promise<void>}
              */
             async onGeneratorCode() {
+                this.generatorCodeLoading = true;
                 // 验证表单是否通过
                 const isValidate = this.$refs.mainFormRef.validateForm();
                 if (!isValidate) return;
@@ -172,12 +174,15 @@
                 const {data, code, message} = await axiosInstance.post("/vms/generator", this.form);
 
                 // 判断是否请求成功
-                if (code !== 200) return;
-                else antd.message.success(message);
+                if (code !== 200) {
+                    this.generatorCodeLoading = false;
+                    return;
+                } else antd.message.success(message);
 
                 // 显示生成的页面
                 this.generatorData = data;
                 this.generatorPageFlag = true;
+                this.generatorCodeLoading = false;
 
                 // 等待 DOM 更新，之后手动更新代码高亮
                 await this.$nextTick();
