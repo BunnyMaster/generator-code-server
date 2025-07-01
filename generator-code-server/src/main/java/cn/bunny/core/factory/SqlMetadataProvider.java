@@ -1,9 +1,12 @@
 package cn.bunny.core.factory;
 
+import cn.bunny.core.dialect.DatabaseDialect;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.exception.GeneratorCodeException;
-import cn.bunny.utils.TypeConvertUtil;
+import cn.bunny.exception.SqlParseException;
+import cn.bunny.utils.MysqlTypeConvertUtil;
+import lombok.RequiredArgsConstructor;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
@@ -12,11 +15,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
+@RequiredArgsConstructor
 public class SqlMetadataProvider implements IMetadataProvider {
+
+    private final DatabaseDialect dialect;
 
     /**
      * 解析 sql 表信息
@@ -49,11 +53,8 @@ public class SqlMetadataProvider implements IMetadataProvider {
         String tableOptionsStrings = String.join(" ", createTable.getTableOptionsStrings());
 
         // 注释信息
-        Pattern pattern = Pattern.compile("COMMENT\\s*=\\s*'(.*?)'", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(tableOptionsStrings);
-        if (matcher.find()) {
-            tableInfo.setComment(matcher.group(1));
-        }
+        String comment = dialect.extractTableComment(tableOptionsStrings);
+        tableInfo.setComment(comment);
 
         return tableInfo;
     }
@@ -71,11 +72,11 @@ public class SqlMetadataProvider implements IMetadataProvider {
         try {
             statement = CCJSqlParserUtil.parse(identifier);
         } catch (JSQLParserException e) {
-            throw new RuntimeException("SQL解析失败");
+            throw new SqlParseException("Fail parse sql", e.getCause());
         }
 
         if (!(statement instanceof CreateTable createTable)) {
-            throw new IllegalArgumentException("缺少SQL语句");
+            throw new IllegalArgumentException("Lack of Sql Statement");
         }
 
         return createTable.getColumnDefinitions()
@@ -91,24 +92,23 @@ public class SqlMetadataProvider implements IMetadataProvider {
                     columnInfo.setJdbcType(dataType);
 
                     // 设置 Java 类型
-                    String javaType = TypeConvertUtil.convertToJavaType(dataType.contains("varchar") ? "varchar" : dataType);
+                    String javaType = MysqlTypeConvertUtil.convertToJavaType(dataType.contains("varchar") ? "varchar" : dataType);
                     columnInfo.setJavaType(javaType);
 
                     // 设置 JavaScript 类型
                     columnInfo.setJavascriptType(StringUtils.uncapitalize(javaType));
 
                     // 列字段转成 下划线 -> 小驼峰
-                    columnInfo.setLowercaseName(TypeConvertUtil.convertToCamelCase(column.getColumnName()));
+                    columnInfo.setLowercaseName(MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName()));
                     // 列字段转成 下划线 -> 大驼峰名称
-                    columnInfo.setUppercaseName(TypeConvertUtil.convertToCamelCase(column.getColumnName(), true));
+                    columnInfo.setUppercaseName(MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), true));
 
                     // 解析注释
                     List<String> columnSpecs = column.getColumnSpecs();
-                    String columnSpecsString = String.join(" ", columnSpecs);
-                    Matcher columnSpecsStringMatcher = Pattern.compile("COMMENT\\s*'(.*?)'", Pattern.CASE_INSENSITIVE).matcher(columnSpecsString);
-                    if (columnSpecsStringMatcher.find()) {
-                        columnInfo.setComment(columnSpecsStringMatcher.group(1));
-                    }
+
+                    // 设置列属性信息
+                    String comment = dialect.extractColumnComment(columnSpecs);
+                    columnInfo.setComment(comment);
 
                     return columnInfo;
                 }).toList();

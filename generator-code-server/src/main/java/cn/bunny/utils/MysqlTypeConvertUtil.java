@@ -4,8 +4,8 @@ import com.google.common.base.CaseFormat;
 import org.assertj.core.util.introspection.CaseFormatUtils;
 
 /* 类型转换，数据库转Java类型等 */
-public class TypeConvertUtil {
-
+public class MysqlTypeConvertUtil {
+ 
     /**
      * 将数据库类型转换为Java类型
      */

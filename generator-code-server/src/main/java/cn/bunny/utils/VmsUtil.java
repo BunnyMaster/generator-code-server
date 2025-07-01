@@ -28,9 +28,9 @@ public class VmsUtil {
         int splitPathsSize = splitPaths.length - 1;
 
         // 大驼峰名称
-        String CamelCase = TypeConvertUtil.convertToCamelCase(className, true);
+        String CamelCase = MysqlTypeConvertUtil.convertToCamelCase(className, true);
         // 小驼峰名称
-        String camelCase = TypeConvertUtil.convertToCamelCase(className);
+        String camelCase = MysqlTypeConvertUtil.convertToCamelCase(className);
 
         // 当前文件名
         String filename = splitPaths[splitPathsSize];

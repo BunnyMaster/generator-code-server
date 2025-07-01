@@ -4,7 +4,9 @@ import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.DatabaseInfoMetaData;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.exception.GeneratorCodeException;
-import cn.bunny.utils.TypeConvertUtil;
+import cn.bunny.exception.MetadataNotFoundException;
+import cn.bunny.exception.MetadataProviderException;
+import cn.bunny.utils.MysqlTypeConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,7 +111,7 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
                         .tableType(tableType)
                         .build();
             } else {
-                throw new RuntimeException("数据表不存在");
+                throw new MetadataNotFoundException("Table not found: " + identifier);
             }
 
             return tableMetaData;
@@ -124,26 +126,29 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
      * @return 所有表信息
      */
     public List<TableMetaData> getTableMetadataBatch(String dbName) {
-        // 当前数据库数据库所有的表
         List<TableMetaData> allTableInfo = new ArrayList<>();
 
         try (Connection conn = dataSource.getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
-
-            // 当前数据库中所有的表
             ResultSet tables = metaData.getTables(dbName, null, "%", new String[]{"TABLE"});
 
             while (tables.next()) {
-                // 表名称
-                dbName = tables.getString("TABLE_NAME");
+                String tableName = tables.getString("TABLE_NAME");
+                String remarks = tables.getString("REMARKS");
+                String tableCat = tables.getString("TABLE_CAT");
+                String tableType = tables.getString("TABLE_TYPE");
 
-                // 设置表信息
-                TableMetaData tableMetaData = getTableMetadata(dbName);
+                TableMetaData tableMetaData = TableMetaData.builder()
+                        .tableName(tableName)
+                        .comment(remarks)
+                        .tableCat(tableCat)
+                        .tableType(tableType)
+                        .build();
 
                 allTableInfo.add(tableMetaData);
             }
         } catch (Exception e) {
-            throw new GeneratorCodeException("Get error of [current/all] database tables" + e.getMessage());
+            throw new MetadataProviderException("Failed to get batch table metadata", e);
         }
 
         return allTableInfo;
@@ -175,13 +180,13 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
                     // 设置列字段
                     column.setColumnName(columnName);
                     // 列字段转成 下划线 -> 小驼峰
-                    column.setLowercaseName(TypeConvertUtil.convertToCamelCase(column.getColumnName()));
+                    column.setLowercaseName(MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName()));
                     // 列字段转成 下划线 -> 大驼峰名称
-                    column.setUppercaseName(TypeConvertUtil.convertToCamelCase(column.getColumnName(), true));
+                    column.setUppercaseName(MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), true));
                     // 字段类型
                     column.setJdbcType(typeName);
                     // 字段类型转 Java 类型
-                    String javaType = TypeConvertUtil.convertToJavaType(typeName);
+                    String javaType = MysqlTypeConvertUtil.convertToJavaType(typeName);
                     column.setJavaType(javaType);
                     // 字段类型转 JavaScript 类型
                     column.setJavascriptType(StringUtils.uncapitalize(javaType));
@@ -201,7 +206,7 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
 
             return new ArrayList<>(map.values());
         } catch (Exception e) {
-            throw new RuntimeException("Get error of database columns mete data" + e.getMessage());
+            throw new MetadataProviderException("Failed to get table metadata for: " + identifier, e);
         }
     }
 }

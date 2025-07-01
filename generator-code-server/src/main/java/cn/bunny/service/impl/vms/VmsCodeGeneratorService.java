@@ -32,34 +32,45 @@ public class VmsCodeGeneratorService {
      * 根据DTO生成代码模板
      *
      * @param dto 包含生成参数的数据传输对象
-     * @return 生成的代码模板列表
+     * @return 按表名分组的生成的代码模板列表
      */
     public Map<String, List<GeneratorVo>> generateCode(VmsArgumentDto dto) {
-        String sql = dto.getSql();
+        // 提前获取可复用的数据
+        final String sql = dto.getSql();
+        final List<String> tableNames = dto.getTableNames();
+        final List<String> paths = dto.getPath();
 
-        return dto.getTableNames().stream()
+        return tableNames.parallelStream()  // 使用并行流提高多表处理效率
                 .map(tableName -> {
+                    // 获取表元数据和列信息
                     TableMetaData tableMetaData = getTableMetadata(dto, tableName);
                     List<ColumnMetaData> columnInfoList = getColumnInfoList(sql, tableName);
 
-                    return dto.getPath().stream()
-                            .map(path -> {
-                                VmsTemplateGenerator generator = new VmsTemplateGenerator(dto, path, tableMetaData);
-                                StringWriter writer = generator.generatorCodeTemplate(tableMetaData, columnInfoList);
-                                String processedPath = VmsUtil.handleVmFilename(path, tableMetaData.getTableName());
-
-                                return GeneratorVo.builder()
-                                        .id(UUID.randomUUID().toString())
-                                        .code(writer.toString())
-                                        .comment(tableMetaData.getComment())
-                                        .tableName(tableMetaData.getTableName())
-                                        .path(processedPath)
-                                        .build();
-                            })
+                    // 为每个路径生成模板
+                    return paths.stream()
+                            .map(path -> generateTemplate(dto, path, tableMetaData, columnInfoList))
                             .toList();
                 })
                 .flatMap(List::stream)
                 .collect(Collectors.groupingBy(GeneratorVo::getTableName));
+    }
+
+    /**
+     * 生成单个模板
+     */
+    private GeneratorVo generateTemplate(VmsArgumentDto dto, String path,
+                                         TableMetaData tableMetaData, List<ColumnMetaData> columnInfoList) {
+        VmsTemplateGenerator generator = new VmsTemplateGenerator(dto, path, tableMetaData);
+        StringWriter writer = generator.generatorCodeTemplate(tableMetaData, columnInfoList);
+        String processedPath = VmsUtil.handleVmFilename(path, tableMetaData.getTableName());
+
+        return GeneratorVo.builder()
+                .id(UUID.randomUUID().toString())
+                .code(writer.toString())
+                .comment(tableMetaData.getComment())
+                .tableName(tableMetaData.getTableName())
+                .path(processedPath)
+                .build();
     }
 
     /**

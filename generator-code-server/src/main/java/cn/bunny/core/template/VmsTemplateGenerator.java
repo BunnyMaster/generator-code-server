@@ -2,7 +2,7 @@ package cn.bunny.core.template;
 
 import cn.bunny.domain.dto.VmsArgumentDto;
 import cn.bunny.domain.entity.TableMetaData;
-import cn.bunny.utils.TypeConvertUtil;
+import cn.bunny.utils.MysqlTypeConvertUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -61,11 +61,11 @@ public class VmsTemplateGenerator extends AbstractTemplateGenerator {
         context.put("package", dto.getPackageName());
 
         // 将类名称转成小驼峰
-        String toCamelCase = TypeConvertUtil.convertToCamelCase(tableName);
+        String toCamelCase = MysqlTypeConvertUtil.convertToCamelCase(tableName);
         context.put("classLowercaseName", toCamelCase);
 
         // 将类名称转成大驼峰
-        String convertToCamelCase = TypeConvertUtil.convertToCamelCase(tableName, true);
+        String convertToCamelCase = MysqlTypeConvertUtil.convertToCamelCase(tableName, true);
         context.put("classUppercaseName", convertToCamelCase);
     }
 
