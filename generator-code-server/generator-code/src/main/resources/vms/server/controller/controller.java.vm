@@ -1,0 +1,65 @@
+package ${package}.controller;
+
+import cn.bunny.domain.pojo.result.Result;
+import cn.bunny.domain.pojo.result.ResultCodeEnum;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+import cn.bunny.domain.pojo.result.PageResult;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import java.util.List;
+
+/**
+ * <p>
+ * ${comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Tag(name = "${comment}" , description = "${comment}相关接口" )
+@RestController
+@RequestMapping("${requestMapping}/${classLowercaseName}" )
+public class ${classUppercaseName}Controller {
+
+    @Resource
+    private ${classUppercaseName}Service ${classLowercaseName}Service;
+
+    @Operation(summary = "分页查询${comment}" , description = "分页${comment}" )
+    @GetMapping("{page}/{limit}" )
+    public Result<PageResult<${classUppercaseName}Vo>> get${classUppercaseName}Page(
+            @Parameter(name = "page" , description = "当前页" , required = true)
+            @PathVariable("page" ) Integer page,
+            @Parameter(name = "limit" , description = "每页记录数" , required = true)
+            @PathVariable("limit" ) Integer limit,
+            ${classUppercaseName}Dto dto) {
+        Page<${classUppercaseName}> pageParams = new Page<>(page, limit);
+        PageResult<${classUppercaseName}Vo> pageResult = ${classLowercaseName}Service.get${classUppercaseName}Page(pageParams, dto);
+        return Result.success(pageResult);
+    }
+
+    @Operation(summary = "添加${comment}" , description = "添加${comment}" )
+    @PostMapping()
+    public Result<String> add${classUppercaseName}(@Valid @RequestBody ${classUppercaseName}to dto) {
+            ${classLowercaseName}Service.add${classUppercaseName}(dto);
+        return Result.success(ResultCodeEnum.ADD_SUCCESS);
+    }
+
+    @Operation(summary = "更新${comment}" , description = "更新${comment}" )
+    @PutMapping()
+    public Result<String> update${classUppercaseName}(@Valid @RequestBody ${classUppercaseName}Dto dto) {
+            ${classLowercaseName}Service.update${classUppercaseName}(dto);
+        return Result.success(ResultCodeEnum.UPDATE_SUCCESS);
+    }
+
+    @Operation(summary = "删除${comment}" , description = "删除${comment}" )
+    @DeleteMapping()
+    public Result<String> delete${classUppercaseName}(@RequestBody List<Long> ids) {
+            ${classLowercaseName}Service.delete${classUppercaseName}(ids);
+        return Result.success(ResultCodeEnum.DELETE_SUCCESS);
+    }
+}

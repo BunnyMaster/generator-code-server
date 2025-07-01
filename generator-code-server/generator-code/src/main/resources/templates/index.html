@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>代码生成器前端</title>
+    <!-- 本地引入 Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/lib/css/bootstrap.min.css}">
+    <!-- 本地引入 Bootstrap Icons -->
+    <link rel="stylesheet" th:href="@{/lib/css/bootstrap-icons.min.css}">
+    <!-- 本地引入 Vue.js -->
+    <script th:src="@{/lib/js/vue/vue.global.js}"></script>
+    <!-- 本地引入 Bootstrap JS -->
+    <script th:src="@{/lib/js/boostrap/bootstrap.bundle.min.js}"></script>
+    <!-- 本地引入 popper JS -->
+    <script th:src="@{/lib/js/boostrap/popper.min.js}"></script>
+    <!-- 本地引入 axios JS -->
+    <script th:src="@{/lib/js/axios/axios.min.js}"></script>
+    <!-- 加载全局axios配置 -->
+    <script th:src="@{/lib/js/axios/axios-global.js}"></script>
+</head>
+
+<body>
+<div id="app">
+    <div class="container my-4">
+        <!-- 主标题 -->
+        <app-header></app-header>
+
+        <!-- 主卡片 -->
+        <main-card :raw-table-list="rawTableList"
+                   @get-database-table-list="getDatabaseTableList"
+                   v-model:db-select="dbSelect" v-model:table-select="tableSelect"></main-card>
+
+        <!-- 填写生成表单 -->
+        <main-form></main-form>
+
+        <!-- 表格显示 -->
+        <main-table :loading="loading" :raw-table-list="rawTableList" :table-list="tableList"></main-table>
+    </div>
+</div>
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 初始化所有tooltip
+        const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        [...tooltips].forEach(t => new bootstrap.Tooltip(t));
+    });
+</script>
+<script th:src="@{/views/components/AppHeader.js}"></script>
+<script th:src="@{/views/index/MainCard.js}"></script>
+<script th:src="@{/views/index/MainForm.js}"></script>
+<script th:src="@{/views/index/MainTable.js}"></script>
+<script>
+    const {createApp, ref} = Vue
+
+    const app = createApp({
+        setup() {
+            return {
+                // 数据库选择
+                dbSelect: ref(""),
+                // 数据库表过滤
+                tableSelect: ref(""),
+                // 数据库表列表
+                tableList: ref([]),
+                // 原始数据库列表
+                rawTableList: ref([]),
+                // 是否加载
+                loading: ref(false),
+            };
+        },
+        methods: {
+            /* 获取[当前/所有]数据库表 */
+            async getDatabaseTableList() {
+                this.loading = true;
+
+                // 查询数据库表
+                const response = await axios.get("/table/databaseTableList", {params: {dbName: this.dbSelect}});
+                const {data, code} = response.data;
+                if (code !== 200) return;
+
+                // 设置数据库列表
+                this.tableList = data;
+                this.rawTableList = data;
+
+                // 重置到第一页
+                this.currentPage = 1;
+
+                this.loading = false;
+            },
+        },
+        watch: {
+            /* 数据表选择 */
+            dbSelect: {
+                handler() {
+                    this.getDatabaseTableList();
+                }
+            },
+
+            /* 过滤数据表 */
+            tableSelect: {
+                handler(val) {
+                    this.tableList = this.rawTableList;
+                    // 根据表名进行过滤筛选或者根据注释内容进行筛选
+                    this.tableList = this.tableList.filter(table => table.tableName.includes(val) || table.comment.includes(val));
+                }
+            }
+        }
+    });
+
+    app.component('AppHeader', AppHeader);
+    app.component('MainCard', MainCard);
+    app.component('MainForm', MainForm);
+    app.component('MainTable', MainTable);
+    app.mount('#app');
+</script>
+
+</html>
