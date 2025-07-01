@@ -57,19 +57,19 @@ const MainTable = defineComponent({
                 <tr :key="table.tableName" v-for="(table, index) in paginatedTableList">
                     <td>
                         <input class="form-check-input border-secondary" type="checkbox" 
-                               v-model="table.checked" @change="onSelectTable($event, table)">
+                               v-model="table.checked" @change="onSelectTable($event.target.checked, table)">
                     </td>
                     <td>{{ (currentPage - 1) * itemsPerPage + index + 1 }}</td>
                     <td>
-                        <a class="text-decoration-none" href="#" @click.prevent="onGeneratorCode(table)">
+                        <a class="text-decoration-none" href="#" @click.prevent="onSelectTable(!table.checked, table)">
                             {{ table.tableName }}
                         </a>
                     </td>
                     <td>{{ table.comment || '无注释' }}</td>
                     <td>{{ table.tableCat }}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-primary" @click="onGeneratorCode(table)">
-                            <i class="bi bi-gear"></i> 生成
+                        <button class="btn btn-sm btn-outline-primary" @click="onSelectTable(!table.checked, table)">
+                            <i class="bi bi-gear"></i> 选择
                         </button>
                     </td>
                 </tr>
@@ -249,11 +249,11 @@ const MainTable = defineComponent({
 
         /**
          * 选择单个表
-         * @param {Event} event - 事件对象
+         * @param {Boolean} checked - 事件对象
          * @param {Object} table - 表数据对象
          */
-        onSelectTable(event, table) {
-            table.checked = event.target.checked;
+        onSelectTable(checked, table) {
+            table.checked = checked;
             this.updateFormSelectedTables();
 
             // 更新表头全选状态

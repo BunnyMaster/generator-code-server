@@ -24,11 +24,11 @@ const MainCard = defineComponent({
             <p class="card-subtitle mt-2 text-muted">
                 <i class="bi bi-mouse me-1"></i>
                 点击 <code class="bg-primary bg-opacity-10">表名</code> 或
-                <code class="bg-primary bg-opacity-10">生成</code> 进行跳转
+                <code class="bg-primary bg-opacity-10">生成</code> 也可以选择
             </p>
         </div>
     
-        <!-- 代码仓库链接区域：包含GitHub和Gitee仓库链接 -->
+        <!-- 代码仓库链接区域：包含GitHub和Gitee仓库链接 --> 
         <div class="card-body">
             <div class="d-flex flex-wrap align-items-center gap-3">
                 <!-- GitHub 仓库链接 -->
