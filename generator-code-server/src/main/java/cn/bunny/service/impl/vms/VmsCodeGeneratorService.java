@@ -1,8 +1,8 @@
 package cn.bunny.service.impl.vms;
 
-import cn.bunny.core.factory.ConcreteDatabaseInfoService;
-import cn.bunny.core.factory.ConcreteSqlParserDatabaseInfoService;
-import cn.bunny.core.template.VmsArgumentDtoBaseVmsGeneratorTemplate;
+import cn.bunny.core.factory.DatabaseMetadataProvider;
+import cn.bunny.core.factory.SqlMetadataProvider;
+import cn.bunny.core.template.VmsArgumentDtoBaseTemplateGenerator;
 import cn.bunny.domain.dto.VmsArgumentDto;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VmsCodeGeneratorService {
 
-    private final ConcreteDatabaseInfoService databaseInfoCore;
-    private final ConcreteSqlParserDatabaseInfoService sqlParserDatabaseInfo;
+    private final DatabaseMetadataProvider databaseInfoCore;
+    private final SqlMetadataProvider sqlParserDatabaseInfo;
 
     /**
      * 根据DTO生成代码模板
@@ -44,7 +44,7 @@ public class VmsCodeGeneratorService {
 
                     return dto.getPath().stream()
                             .map(path -> {
-                                VmsArgumentDtoBaseVmsGeneratorTemplate generator = new VmsArgumentDtoBaseVmsGeneratorTemplate(dto, path, tableMetaData);
+                                VmsArgumentDtoBaseTemplateGenerator generator = new VmsArgumentDtoBaseTemplateGenerator(dto, path, tableMetaData);
                                 StringWriter writer = generator.generatorCodeTemplate(tableMetaData, columnInfoList);
                                 String processedPath = VmsUtil.handleVmFilename(path, tableMetaData.getTableName());
 
@@ -84,8 +84,8 @@ public class VmsCodeGeneratorService {
      */
     private List<ColumnMetaData> getColumnInfoList(String sql, String tableName) {
         return StringUtils.hasText(sql)
-                ? sqlParserDatabaseInfo.tableColumnInfo(sql)
-                : databaseInfoCore.tableColumnInfo(tableName).stream().distinct().toList();
+                ? sqlParserDatabaseInfo.getColumnInfoList(sql)
+                : databaseInfoCore.getColumnInfoList(tableName).stream().distinct().toList();
     }
 
 }

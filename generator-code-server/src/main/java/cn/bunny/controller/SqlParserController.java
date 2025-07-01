@@ -1,6 +1,6 @@
 package cn.bunny.controller;
 
-import cn.bunny.core.factory.ConcreteSqlParserDatabaseInfoService;
+import cn.bunny.core.factory.SqlMetadataProvider;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.domain.result.Result;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SqlParserController {
 
-    private final ConcreteSqlParserDatabaseInfoService sqlParserService;
+    private final SqlMetadataProvider sqlParserService;
 
     @Operation(summary = "解析SQL成表信息", description = "解析SQL成表信息")
     @PostMapping("tableInfo")
@@ -31,7 +31,7 @@ public class SqlParserController {
     @Operation(summary = "解析SQL成列数据", description = "解析SQL成列数据")
     @PostMapping("columnMetaData")
     public Result<List<ColumnMetaData>> columnMetaData(String sql) {
-        List<ColumnMetaData> vo = sqlParserService.tableColumnInfo(sql);
+        List<ColumnMetaData> vo = sqlParserService.getColumnInfoList(sql);
         return Result.success(vo);
     }
 }

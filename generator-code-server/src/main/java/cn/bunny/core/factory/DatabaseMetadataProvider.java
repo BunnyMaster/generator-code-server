@@ -3,22 +3,56 @@ package cn.bunny.core.factory;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.DatabaseInfoMetaData;
 import cn.bunny.domain.entity.TableMetaData;
+import cn.bunny.exception.GeneratorCodeException;
 import cn.bunny.utils.TypeConvertUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 @Component
-public class ConcreteDatabaseInfoService extends AbstractDatabaseInfo {
+@RequiredArgsConstructor
+public class DatabaseMetadataProvider implements IMetadataProvider {
 
+    private final DataSource dataSource;
     @Value("${bunny.master.database}")
     private String currentDatabase;
+
+    /**
+     * 获取表的所有主键列名
+     *
+     * @param tableName 表名
+     * @return 主键列名的集合
+     */
+    public Set<String> getPrimaryKeys(String tableName) {
+        // 主键的key
+        Set<String> primaryKeys = new HashSet<>();
+
+        try (Connection connection = dataSource.getConnection()) {
+            DatabaseMetaData metaData = connection.getMetaData();
+
+            // 当前表的主键
+            ResultSet pkResultSet = metaData.getPrimaryKeys(null, null, tableName);
+
+            while (pkResultSet.next()) {
+                // 列字段
+                String columnName = pkResultSet.getString("COLUMN_NAME").toLowerCase();
+                primaryKeys.add(columnName);
+            }
+
+            return primaryKeys;
+        } catch (SQLException e) {
+            throw new GeneratorCodeException("获取主键失败：" + e.getMessage());
+        }
+    }
 
     /**
      * 数据库所有的信息
@@ -45,17 +79,17 @@ public class ConcreteDatabaseInfoService extends AbstractDatabaseInfo {
     /**
      * 解析 sql 表信息
      *
-     * @param tableName 表名称或sql
+     * @param identifier 表名称或sql
      * @return 表西悉尼
      */
     @SneakyThrows
     @Override
-    public TableMetaData getTableMetadata(String tableName) {
+    public TableMetaData getTableMetadata(String identifier) {
         TableMetaData tableMetaData;
 
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
-            ResultSet tables = metaData.getTables(null, null, tableName, new String[]{"TABLE"});
+            ResultSet tables = metaData.getTables(null, null, identifier, new String[]{"TABLE"});
 
             // 获取表的注释信息
             if (tables.next()) {
@@ -69,7 +103,7 @@ public class ConcreteDatabaseInfoService extends AbstractDatabaseInfo {
                 String tableType = tables.getString("TABLE_TYPE");
 
                 tableMetaData = TableMetaData.builder()
-                        .tableName(tableName)
+                        .tableName(identifier)
                         .comment(remarks)
                         .tableCat(tableCat)
                         .tableType(tableType)
@@ -88,12 +122,12 @@ public class ConcreteDatabaseInfoService extends AbstractDatabaseInfo {
      * @return 所有表信息
      */
     @SneakyThrows
-    public List<TableMetaData> databaseTableList(String dbName) {
+    public List<TableMetaData> getTableMetadataBatch(String dbName) {
         // 当前数据库数据库所有的表
         List<TableMetaData> allTableInfo = new ArrayList<>();
 
-        try (Connection connection = dataSource.getConnection()) {
-            DatabaseMetaData metaData = connection.getMetaData();
+        try (Connection conn = dataSource.getConnection()) {
+            DatabaseMetaData metaData = conn.getMetaData();
 
             // 当前数据库中所有的表
             ResultSet tables = metaData.getTables(dbName, null, "%", new String[]{"TABLE"});
@@ -115,20 +149,20 @@ public class ConcreteDatabaseInfoService extends AbstractDatabaseInfo {
     /**
      * 获取当前表的列属性
      *
-     * @param tableName 表名称或sql
+     * @param identifier 表名称或sql
      * @return 当前表所有的列内容
      */
     @SneakyThrows
     @Override
-    public List<ColumnMetaData> tableColumnInfo(String tableName) {
+    public List<ColumnMetaData> getColumnInfoList(String identifier) {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
             Map<String, ColumnMetaData> map = new LinkedHashMap<>();
             // 当前表的主键
-            Set<String> primaryKeyColumns = findPrimaryKeyColumns(tableName);
+            Set<String> primaryKeyColumns = getPrimaryKeys(identifier);
 
             // 当前表的列信息
-            try (ResultSet columnsRs = metaData.getColumns(null, null, tableName, null)) {
+            try (ResultSet columnsRs = metaData.getColumns(null, null, identifier, null)) {
                 while (columnsRs.next()) {
                     ColumnMetaData column = new ColumnMetaData();
                     // 列字段

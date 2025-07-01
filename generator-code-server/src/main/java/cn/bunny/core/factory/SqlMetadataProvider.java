@@ -16,24 +16,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class ConcreteSqlParserDatabaseInfoService extends AbstractDatabaseInfo {
+public class SqlMetadataProvider implements IMetadataProvider {
 
     /**
      * 解析 sql 表信息
      * 先解析SQL语句，解析列字段信息
      *
-     * @param sql 表名称或sql
+     * @param identifier 表名称或sql
      * @return 表西悉尼
      * @see CCJSqlParserUtil 使用这个工具进行SQL的解析
      */
     @Override
-    public TableMetaData getTableMetadata(String sql) {
+    public TableMetaData getTableMetadata(String identifier) {
         TableMetaData tableInfo = new TableMetaData();
 
         // 解析sql
         Statement statement;
         try {
-            statement = CCJSqlParserUtil.parse(sql);
+            statement = CCJSqlParserUtil.parse(identifier);
         } catch (JSQLParserException e) {
             throw new GeneratorCodeException("SQL解析失败");
         }
@@ -61,15 +61,15 @@ public class ConcreteSqlParserDatabaseInfoService extends AbstractDatabaseInfo {
     /**
      * 获取当前表的列属性
      *
-     * @param sql 表名称或sql
+     * @param identifier 表名称或sql
      * @return 当前表所有的列内容
      */
     @Override
-    public List<ColumnMetaData> tableColumnInfo(String sql) {
+    public List<ColumnMetaData> getColumnInfoList(String identifier) {
         // 解析sql
         Statement statement;
         try {
-            statement = CCJSqlParserUtil.parse(sql);
+            statement = CCJSqlParserUtil.parse(identifier);
         } catch (JSQLParserException e) {
             throw new RuntimeException("SQL解析失败");
         }

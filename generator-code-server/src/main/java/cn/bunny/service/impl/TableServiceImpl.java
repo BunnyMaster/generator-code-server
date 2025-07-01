@@ -1,6 +1,6 @@
 package cn.bunny.service.impl;
 
-import cn.bunny.core.factory.ConcreteDatabaseInfoService;
+import cn.bunny.core.factory.DatabaseMetadataProvider;
 import cn.bunny.domain.entity.DatabaseInfoMetaData;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.service.TableService;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TableServiceImpl implements TableService {
 
-    private final ConcreteDatabaseInfoService concreteDatabaseInfoService;
+    private final DatabaseMetadataProvider databaseMetadataProvider;
 
     /**
      * 数据库所有的信息
@@ -25,7 +25,7 @@ public class TableServiceImpl implements TableService {
     @SneakyThrows
     @Override
     public DatabaseInfoMetaData databaseInfoMetaData() {
-        List<TableMetaData> databaseTableList = concreteDatabaseInfoService.databaseTableList(null);
+        List<TableMetaData> databaseTableList = databaseMetadataProvider.getTableMetadataBatch(null);
 
         // 将当前数据库表分组，以数据库名称为key
         List<TableMetaData> databaseList = databaseTableList.stream()
@@ -37,7 +37,7 @@ public class TableServiceImpl implements TableService {
                     return tableInfoVo;
                 }).toList();
 
-        DatabaseInfoMetaData databaseInfoMetaData = concreteDatabaseInfoService.databaseInfoMetaData();
+        DatabaseInfoMetaData databaseInfoMetaData = databaseMetadataProvider.databaseInfoMetaData();
         databaseInfoMetaData.setDatabaseList(databaseList);
 
         return databaseInfoMetaData;

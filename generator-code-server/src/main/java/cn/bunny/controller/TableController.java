@@ -1,6 +1,6 @@
 package cn.bunny.controller;
 
-import cn.bunny.core.factory.ConcreteDatabaseInfoService;
+import cn.bunny.core.factory.DatabaseMetadataProvider;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.DatabaseInfoMetaData;
 import cn.bunny.domain.entity.TableMetaData;
@@ -22,7 +22,7 @@ import java.util.List;
 public class TableController {
 
     private final TableService tableService;
-    private final ConcreteDatabaseInfoService concreteDatabaseInfoService;
+    private final DatabaseMetadataProvider databaseMetadataProvider;
 
     @Operation(summary = "当前数据库信息", description = "当前连接的数据库信息")
     @GetMapping("databaseInfoMetaData")
@@ -34,21 +34,21 @@ public class TableController {
     @Operation(summary = "数据库所有的表", description = "获取[当前/所有]数据库表")
     @GetMapping("databaseTableList")
     public Result<List<TableMetaData>> databaseTableList(String dbName) {
-        List<TableMetaData> list = concreteDatabaseInfoService.databaseTableList(dbName);
+        List<TableMetaData> list = databaseMetadataProvider.getTableMetadataBatch(dbName);
         return Result.success(list);
     }
 
     @Operation(summary = "表属性", description = "获取当前查询表属性")
     @GetMapping("tableMetaData")
     public Result<TableMetaData> tableMetaData(String tableName) {
-        TableMetaData tableMetaData = concreteDatabaseInfoService.getTableMetadata(tableName);
+        TableMetaData tableMetaData = databaseMetadataProvider.getTableMetadata(tableName);
         return Result.success(tableMetaData);
     }
 
     @Operation(summary = "表的列属性", description = "获取当前查询表中列属性")
     @GetMapping("tableColumnInfo")
     public Result<List<ColumnMetaData>> tableColumnInfo(String tableName) {
-        List<ColumnMetaData> columnInfo = concreteDatabaseInfoService.tableColumnInfo(tableName);
+        List<ColumnMetaData> columnInfo = databaseMetadataProvider.getColumnInfoList(tableName);
         return Result.success(columnInfo);
     }
 }
