@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>代码生成器-SQL语句生成</title>
+    <!-- 本地引入 Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/src/lib/css/index.css}">
+    <!-- 本地引入 Vue.js -->
+    <script th:src="@{/src/lib/js/vue/vue.global.js}"></script>
+    <!-- 本地引入 Bootstrap JS -->
+    <script th:src="@{/src/lib/js/boostrap/bootstrap.bundle.min.js}"></script>
+    <!-- 本地引入 popper JS -->
+    <script th:src="@{/src/lib/js/boostrap/popper.min.js}"></script>
+    <!-- 本地引入 axios JS -->
+    <script th:src="@{/src/lib/js/axios/axios.min.js}"></script>
+    <!-- 引入dayjs -->
+    <script th:src="@{/src/lib/js/dayjs/dayjs.min.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/customParseFormat.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/weekday.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/localeData.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/weekOfYear.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/weekYear.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/advancedFormat.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/quarterOfYear.js}"></script>
+    <!-- 引入 antd JS -->
+    <script th:src="@{/src/lib/js/dayjs/antd.min.js}"></script>
+</head>
+
+<body>
+<div id="app">
+    <div class="container my-4">
+        <!-- 主标题 -->
+        <app-header></app-header>
+
+    </div>
+</div>
+</body>
+
+<!-- 引入Highlight.js -->
+<script th:src="@{/src/lib/js/highlightjs/highlight.min.js}"></script>
+<script th:src="@{/src/lib/js/highlightjs/javascript.min.js}"></script>
+<!-- 初始化 Highlight.js -->
+<script th:src="@{/src/config/highlight-config.js}"></script>
+<!-- 设置 popper 提示框 -->
+<script th:src="@{/src/config/popper-config.js}"></script>
+<!-- 加载全局axios配置 -->
+<script th:src="@{/src/config/axios-config.js}"></script>
+
+<!-- 引入组件 -->
+<script th:src="@{/src/components/AppHeader.js}"></script>
+
+<script>
+    const {createApp, ref} = Vue
+
+    const app = createApp({
+        setup() {
+            return {
+                loading: ref(false),
+                // 提交的表单
+                form: ref({
+                    // 作者名称
+                    author: "Bunny",
+                    // requestMapping名称
+                    requestMapping: "/api",
+                    // 表名称
+                    tableNames: [],
+                    // 包名称
+                    packageName: "cn.bunny",
+                    // 时间格式
+                    simpleDateFormat: "yyyy-MM-dd HH:mm:ss",
+                    // 去除开头前缀
+                    tablePrefixes: "t_,sys_,qrtz_,log_",
+                    // 生成代码路径
+                    path: [],
+                }),
+                // 生成的数据
+                generatorData: ref({}),
+            };
+        },
+        methods: {},
+    });
+
+    // 注册组件
+    app.component('AppHeader', AppHeader);
+
+    app.mount('#app');
+</script>
+
+</html>

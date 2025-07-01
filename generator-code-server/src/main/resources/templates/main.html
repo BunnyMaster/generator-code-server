@@ -2,13 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>代码生成器前端</title>
+    <title>代码生成器-数据库生成</title>
     <!-- 本地引入 Bootstrap CSS -->
-    <link rel="stylesheet" th:href="@{/src/lib/css/bootstrap.min.css}">
-    <!-- 本地引入 Bootstrap Icons -->
-    <link rel="stylesheet" th:href="@{/src/lib/css/bootstrap-icons.min.css}">
-    <!-- 引入Highlight.js的CSS -->
-    <link rel="stylesheet" th:href="@{/src/lib/css/atom-one-dark.min.css}">
+    <link rel="stylesheet" th:href="@{/src/lib/css/index.css}">
     <!-- 本地引入 Vue.js -->
     <script th:src="@{/src/lib/js/vue/vue.global.js}"></script>
     <!-- 本地引入 Bootstrap JS -->
@@ -29,30 +25,6 @@
     <!-- 引入 antd JS -->
     <script th:src="@{/src/lib/js/dayjs/antd.min.js}"></script>
 </head>
-
-<style>
-    /* 提高 Antd Message 的 z-index */
-    .ant-message {
-        z-index: 1100 !important;
-    }
-
-    /* 响应式 OffCanvas 宽度 */
-    .offcanvas.offcanvas-start {
-        width: 50%;
-    }
-
-    @media (max-width: 991.98px) {
-        .offcanvas.offcanvas-start {
-            width: 75%;
-        }
-    }
-
-    @media (max-width: 767.98px) {
-        .offcanvas.offcanvas-start {
-            width: 100%;
-        }
-    }
-</style>
 
 <body>
 <div id="app">

@@ -1,0 +1,21 @@
+/* 提高 Antd Message 的 z-index */
+.ant-message {
+    z-index: 1100 !important;
+}
+
+/* 响应式 OffCanvas 宽度 */
+.offcanvas.offcanvas-start {
+    width: 50%;
+}
+
+@media (max-width: 991.98px) {
+    .offcanvas.offcanvas-start {
+        width: 75%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .offcanvas.offcanvas-start {
+        width: 100%;
+    }
+}
