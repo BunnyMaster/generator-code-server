@@ -249,30 +249,30 @@
         </dependency>
     </dependencies>
 
-    <profiles>
-        <!--dev环境-->
-        <profile>
-            <id>dev</id>
-            <properties>
-                <profiles.active>dev</profiles.active>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <!--test环境-->
-        <profile>
-            <id>test</id>
-            <properties>
-                <profiles.active>test</profiles.active>
-            </properties>
-        </profile>
-        <!--prod环境-->
-        <profile>
-            <id>prod</id>
-            <properties>
-                <profiles.active>prod</profiles.active>
-            </properties>
-        </profile>
-    </profiles>
+    <!-- <profiles> -->
+    <!--     &lt;!&ndash;dev环境&ndash;&gt; -->
+    <!--     <profile> -->
+    <!--         <id>dev</id> -->
+    <!--         <properties> -->
+    <!--             <profiles.active>dev</profiles.active> -->
+    <!--         </properties> -->
+    <!--         <activation> -->
+    <!--             <activeByDefault>true</activeByDefault> -->
+    <!--         </activation> -->
+    <!--     </profile> -->
+    <!--     &lt;!&ndash;test环境&ndash;&gt; -->
+    <!--     <profile> -->
+    <!--         <id>test</id> -->
+    <!--         <properties> -->
+    <!--             <profiles.active>test</profiles.active> -->
+    <!--         </properties> -->
+    <!--     </profile> -->
+    <!--     &lt;!&ndash;prod环境&ndash;&gt; -->
+    <!--     <profile> -->
+    <!--         <id>prod</id> -->
+    <!--         <properties> -->
+    <!--             <profiles.active>prod</profiles.active> -->
+    <!--         </properties> -->
+    <!--     </profile> -->
+    <!-- </profiles> -->
 </project>
