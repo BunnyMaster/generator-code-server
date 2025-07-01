@@ -42,4 +42,5 @@ public class VmsController {
     public ResponseEntity<byte[]> downloadByZip(@Valid @RequestBody VmsArgumentDto dto) {
         return vmsService.downloadByZip(dto);
     }
+
 }
