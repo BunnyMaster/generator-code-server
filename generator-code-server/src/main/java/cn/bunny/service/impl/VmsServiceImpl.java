@@ -10,7 +10,6 @@ import cn.bunny.utils.ResourceFileUtil;
 import cn.bunny.utils.VmsUtil;
 import cn.hutool.crypto.digest.MD5;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,24 +34,37 @@ public class VmsServiceImpl implements VmsService {
         return codeGeneratorService.generateCode(dto);
     }
 
-    @SneakyThrows
+    /**
+     * 获取vms文件路径
+     *
+     * @return vms下的文件路径
+     */
     @Override
     public Map<String, List<VmsPathVo>> vmsResourcePathList() {
-        List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
+        List<String> vmsRelativeFiles;
+        Map<String, List<VmsPathVo>> listMap;
 
-        return vmsRelativeFiles.stream()
-                .map(vmFile -> {
-                    String[] filepathList = vmFile.split("/");
-                    String filename = filepathList[filepathList.length - 1].replace(".vm", "");
+        try {
+            vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
+            listMap = vmsRelativeFiles.stream()
+                    .map(vmFile -> {
+                        String[] filepathList = vmFile.split("/");
+                        String filename = filepathList[filepathList.length - 1].replace(".vm", "");
 
-                    return VmsPathVo.builder()
-                            .id(VmsUtil.generateDivId())
-                            .name(vmFile)
-                            .label(filename)
-                            .type(filepathList[0])
-                            .build();
-                })
-                .collect(Collectors.groupingBy(VmsPathVo::getType));
+                        return VmsPathVo.builder()
+                                .id(VmsUtil.generateDivId())
+                                .name(vmFile)
+                                .label(filename)
+                                .type(filepathList[0])
+                                .build();
+                    })
+                    .collect(Collectors.groupingBy(VmsPathVo::getType));
+        } catch (Exception e) {
+            throw new RuntimeException("Get error of VMS path:" + e.getMessage());
+        }
+
+
+        return listMap;
     }
 
     @Override

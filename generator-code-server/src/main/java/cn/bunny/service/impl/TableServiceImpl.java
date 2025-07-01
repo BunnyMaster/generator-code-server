@@ -5,7 +5,6 @@ import cn.bunny.domain.entity.DatabaseInfoMetaData;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.service.TableService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +21,6 @@ public class TableServiceImpl implements TableService {
      *
      * @return 当前连接的数据库信息属性
      */
-    @SneakyThrows
     @Override
     public DatabaseInfoMetaData databaseInfoMetaData() {
         List<TableMetaData> databaseTableList = databaseMetadataProvider.getTableMetadataBatch(null);
