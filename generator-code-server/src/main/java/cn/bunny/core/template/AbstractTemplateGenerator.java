@@ -11,7 +11,7 @@ import java.util.List;
  * 模板方法模式
  * 如果需要继承 AbstractVmsGenerator
  */
-public abstract class AbstractVmsGeneratorTemplate {
+public abstract class AbstractTemplateGenerator {
 
     /**
      * 添加生成内容

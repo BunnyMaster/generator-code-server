@@ -2,7 +2,7 @@ package cn.bunny.service.impl.vms;
 
 import cn.bunny.core.factory.DatabaseMetadataProvider;
 import cn.bunny.core.factory.SqlMetadataProvider;
-import cn.bunny.core.template.VmsArgumentDtoBaseTemplateGenerator;
+import cn.bunny.core.template.VmsTemplateGenerator;
 import cn.bunny.domain.dto.VmsArgumentDto;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VmsCodeGeneratorService {
 
-    private final DatabaseMetadataProvider databaseInfoCore;
-    private final SqlMetadataProvider sqlParserDatabaseInfo;
+    private final DatabaseMetadataProvider databaseMetadataProvider;
+    private final SqlMetadataProvider sqlMetadataProvider;
 
     /**
      * 根据DTO生成代码模板
@@ -44,7 +44,7 @@ public class VmsCodeGeneratorService {
 
                     return dto.getPath().stream()
                             .map(path -> {
-                                VmsArgumentDtoBaseTemplateGenerator generator = new VmsArgumentDtoBaseTemplateGenerator(dto, path, tableMetaData);
+                                VmsTemplateGenerator generator = new VmsTemplateGenerator(dto, path, tableMetaData);
                                 StringWriter writer = generator.generatorCodeTemplate(tableMetaData, columnInfoList);
                                 String processedPath = VmsUtil.handleVmFilename(path, tableMetaData.getTableName());
 
@@ -71,8 +71,8 @@ public class VmsCodeGeneratorService {
      */
     private TableMetaData getTableMetadata(VmsArgumentDto dto, String tableName) {
         return StringUtils.hasText(dto.getSql())
-                ? sqlParserDatabaseInfo.getTableMetadata(dto.getSql())
-                : databaseInfoCore.getTableMetadata(tableName);
+                ? sqlMetadataProvider.getTableMetadata(dto.getSql())
+                : databaseMetadataProvider.getTableMetadata(tableName);
     }
 
     /**
@@ -84,8 +84,8 @@ public class VmsCodeGeneratorService {
      */
     private List<ColumnMetaData> getColumnInfoList(String sql, String tableName) {
         return StringUtils.hasText(sql)
-                ? sqlParserDatabaseInfo.getColumnInfoList(sql)
-                : databaseInfoCore.getColumnInfoList(tableName).stream().distinct().toList();
+                ? sqlMetadataProvider.getColumnInfoList(sql)
+                : databaseMetadataProvider.getColumnInfoList(tableName).stream().distinct().toList();
     }
 
 }

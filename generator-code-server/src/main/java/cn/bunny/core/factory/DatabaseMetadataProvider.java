@@ -6,7 +6,6 @@ import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.exception.GeneratorCodeException;
 import cn.bunny.utils.TypeConvertUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,6 +22,7 @@ import java.util.*;
 public class DatabaseMetadataProvider implements IMetadataProvider {
 
     private final DataSource dataSource;
+
     @Value("${bunny.master.database}")
     private String currentDatabase;
 
@@ -50,7 +50,7 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
 
             return primaryKeys;
         } catch (SQLException e) {
-            throw new GeneratorCodeException("获取主键失败：" + e.getMessage());
+            throw new GeneratorCodeException("Get primary key error:" + e.getMessage());
         }
     }
 
@@ -59,7 +59,6 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
      *
      * @return 当前连接的数据库信息属性
      */
-    @SneakyThrows
     public DatabaseInfoMetaData databaseInfoMetaData() {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
@@ -73,6 +72,8 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
                     .username(metaData.getUserName())
                     .currentDatabase(currentDatabase)
                     .build();
+        } catch (SQLException e) {
+            throw new GeneratorCodeException("Get database info error:" + e.getMessage());
         }
     }
 
@@ -82,7 +83,6 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
      * @param identifier 表名称或sql
      * @return 表西悉尼
      */
-    @SneakyThrows
     @Override
     public TableMetaData getTableMetadata(String identifier) {
         TableMetaData tableMetaData;
@@ -113,6 +113,8 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
             }
 
             return tableMetaData;
+        } catch (Exception e) {
+            throw new GeneratorCodeException(e.getMessage());
         }
     }
 
@@ -121,7 +123,6 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
      *
      * @return 所有表信息
      */
-    @SneakyThrows
     public List<TableMetaData> getTableMetadataBatch(String dbName) {
         // 当前数据库数据库所有的表
         List<TableMetaData> allTableInfo = new ArrayList<>();
@@ -141,6 +142,8 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
 
                 allTableInfo.add(tableMetaData);
             }
+        } catch (Exception e) {
+            throw new GeneratorCodeException("Get error of [current/all] database tables" + e.getMessage());
         }
 
         return allTableInfo;
@@ -152,7 +155,6 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
      * @param identifier 表名称或sql
      * @return 当前表所有的列内容
      */
-    @SneakyThrows
     @Override
     public List<ColumnMetaData> getColumnInfoList(String identifier) {
         try (Connection connection = dataSource.getConnection()) {
@@ -198,6 +200,8 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
             }
 
             return new ArrayList<>(map.values());
+        } catch (Exception e) {
+            throw new RuntimeException("Get error of database columns mete data" + e.getMessage());
         }
     }
 }
