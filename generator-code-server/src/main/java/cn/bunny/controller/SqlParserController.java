@@ -1,6 +1,6 @@
 package cn.bunny.controller;
 
-import cn.bunny.core.factory.SqlMetadataProvider;
+import cn.bunny.core.provider.SqlMetadataProvider;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.domain.result.Result;
@@ -34,4 +34,5 @@ public class SqlParserController {
         List<ColumnMetaData> vo = sqlParserService.getColumnInfoList(sql);
         return Result.success(vo);
     }
+
 }

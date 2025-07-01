@@ -1,6 +1,6 @@
 package cn.bunny.controller;
 
-import cn.bunny.core.factory.DatabaseMetadataProvider;
+import cn.bunny.core.provider.DatabaseMetadataProvider;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.DatabaseInfoMetaData;
 import cn.bunny.domain.entity.TableMetaData;
@@ -51,4 +51,5 @@ public class TableController {
         List<ColumnMetaData> columnInfo = databaseMetadataProvider.getColumnInfoList(tableName);
         return Result.success(columnInfo);
     }
+
 }

@@ -1,6 +1,6 @@
 package cn.bunny.service.impl;
 
-import cn.bunny.core.factory.DatabaseMetadataProvider;
+import cn.bunny.core.provider.DatabaseMetadataProvider;
 import cn.bunny.domain.entity.DatabaseInfoMetaData;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.service.TableService;

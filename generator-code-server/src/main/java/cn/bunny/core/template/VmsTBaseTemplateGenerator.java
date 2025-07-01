@@ -15,7 +15,7 @@ import java.util.Date;
  * 使用模板方法，方便扩展
  * 如果需要继承 AbstractVmsGenerator
  */
-public class VmsTemplateGenerator extends AbstractTemplateGenerator {
+public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
 
     private final VmsArgumentDto dto;
     private final String path;
@@ -26,7 +26,7 @@ public class VmsTemplateGenerator extends AbstractTemplateGenerator {
      * @param path          当前路径
      * @param tableMetaData 表名称
      */
-    public VmsTemplateGenerator(VmsArgumentDto dto, String path, TableMetaData tableMetaData) {
+    public VmsTBaseTemplateGenerator(VmsArgumentDto dto, String path, TableMetaData tableMetaData) {
         this.dto = dto;
         this.path = path;
         this.tableMetaData = tableMetaData;

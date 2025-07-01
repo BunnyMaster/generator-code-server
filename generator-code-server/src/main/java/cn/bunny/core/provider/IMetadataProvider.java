@@ -1,4 +1,4 @@
-package cn.bunny.core.factory;
+package cn.bunny.core.provider;
 
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;

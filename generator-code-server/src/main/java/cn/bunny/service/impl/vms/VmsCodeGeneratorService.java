@@ -1,8 +1,8 @@
 package cn.bunny.service.impl.vms;
 
-import cn.bunny.core.factory.DatabaseMetadataProvider;
-import cn.bunny.core.factory.SqlMetadataProvider;
-import cn.bunny.core.template.VmsTemplateGenerator;
+import cn.bunny.core.provider.DatabaseMetadataProvider;
+import cn.bunny.core.provider.SqlMetadataProvider;
+import cn.bunny.core.template.VmsTBaseTemplateGenerator;
 import cn.bunny.domain.dto.VmsArgumentDto;
 import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.TableMetaData;
@@ -60,7 +60,7 @@ public class VmsCodeGeneratorService {
      */
     private GeneratorVo generateTemplate(VmsArgumentDto dto, String path,
                                          TableMetaData tableMetaData, List<ColumnMetaData> columnInfoList) {
-        VmsTemplateGenerator generator = new VmsTemplateGenerator(dto, path, tableMetaData);
+        VmsTBaseTemplateGenerator generator = new VmsTBaseTemplateGenerator(dto, path, tableMetaData);
         StringWriter writer = generator.generatorCodeTemplate(tableMetaData, columnInfoList);
         String processedPath = VmsUtil.handleVmFilename(path, tableMetaData.getTableName());
 
