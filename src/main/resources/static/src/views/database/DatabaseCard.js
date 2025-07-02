@@ -23,8 +23,9 @@ const DatabaseCard = defineComponent({
             </div>
             <p class="card-subtitle mt-2 text-muted">
                 <i class="bi bi-mouse me-1"></i>
-                点击 <code class="bg-primary bg-opacity-10">表名</code> 或
-                <code class="bg-primary bg-opacity-10">生成</code> 也可以选择
+                点击 <code class="bg-primary bg-opacity-10">复选框</code>或
+                <code class="bg-primary bg-opacity-10">选择按钮</code>
+                进行选择，之后点击 <code class="bg-primary bg-opacity-10">生成选中表</code> 进行预览。
             </p>
         </div>
         

@@ -5,6 +5,7 @@ import cn.bunny.domain.entity.ColumnMetaData;
 import cn.bunny.domain.entity.DatabaseInfoMetaData;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.domain.result.Result;
+import cn.bunny.domain.result.ResultCodeEnum;
 import cn.bunny.service.TableService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,7 +50,7 @@ public class TableController {
     @GetMapping("tableColumnInfo")
     public Result<List<ColumnMetaData>> tableColumnInfo(String tableName) {
         List<ColumnMetaData> columnInfo = databaseMetadataProvider.getColumnInfoList(tableName);
-        return Result.success(columnInfo);
+        return Result.success(columnInfo, ResultCodeEnum.LOAD_FINISHED);
     }
 
 }

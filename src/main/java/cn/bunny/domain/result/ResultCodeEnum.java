@@ -9,13 +9,13 @@ import lombok.Getter;
 public enum ResultCodeEnum {
     // 成功操作 200
     SUCCESS(200, "操作成功"),
+    LOAD_FINISHED(200, "加载完成"),
     ADD_SUCCESS(200, "添加成功"),
     UPDATE_SUCCESS(200, "修改成功"),
     DELETE_SUCCESS(200, "删除成功"),
     SORT_SUCCESS(200, "排序成功"),
     SUCCESS_UPLOAD(200, "上传成功"),
     SUCCESS_LOGOUT(200, "退出成功"),
-    LOGOUT_SUCCESS(200, "退出成功"),
     EMAIL_CODE_REFRESH(200, "邮箱验证码已刷新"),
     EMAIL_CODE_SEND_SUCCESS(200, "邮箱验证码已发送"),
 

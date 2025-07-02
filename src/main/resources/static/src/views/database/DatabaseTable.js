@@ -331,7 +331,7 @@ const DatabaseTable = defineComponent({
          */
         async toggleTableDetails(table) {
             // 如果是展开操作且没有列数据，则请求获取列信息
-            if (!table.showDetails && !table.columns) {
+            if (!table.showDetails) {
                 // 发送请求获取列信息
                 const {data, code, message} = await axiosInstance({
                     url: "/table/tableColumnInfo",
