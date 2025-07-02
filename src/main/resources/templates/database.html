@@ -45,8 +45,8 @@
                         :raw-table-list="rawTableList" :table-list="tableList" v-model:form="form"></database-table>
 
         <!-- 模板生成页面 -->
-        <database-generator-page :generator-data="generatorData" ref="mainGeneratorRef"
-                                 v-model:generator-page-flag="generatorPageFlag"></database-generator-page>
+        <app-generator-page :generator-data="generatorData"
+                            v-model:generator-page-flag="generatorPageFlag"></app-generator-page>
     </div>
 </div>
 </body>
@@ -66,7 +66,7 @@
 <script th:src="@{/src/views/database/DatabaseCard.js}"></script>
 <script th:src="@{/src/views/database/DatabaseForm.js}"></script>
 <script th:src="@{/src/views/database/DatabaseTable.js}"></script>
-<script th:src="@{/src/views/database/DatabaseGeneratorPage.js}"></script>
+<script th:src="@{/src/components/AppGeneratorPage.js}"></script>
 
 <script>
     const {createApp, ref} = Vue
@@ -143,7 +143,7 @@
                 if (!isValidate) return;
 
                 // 请求生成模板
-                const {data, code, message} = await axiosInstance.post("/vms/generator", this.form);
+                const {data, code, message} = await axiosInstance.post("/generator", this.form);
 
                 // 判断是否请求成功
                 if (code !== 200) {
@@ -164,6 +164,7 @@
             /* 清空已经生成的内容 */
             onClearGeneratorData() {
                 this.generatorData = {};
+                antd.message.success("清除完成");
             },
         },
         watch: {
@@ -190,7 +191,7 @@
     app.component('DatabaseCard', DatabaseCard);
     app.component('DatabaseForm', DatabaseForm);
     app.component('DatabaseTable', DatabaseTable);
-    app.component('DatabaseGeneratorPage', DatabaseGeneratorPage);
+    app.component('AppGeneratorPage', AppGeneratorPage);
 
     app.mount('#app');
 </script>

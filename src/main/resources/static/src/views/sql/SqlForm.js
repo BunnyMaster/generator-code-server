@@ -1,4 +1,4 @@
-const DatabaseForm = {
+const SqlForm = {
     name: "MainForm",
     template: `
     <div class="card shadow-sm mt-2 bg-body-secondary">
@@ -62,13 +62,15 @@ const DatabaseForm = {
                         {{ errors.tablePrefixes || '请输入去除开头前缀' }}
                     </div>
                 </div>
-
-                <!-- 已选择的表 -->
-                <div class="col-md-12" v-show="form.tableNames.length > 0">
-                    <label class="form-label fw-medium" for="tableNames">已选择的要生成表({{form.tableNames.length}})：</label>
-                    <span class="badge rounded-pill text-bg-dark me-1" v-for="(item,index) in form.tableNames" :ket="index">{{item}}</span>
+                <div class="col-md-12 mb-3 has-validation">
+                    <label class="form-label fw-medium" for="sql">Sql语句</label>
+                    <textarea class="form-control border-secondary" style="height: 150px;" :class="{ 'is-invalid': errors.sql }"
+                        id="sql" placeholder="请输入Sql语句" v-model="form.sql" @input="validateField('sql')"/>
+                    <div class="invalid-feedback">
+                        {{ errors.sql || '请输入Sql语句' }}
+                    </div> 
                 </div>
-    
+
                 <!-- 前端模板选择区域 -->
                 <div class="col-12 mt-3 mb-3 p-3 bg-light rounded">
                     <label class="form-check-inline col-form-label fw-medium">生成前端模板：</label>
@@ -133,11 +135,12 @@ const DatabaseForm = {
                        <button class="btn btn-primary shadow-sm" disabled type="button"
                         v-if="generatorCodeLoading">
                             <span aria-hidden="true" class="spinner-grow spinner-grow-sm"></span>
-                            <span role="status">生成选中表...</span>
+                            <span role="status">生成中...</span>
                         </button>
                         <button v-else class="btn btn-primary" type="submit">
-                            生成选中表
+                            开始生成
                         </button>
+                        <button class="btn btn-info" type="button" @click="onGetSqlParserInfo">获取Sql内容信息</button>
                         <button class="btn btn-warning" type="button" @click="onClearGeneratorData">清空生成记录</button>
                     </div>
                     <div class="col-md-4 d-grid gap-2">
@@ -163,6 +166,10 @@ const DatabaseForm = {
         onClearGeneratorData: {type: Function, required: true},
         // 生成代码加载
         generatorCodeLoading: {type: Boolean, required: true},
+        // sql语句中表信息
+        tableInfo: {type: Object, required: true},
+        // sql语句中列信息
+        columnMetaList: {type: Object, required: true},
     },
     data() {
         return {
@@ -180,10 +187,11 @@ const DatabaseForm = {
                 simpleDateFormat: '',
                 tablePrefixes: '',
                 webTemplates: '',
-                serverTemplates: ''
+                serverTemplates: '',
+                sql: ''
             },
             downloadLoading: ref(false),
-        }
+        };
     },
     methods: {
         /**
@@ -226,7 +234,7 @@ const DatabaseForm = {
             let isValid = true;
 
             // 验证文本字段
-            const textFields = ['author', 'requestMapping', 'packageName', 'simpleDateFormat', 'tablePrefixes'];
+            const textFields = ['author', 'requestMapping', 'packageName', 'simpleDateFormat', 'tablePrefixes', "sql"];
             textFields.forEach(field => {
                 if (!this.validateField(field)) {
                     isValid = false;
@@ -248,6 +256,27 @@ const DatabaseForm = {
 
             const newForm = {...this.form, path: [...webList, ...serverList,]};
             this.$emit("update:form", newForm);
+        },
+
+        /* 获取Sql内容信息 */
+        async onGetSqlParserInfo() {
+            const validate = this.validateForm();
+            if (!validate) return;
+
+            // 设置请求参数
+            const data = {sql: this.form.sql};
+
+            // 获取表信息
+            const tableInfoResponse = await axiosInstance.post("/sqlParser/tableInfo", data, {headers: {'Content-Type': 'multipart/form-data'}});
+            if (tableInfoResponse.code === 200) {
+                this.$emit("update:tableInfo", tableInfoResponse.data)
+            }
+
+            // 获取sql中的列信息
+            const columnMetaDataResponse = await axiosInstance.post("/sqlParser/columnMetaData", data, {headers: {'Content-Type': 'multipart/form-data'}});
+            if (columnMetaDataResponse.code === 200) {
+                this.$emit("update:columnMetaList", columnMetaDataResponse.data)
+            }
         },
 
         /* 处理表单提交 */
@@ -380,5 +409,5 @@ const DatabaseForm = {
     async mounted() {
         // 组件挂载时获取模板列表
         await this.getVmsResourcePathList();
-    }
+    },
 }
