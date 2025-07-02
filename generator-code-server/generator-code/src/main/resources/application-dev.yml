@@ -1,6 +1,6 @@
 bunny:
   master:
-    host: 192.168.1.137
+    host: 192.168.3.137
     port: 3306
     database: auth_admin
     username: root

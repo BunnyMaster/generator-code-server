@@ -3,15 +3,15 @@ package cn.bunny.service.impl;
 import cn.bunny.core.factory.ConcreteSqlParserDatabaseInfo;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.service.SqlParserService;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class SqlParserServiceImpl implements SqlParserService {
 
-    private final ConcreteSqlParserDatabaseInfo sqlParserDatabaseInfo;
+    @Resource
+    private ConcreteSqlParserDatabaseInfo sqlParserDatabaseInfo;
 
     /**
      * 解析SQL内容

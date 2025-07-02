@@ -125,7 +125,7 @@ public class ConcreteDatabaseInfo extends AbstractDatabaseInfo {
             DatabaseMetaData metaData = connection.getMetaData();
             Map<String, ColumnMetaData> map = new LinkedHashMap<>();
             // 当前表的主键
-            Set<String> primaryKeyColumns = findPrimaryKeyColumns(tableName);
+            Set<String> primaryKeyColumns = getPrimaryKeyColumns(tableName);
 
             // 当前表的列信息
             try (ResultSet columnsRs = metaData.getColumns(null, null, tableName, null)) {

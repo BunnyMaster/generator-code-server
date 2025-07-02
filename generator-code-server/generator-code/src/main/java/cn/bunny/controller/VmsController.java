@@ -32,8 +32,8 @@ public class VmsController {
 
     @Operation(summary = "生成代码", description = "生成代码")
     @PostMapping("generator")
-    public Result<Map<String, List<GeneratorVo>>> generator(@Valid @RequestBody VmsArgumentDto dto) {
-        Map<String, List<GeneratorVo>> list = vmsService.generator(dto);
+    public Result<List<GeneratorVo>> generator(@Valid @RequestBody VmsArgumentDto dto) {
+        List<GeneratorVo> list = vmsService.generator(dto);
         return Result.success(list);
     }
 

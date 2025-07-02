@@ -3,7 +3,6 @@ package cn.bunny.utils;
 import com.google.common.base.CaseFormat;
 
 import java.util.Map;
-import java.util.UUID;
 
 public class VmsUtil {
 
@@ -58,14 +57,5 @@ public class VmsUtil {
 
         splitPaths[splitPathsSize] = filename;
         return String.join("/", splitPaths);
-    }
-
-    /**
-     * 生成前端标签上的id
-     *
-     * @return id-UUID
-     */
-    public static String generateDivId() {
-        return "id-" + UUID.randomUUID().toString().replace("-", "");
     }
 }

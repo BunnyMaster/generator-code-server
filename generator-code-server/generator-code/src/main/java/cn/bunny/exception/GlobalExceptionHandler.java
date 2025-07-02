@@ -75,7 +75,6 @@ public class GlobalExceptionHandler {
     public Result<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .distinct()
                 .collect(Collectors.joining(", "));
         return Result.error(null, 201, errorMessage);
     }
