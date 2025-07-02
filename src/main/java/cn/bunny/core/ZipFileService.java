@@ -22,7 +22,7 @@ public class ZipFileService {
 
     private static final String FILE_EXTENSION = ".vm";
     private static final String UTF_8 = StandardCharsets.UTF_8.name();
-    
+
     /**
      * 创建ZIP文件
      *
@@ -52,7 +52,7 @@ public class ZipFileService {
         try {
             String entryPath = generatorVo.getPath().replace(FILE_EXTENSION, "");
             zipOutputStream.putNextEntry(new ZipEntry(entryPath));
-            zipOutputStream.write(generatorVo.getCode().getBytes(StandardCharsets.UTF_8));
+            zipOutputStream.write(generatorVo.getCode().getBytes(UTF_8));
             zipOutputStream.closeEntry();
         } catch (IOException e) {
             throw new RuntimeException("Failed to add file to ZIP: " + generatorVo.getPath(), e);
