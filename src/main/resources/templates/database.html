@@ -180,7 +180,7 @@
                 handler(val) {
                     this.tableList = this.rawTableList;
                     // 根据表名进行过滤筛选或者根据注释内容进行筛选
-                    this.tableList = this.tableList.filter(table => table.tableName.includes(val) || table.tablePrefixes.includes(val));
+                    this.tableList = this.tableList.filter(table => table.tableName.includes(val) || table.comment.includes(val));
                 }
             },
         },
