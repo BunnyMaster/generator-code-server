@@ -12,7 +12,7 @@ dist-ssr
 .eslintcache
 report.html
 vite.config.*.timestamp*
-
+application-prod.yml
 bunny-web.site.csr
 bunny-web.site.key
 bunny-web.site_bundle.crt
