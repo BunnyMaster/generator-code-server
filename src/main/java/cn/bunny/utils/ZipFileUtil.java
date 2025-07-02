@@ -1,8 +1,6 @@
-package cn.bunny.core;
+package cn.bunny.utils;
 
 import cn.bunny.domain.vo.GeneratorVo;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,9 +14,7 @@ import java.util.zip.ZipOutputStream;
  * <p>
  * 提供将生成的代码模板打包为ZIP文件并支持下载的功能
  */
-@Service
-@RequiredArgsConstructor
-public class ZipFileService {
+public class ZipFileUtil {
 
     private static final String FILE_EXTENSION = ".vm";
     private static final String UTF_8 = StandardCharsets.UTF_8.name();
@@ -30,7 +26,7 @@ public class ZipFileService {
      * @return ZIP文件字节数组
      * @throws RuntimeException 打包失败时抛出
      */
-    public byte[] createZipFile(List<GeneratorVo> generatorVoList) {
+    public static byte[] createZipFile(List<GeneratorVo> generatorVoList) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
              ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream, StandardCharsets.UTF_8)) {
 
@@ -48,7 +44,7 @@ public class ZipFileService {
      * @param generatorVo     代码生成结果对象，包含文件路径和内容
      * @throws RuntimeException 当文件添加失败时抛出，包含失败文件路径信息
      */
-    private void addToZip(ZipOutputStream zipOutputStream, GeneratorVo generatorVo) {
+    private static void addToZip(ZipOutputStream zipOutputStream, GeneratorVo generatorVo) {
         try {
             String entryPath = generatorVo.getPath().replace(FILE_EXTENSION, "");
             zipOutputStream.putNextEntry(new ZipEntry(entryPath));

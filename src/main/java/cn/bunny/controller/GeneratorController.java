@@ -39,7 +39,10 @@ public class GeneratorController {
     @Operation(summary = "生成代码", description = "根据SQL或数据库表生成代码")
     @PostMapping
     public Result<Map<String, List<GeneratorVo>>> generator(@Valid @RequestBody VmsArgumentDto dto) {
-        Map<String, List<GeneratorVo>> result = Strings.isEmpty(dto.getSql())
+        // 判断当前是使用 SQL语句 生成还是 数据库生成
+        String sql = dto.getSql();
+
+        Map<String, List<GeneratorVo>> result = Strings.isEmpty(sql)
                 ? generatorService.generateCodeByDatabase(dto)
                 : generatorService.generateCodeBySql(dto);
         return Result.success(result);
@@ -54,7 +57,10 @@ public class GeneratorController {
     @Operation(summary = "打包下载", description = "将生成的代码打包为ZIP文件下载")
     @PostMapping("downloadByZip")
     public ResponseEntity<byte[]> downloadByZip(@Valid @RequestBody VmsArgumentDto dto) {
-        return Strings.isEmpty(dto.getSql())
+        // 判断当前是使用 SQL语句 生成还是 数据库生成
+        String sql = dto.getSql();
+        
+        return Strings.isEmpty(sql)
                 ? generatorService.downloadByZipByDatabase(dto)
                 : generatorService.downloadByZipBySqL(dto);
     }

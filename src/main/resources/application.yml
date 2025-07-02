@@ -15,3 +15,6 @@ spring:
     url: jdbc:mysql://${bunny.master.host}:${bunny.master.port}/${bunny.master.database}?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf-8&allowPublicKeyRetrieval=true
     username: ${bunny.master.username}
     password: ${bunny.master.password}
+    hikari:
+      maximum-pool-size: 20
+      connection-timeout: 30000
