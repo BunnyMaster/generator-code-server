@@ -99,9 +99,12 @@ public class SqlMetadataProvider implements IMetadataProvider {
                     columnInfo.setJavascriptType(StringUtils.uncapitalize(javaType));
 
                     // 列字段转成 下划线 -> 小驼峰
-                    columnInfo.setLowercaseName(MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName()));
+                    String lowercaseName = MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), false);
+                    columnInfo.setLowercaseName(lowercaseName);
+                    
                     // 列字段转成 下划线 -> 大驼峰名称
-                    columnInfo.setUppercaseName(MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), true));
+                    String uppercaseName = MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), true);
+                    columnInfo.setUppercaseName(uppercaseName);
 
                     // 解析注释
                     List<String> columnSpecs = column.getColumnSpecs();

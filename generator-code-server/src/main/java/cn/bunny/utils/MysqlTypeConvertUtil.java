@@ -5,7 +5,7 @@ import org.assertj.core.util.introspection.CaseFormatUtils;
 
 /* 类型转换，数据库转Java类型等 */
 public class MysqlTypeConvertUtil {
- 
+
     /**
      * 将数据库类型转换为Java类型
      */
@@ -31,13 +31,6 @@ public class MysqlTypeConvertUtil {
 
     /**
      * 下划线命名转驼峰命名
-     */
-    public static String convertToCamelCase(String name) {
-        return convertToCamelCase(name, false);
-    }
-
-    /**
-     * 下划线命名转驼峰命名
      *
      * @param name               原始名称，传入的值可以是
      *                           `xxx_xxx` `CaseFormat`
@@ -51,9 +44,7 @@ public class MysqlTypeConvertUtil {
         String lowerCamelCase = CaseFormatUtils.toCamelCase(name);
 
         // 首字母不大写
-        if (!firstLetterCapital) {
-            return lowerCamelCase;
-        }
+        if (!firstLetterCapital) return lowerCamelCase;
 
         // 将小驼峰转成大驼峰
         return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, lowerCamelCase);

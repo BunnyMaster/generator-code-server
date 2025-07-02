@@ -1,13 +1,15 @@
 package cn.bunny.utils;
 
+import cn.bunny.domain.dto.VmsArgumentDto;
 import com.google.common.base.CaseFormat;
 
 import java.util.Map;
-import java.util.UUID;
 
+/**
+ * 代码生成工具类
+ */
 public class VmsUtil {
-
-    private static final Map<String, String> TYPE_MAPPINGS = Map.of(
+    private static final Map<String, String> FILE_TYPE_SUFFIXES = Map.of(
             "controller", "Controller",
             "service", "Service",
             "serviceImpl", "ServiceImpl",
@@ -18,55 +20,65 @@ public class VmsUtil {
     );
 
     /**
-     * 处理 vm 文件名
+     * 处理模板文件路径和命名
      *
-     * @param path      文件路径
-     * @param className 类名
+     * @param dto       生成参数
+     * @param path      原始模板路径
+     * @param tableName 数据库表名
+     * @return 处理后的文件路径
      */
-    public static String handleVmFilename(String path, String className) {
-        String[] splitPaths = path.split("/");
-        int splitPathsSize = splitPaths.length - 1;
+    public static String processVmPath(VmsArgumentDto dto, String path, String tableName) {
+        String className = removeTablePrefixes(dto, tableName);
+        String lowerCamelCase = MysqlTypeConvertUtil.convertToCamelCase(tableName, false);
+        String[] pathParts = path.replace("$className", lowerCamelCase).split("/");
 
-        // 大驼峰名称
-        String CamelCase = MysqlTypeConvertUtil.convertToCamelCase(className, true);
-        // 小驼峰名称
-        String smallCamelCase = MysqlTypeConvertUtil.convertToCamelCase(className);
+        // 处理文件名
+        pathParts[pathParts.length - 1] = processFilename(
+                pathParts[pathParts.length - 1],
+                className
+        );
 
-        // 当前文件名
-        String filename = splitPaths[splitPathsSize];
-        filename = filename.replace(".vm", "");
-
-        String[] split = filename.split("\\.");
-        // 文件名称
-        String name = split[0];
-        // 文件扩展名
-        String extension = "";
-        if (split.length >= 2) {
-            extension = split[1];
-        }
-
-        // 判断是否是 Java 或者 xml 文件
-        String typeMappingsFilename = TYPE_MAPPINGS.get(name);
-        typeMappingsFilename = typeMappingsFilename == null ? "" : typeMappingsFilename;
-        if (filename.contains("java") || filename.contains("xml")) {
-            filename = CamelCase + typeMappingsFilename + "." + extension;
-        }
-
-        if ((filename.contains("vue") || filename.contains("ts") || filename.contains("js"))
-                && !filename.contains("index")) {
-            filename = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, smallCamelCase) + "-" + name + "." + extension;
-        }
-
-        splitPaths[splitPathsSize] = filename;
-        return String.join("/", splitPaths);
+        return String.join("/", pathParts);
     }
 
     /**
-     * 生成前端标签上的id
-     *
-     * @return id-UUID
+     * 移除表前缀
      */
-    public static String generateDivId() {
-        return "id-" + UUID.randomUUID().toString().replace("-", "");
+    private static String removeTablePrefixes(VmsArgumentDto dto, String tableName) {
+        String[] prefixes = dto.getTablePrefixes().split("[,，]");
+        for (String prefix : prefixes) {
+            if (tableName.startsWith(prefix)) {
+                return tableName.substring(prefix.length());
+            }
+        }
+        return tableName;
+    }
+
+    /**
+     * 处理文件名生成
+     */
+    private static String processFilename(String filename, String tableName) {
+        filename = filename.replace(".vm", "");
+        String[] parts = filename.split("\\.");
+        String baseName = parts[0];
+        String extension = parts.length > 1 ? parts[1] : "";
+
+        String upperCamelCase = MysqlTypeConvertUtil.convertToCamelCase(tableName, true);
+        String lowerCamelCase = MysqlTypeConvertUtil.convertToCamelCase(tableName, false);
+
+        // 如果包含Java和xml需要进行处理
+        if (filename.contains("java") || filename.contains("xml")) {
+            return upperCamelCase + FILE_TYPE_SUFFIXES.getOrDefault(baseName, "") + "." + extension;
+        }
+
+        if (filename.equals("api.ts") || filename.equals("store.ts")) {
+            return lowerCamelCase + ".ts";
+        }
+
+        if (filename.equals("dialog.vue")) {
+            return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, lowerCamelCase) + "-dialog.vue";
+        }
+
+        return filename;
     }
 }

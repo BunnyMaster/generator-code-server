@@ -6,6 +6,7 @@ import org.apache.velocity.VelocityContext;
 
 import java.io.StringWriter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 模板方法模式
@@ -16,7 +17,7 @@ public abstract class AbstractTemplateGenerator {
     /**
      * 添加生成内容
      */
-    abstract void addContext(VelocityContext context);
+    protected abstract void addContext(VelocityContext context);
 
     /**
      * Velocity 生成模板
@@ -24,39 +25,50 @@ public abstract class AbstractTemplateGenerator {
      * @param context VelocityContext
      * @param writer  StringWriter 写入
      */
-    abstract void templateMerge(VelocityContext context, StringWriter writer);
+    protected abstract void templateMerge(VelocityContext context, StringWriter writer);
 
     /**
-     * 生成模板
+     * 生成代码模板
      *
-     * @param tableMetaData  表属性
-     * @param columnInfoList 列属性数组
-     * @return StringWriter
+     * @param tableMeta 表元数据
+     * @param columns   列信息列表
+     * @return 生成的代码内容
      */
-    public final StringWriter generatorCodeTemplate(TableMetaData tableMetaData, List<ColumnMetaData> columnInfoList) {
+    public StringWriter generateCode(TableMetaData tableMeta, List<ColumnMetaData> columns) {
         VelocityContext context = new VelocityContext();
+        prepareVelocityContext(context, tableMeta, columns);
+        return mergeTemplate(context);
+    }
 
-        // 添加要生成的属性
-        StringWriter writer = new StringWriter();
-        List<String> list = columnInfoList.stream().map(ColumnMetaData::getColumnName).distinct().toList();
-
-        // vm 不能直接写 `{` 需要转换下
+    /**
+     * 准备Velocity上下文数据
+     */
+    private void prepareVelocityContext(VelocityContext context, TableMetaData tableMeta, List<ColumnMetaData> columns) {
+        // 特殊字符处理
         context.put("leftBrace", "{");
+        context.put("tableName", tableMeta.getTableName());
+        context.put("columnInfoList", columns);
+        context.put("baseColumnList", getDistinctColumnNames(columns));
+        addContext(context);  // 子类可扩展
+    }
 
-        // 当前的表名
-        context.put("tableName", tableMetaData.getTableName());
+    /**
+     * 获取去重的列名列表
+     */
+    private String getDistinctColumnNames(List<ColumnMetaData> columns) {
+        return columns.stream()
+                .map(ColumnMetaData::getColumnName)
+                .distinct()
+                .collect(Collectors.joining(","));
+    }
 
-        // 当前表的列信息
-        context.put("columnInfoList", columnInfoList);
-
-        // 数据库sql列
-        context.put("baseColumnList", String.join(",", list));
-
-        // 添加需要生成的内容
-        addContext(context);
-
+    /**
+     * 合并Velocity模板
+     */
+    private StringWriter mergeTemplate(VelocityContext context) {
+        StringWriter writer = new StringWriter();
         templateMerge(context, writer);
-
         return writer;
     }
+
 }

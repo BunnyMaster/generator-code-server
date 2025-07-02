@@ -37,4 +37,10 @@ public class GeneratorCodeException extends RuntimeException {
         this.message = codeEnum.getMessage();
         this.resultCodeEnum = codeEnum;
     }
+
+    public GeneratorCodeException(String message, Exception exception) {
+        super(message);
+        this.message = message;
+        log.error(message, exception);
+    }
 }

@@ -38,7 +38,7 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
      * @param context VelocityContext
      */
     @Override
-    void addContext(VelocityContext context) {
+    public void addContext(VelocityContext context) {
         // 当前的表名
         String tableName = tableMetaData.getTableName();
         // 表的注释内容
@@ -61,12 +61,12 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
         context.put("package", dto.getPackageName());
 
         // 将类名称转成小驼峰
-        String toCamelCase = MysqlTypeConvertUtil.convertToCamelCase(tableName);
-        context.put("classLowercaseName", toCamelCase);
+        String lowerCamelCase = MysqlTypeConvertUtil.convertToCamelCase(tableName, false);
+        context.put("classLowercaseName", lowerCamelCase);
 
         // 将类名称转成大驼峰
-        String convertToCamelCase = MysqlTypeConvertUtil.convertToCamelCase(tableName, true);
-        context.put("classUppercaseName", convertToCamelCase);
+        String upperCameCase = MysqlTypeConvertUtil.convertToCamelCase(tableName, true);
+        context.put("classUppercaseName", upperCameCase);
     }
 
     /**
@@ -76,7 +76,7 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
      * @param writer  StringWriter 写入
      */
     @Override
-    void templateMerge(VelocityContext context, StringWriter writer) {
+    public void templateMerge(VelocityContext context, StringWriter writer) {
         Template servicePathTemplate = Velocity.getTemplate("vms/" + path, "UTF-8");
         servicePathTemplate.merge(context, writer);
     }

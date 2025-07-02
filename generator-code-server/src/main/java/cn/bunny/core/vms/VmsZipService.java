@@ -33,7 +33,8 @@ public class VmsZipService {
      */
     public byte[] createZipFile(VmsArgumentDto dto) {
         // 将二维代码生成结果扁平化为一维列表
-        List<GeneratorVo> generatorVoList = codeGeneratorService.generateCode(dto).values().stream()
+        List<GeneratorVo> generatorVoList = codeGeneratorService.generateCode(dto)
+                .values().stream()
                 .flatMap(Collection::stream)
                 .toList();
 
@@ -56,17 +57,20 @@ public class VmsZipService {
      * @throws RuntimeException 当文件添加失败时抛出，包含失败文件路径信息
      */
     private void addToZip(ZipOutputStream zipOutputStream, GeneratorVo generatorVo) {
-        try {
-            // 标准化文件路径：移除Velocity模板扩展名
-            String path = generatorVo.getPath().replace(".vm", "");
+        final String FILE_EXTENSION = ".vm";
 
+        String voPath = generatorVo.getPath();
+
+        // 标准化文件路径：移除Velocity模板扩展名
+        String path = voPath.replace(FILE_EXTENSION, "");
+        try {
             zipOutputStream.putNextEntry(new ZipEntry(path));
 
             // 以UTF-8编码写入文件内容，避免乱码问题
             zipOutputStream.write(generatorVo.getCode().getBytes(StandardCharsets.UTF_8));
             zipOutputStream.closeEntry();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to add file to ZIP: " + generatorVo.getPath(), e);
+            throw new RuntimeException("Failed to add file to ZIP: " + voPath, e);
         }
     }
 }
