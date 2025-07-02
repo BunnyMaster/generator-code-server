@@ -31,6 +31,6 @@ public class TableMetaData {
     private String className;
 
     @Schema(name = "columns", description = "列名称")
-    private List<ColumnMetaData> columns;
+    private List<ColumnMetaData> columns = List.of();
 
 }
