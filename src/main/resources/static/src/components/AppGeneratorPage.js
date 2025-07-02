@@ -94,40 +94,31 @@ const AppGeneratorPage = defineComponent({
          * 点击复制图表
          * 几秒后恢复原状
          */
-        onCopyToClipboard(code) {
-            const textarea = document.createElement('textarea');
-            textarea.value = code;
-            // 避免滚动到页面底部
-            textarea.style.position = 'fixed';
-            document.body.appendChild(textarea);
-            textarea.select();
-
+        async onCopyToClipboard(code) {
             try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    this.copied = true;
-                    antd.notification.open({
-                        type: 'success',
-                        message: '复制成功',
-                        description: '已将内容复制至剪切板',
-                        duration: 3,
-                    });
-
-                    // 几秒后恢复原状
-                    setTimeout(() => {
-                        this.copied = false;
-                    }, 2000);
-                }
-            } catch (err) {
+                await navigator.clipboard.writeText(code);
                 antd.notification.open({
                     type: 'success',
-                    message: '复制失败',
-                    description: err.message,
+                    message: '复制成功',
+                    description: '已将内容复制至剪切板',
                     duration: 3,
                 });
+            } catch (err) {
+                antd.notification.open({
+                    type: 'error',
+                    message: '复制失败',
+                    description: err.message``,
+                    duration: 3,
+                });
+                console.error('复制失败:', err);
+                // 回退到传统方法
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
             }
-
-            document.body.removeChild(textarea);
         },
 
         /* 下载全部文件 */
