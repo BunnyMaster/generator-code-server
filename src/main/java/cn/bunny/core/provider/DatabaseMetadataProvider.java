@@ -18,7 +18,12 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
+/**
+ * 数据库元数据提供者
+ * 提供从数据库获取表结构信息的实现
+ */
 @Component
 @RequiredArgsConstructor
 public class DatabaseMetadataProvider implements IMetadataProvider {
@@ -29,31 +34,108 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
     private String currentDatabase;
 
     /**
-     * 获取表的所有主键列名
+     * 根据表名标识符获取单个表的元数据信息
+     *
+     * @param tableName 要查询的表名（大小写敏感度取决于数据库实现）
+     * @return TableMetaData 包含表元数据的对象，包括：
+     * - 表名
+     * - 表注释/备注
+     * - 表所属目录（通常是数据库名）
+     * - 表类型（通常为"TABLE"）
+     * @throws MetadataNotFoundException 当指定的表不存在时抛出
+     * @throws GeneratorCodeException    当查询过程中发生其他异常时抛出
+     */
+    @Override
+    public TableMetaData getTableMetadata(String tableName) {
+        try (Connection connection = dataSource.getConnection()) {
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet tables = metaData.getTables(null, null, tableName, new String[]{"TABLE"});
+
+            if (tables.next()) {
+                return TableMetaData.builder()
+                        .tableName(tableName)
+                        .comment(tables.getString("REMARKS"))
+                        .tableCat(tables.getString("TABLE_CAT"))
+                        .tableType(tables.getString("TABLE_TYPE"))
+                        .build();
+            }
+            throw new MetadataNotFoundException("Table not found: " + tableName);
+        } catch (SQLException e) {
+            throw new GeneratorCodeException("Failed to get metadata for table: " + tableName, e);
+        }
+    }
+
+
+    /**
+     * 获取指定表的所有列信息列表
+     *
+     * @param tableName 要查询的表名（大小写敏感度取决于数据库实现）
+     * @return 包含所有列元数据的列表，每个列的信息封装在ColumnMetaData对象中
+     * @throws MetadataProviderException 当获取列元数据过程中发生异常时抛出
+     */
+    @Override
+    public List<ColumnMetaData> getColumnInfoList(String tableName) {
+        try (Connection connection = dataSource.getConnection()) {
+            Set<String> primaryKeys = getPrimaryKeys(tableName);
+            DatabaseMetaData metaData = connection.getMetaData();
+
+            return getColumnMetaData(metaData, tableName, primaryKeys);
+        } catch (SQLException e) {
+            throw new GeneratorCodeException("Failed to get column info for table: " + tableName, e);
+        }
+    }
+
+    /**
+     * 获取表的所有主键列名 获取表的主键列名集合
      *
      * @param tableName 表名
      * @return 主键列名的集合
      */
-    public Set<String> getPrimaryKeys(String tableName) {
-        // 主键的key
+    private Set<String> getPrimaryKeys(String tableName) {
         Set<String> primaryKeys = new HashSet<>();
-
         try (Connection connection = dataSource.getConnection()) {
-            DatabaseMetaData metaData = connection.getMetaData();
-
-            // 当前表的主键
-            ResultSet pkResultSet = metaData.getPrimaryKeys(null, null, tableName);
-
+            ResultSet pkResultSet = connection.getMetaData().getPrimaryKeys(null, null, tableName);
             while (pkResultSet.next()) {
-                // 列字段
-                String columnName = pkResultSet.getString("COLUMN_NAME").toLowerCase();
-                primaryKeys.add(columnName);
+                primaryKeys.add(pkResultSet.getString("COLUMN_NAME").toLowerCase());
             }
-
-            return primaryKeys;
         } catch (SQLException e) {
-            throw new GeneratorCodeException("Get primary key error:" + e.getMessage());
+            throw new GeneratorCodeException("Get primary key error: " + e.getMessage());
         }
+        return primaryKeys;
+    }
+
+    /**
+     * 获取列元数据列表
+     */
+    private List<ColumnMetaData> getColumnMetaData(DatabaseMetaData metaData, String tableName, Set<String> primaryKeys) throws SQLException {
+        Map<String, ColumnMetaData> columnMap = new LinkedHashMap<>();
+        try (ResultSet columnsRs = metaData.getColumns(null, null, tableName, null)) {
+            while (columnsRs.next()) {
+                ColumnMetaData column = buildColumnMetaData(columnsRs, primaryKeys);
+                columnMap.putIfAbsent(column.getColumnName(), column);
+            }
+        }
+        return columnMap.values().stream().distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 构建列元数据对象
+     */
+    private ColumnMetaData buildColumnMetaData(ResultSet columnsRs, Set<String> primaryKeys) throws SQLException {
+        String columnName = columnsRs.getString("COLUMN_NAME");
+        String typeName = columnsRs.getString("TYPE_NAME");
+
+        ColumnMetaData column = new ColumnMetaData();
+        column.setColumnName(columnName);
+        column.setLowercaseName(MysqlTypeConvertUtil.convertToCamelCase(columnName, false));
+        column.setUppercaseName(MysqlTypeConvertUtil.convertToCamelCase(columnName, true));
+        column.setJdbcType(typeName);
+        column.setJavaType(MysqlTypeConvertUtil.convertToJavaType(typeName));
+        column.setJavascriptType(StringUtils.uncapitalize(column.getJavaType()));
+        column.setComment(columnsRs.getString("REMARKS"));
+        column.setIsPrimaryKey(primaryKeys.contains(columnName));
+
+        return column;
     }
 
     /**
@@ -93,67 +175,6 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
         } catch (SQLException e) {
             // 将SQL异常转换为自定义的业务异常
             throw new GeneratorCodeException("Get database info error:" + e.getMessage());
-        }
-    }
-
-    /**
-     * 根据表名标识符获取单个表的元数据信息
-     *
-     * @param identifier 要查询的表名（大小写敏感度取决于数据库实现）
-     * @return TableMetaData 包含表元数据的对象，包括：
-     * - 表名
-     * - 表注释/备注
-     * - 表所属目录（通常是数据库名）
-     * - 表类型（通常为"TABLE"）
-     * @throws MetadataNotFoundException 当指定的表不存在时抛出
-     * @throws GeneratorCodeException    当查询过程中发生其他异常时抛出
-     */
-    public TableMetaData getTableMetadata(String identifier) {
-        // 声明返回对象
-        TableMetaData tableMetaData;
-
-        // 使用try-with-resources自动管理数据库连接
-        try (Connection connection = dataSource.getConnection()) {
-            // 获取数据库元数据对象
-            DatabaseMetaData metaData = connection.getMetaData();
-
-            /*
-              查询指定表名的元数据信息
-              参数说明：
-              1. null - 不限制数据库目录（catalog）
-              2. null - 不限制模式（schema）
-              3. identifier - 要查询的精确表名
-              4. new String[]{"TABLE"} - 只查询基本表类型（排除视图等）
-             */
-            ResultSet tables = metaData.getTables(null, null, identifier, new String[]{"TABLE"});
-
-            // 检查是否找到匹配的表
-            if (tables.next()) {
-                // 获取表的注释/备注（可能为null）
-                String remarks = tables.getString("REMARKS");
-
-                // 获取表所属的目录（通常对应数据库名）
-                String tableCat = tables.getString("TABLE_CAT");
-
-                // 获取表类型（正常表应为"TABLE"）
-                String tableType = tables.getString("TABLE_TYPE");
-
-                // 使用Builder模式构建表元数据对象
-                tableMetaData = TableMetaData.builder()
-                        .tableName(identifier)      // 使用传入的表名标识符
-                        .comment(remarks)           // 设置表注释
-                        .tableCat(tableCat)         // 设置表所属目录
-                        .tableType(tableType)       // 设置表类型
-                        .build();
-            } else {
-                // 如果结果集为空，抛出表不存在异常
-                throw new MetadataNotFoundException("Table not found: " + identifier);
-            }
-
-            return tableMetaData;
-        } catch (Exception e) {
-            // 捕获所有异常并转换为业务异常
-            throw new GeneratorCodeException("Failed to get metadata for table: " + identifier + ". Error: " + e.getMessage(), e);
         }
     }
 
@@ -211,82 +232,4 @@ public class DatabaseMetadataProvider implements IMetadataProvider {
         return allTableInfo;
     }
 
-    /**
-     * 获取指定表的所有列信息列表
-     *
-     * @param identifier 要查询的表名（大小写敏感度取决于数据库实现）
-     * @return 包含所有列元数据的列表，每个列的信息封装在ColumnMetaData对象中
-     * @throws MetadataProviderException 当获取列元数据过程中发生异常时抛出
-     */
-    public List<ColumnMetaData> getColumnInfoList(String identifier) {
-        // 使用try-with-resources确保Connection自动关闭
-        try (Connection connection = dataSource.getConnection()) {
-            // 获取数据库元数据对象
-            DatabaseMetaData metaData = connection.getMetaData();
-
-            // 使用LinkedHashMap保持列的顺序与数据库一致
-            Map<String, ColumnMetaData> map = new LinkedHashMap<>();
-
-            // 获取当前表的所有主键列名集合
-            Set<String> primaryKeyColumns = getPrimaryKeys(identifier);
-
-            /*
-              获取指定表的所有列信息
-              参数说明：
-              1. null - 不限制数据库目录（catalog）
-              2. null - 不限制模式（schema）
-              3. identifier - 要查询的表名
-              4. null - 不限制列名模式（获取所有列）
-             */
-            try (ResultSet columnsRs = metaData.getColumns(null, null, identifier, null)) {
-                // 遍历结果集中的所有列
-                while (columnsRs.next()) {
-                    ColumnMetaData column = new ColumnMetaData();
-
-                    // 获取列的基本信息
-                    String columnName = columnsRs.getString("COLUMN_NAME");  // 列名（原始字段名）
-                    String typeName = columnsRs.getString("TYPE_NAME");      // 数据库类型名称
-
-                    // 设置列基本信息
-                    column.setColumnName(columnName);  // 设置原始列名
-
-                    // 列名格式转换：下划线命名 -> 小驼峰命名（首字母小写）
-                    String lowercaseName = MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), false);
-                    column.setLowercaseName(lowercaseName);
-
-                    // 列名格式转换：下划线命名 -> 大驼峰命名（首字母大写）
-                    String uppercaseName = MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), true);
-                    column.setUppercaseName(uppercaseName);
-
-                    // 设置数据库类型
-                    column.setJdbcType(typeName);
-
-                    // 数据库类型 -> Java类型转换
-                    String javaType = MysqlTypeConvertUtil.convertToJavaType(typeName);
-                    column.setJavaType(javaType);
-
-                    // Java类型 -> JavaScript类型转换（首字母小写）
-                    column.setJavascriptType(StringUtils.uncapitalize(javaType));
-
-                    // 设置列注释（可能为null）
-                    column.setComment(columnsRs.getString("REMARKS"));
-
-                    // 如果主键集合不为空，检查当前列是否是主键
-                    if (!primaryKeyColumns.isEmpty()) {
-                        boolean isPrimaryKey = primaryKeyColumns.contains(columnName);
-                        column.setIsPrimaryKey(isPrimaryKey);
-                    }
-
-                    // 将列信息存入Map，避免重复（使用putIfAbsent保证不覆盖已有值）
-                    map.putIfAbsent(column.getColumnName(), column);
-                }
-            }
-
-            // 将Map中的值转换为List返回
-            return map.values().stream().distinct().toList();
-        } catch (Exception e) {
-            // 捕获所有异常并转换为自定义异常，包含表名和原始异常信息
-            throw new MetadataProviderException("Failed to get table metadata for: " + identifier, e);
-        }
-    }
 }

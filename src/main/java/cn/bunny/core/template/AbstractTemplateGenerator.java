@@ -9,23 +9,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 模板方法模式
- * 如果需要继承 AbstractVmsGenerator
+ * 模板生成抽象基类
+ * 定义代码生成的模板方法流程
  */
 public abstract class AbstractTemplateGenerator {
-
-    /**
-     * 添加生成内容
-     */
-    protected abstract void addContext(VelocityContext context);
-
-    /**
-     * Velocity 生成模板
-     *
-     * @param context VelocityContext
-     * @param writer  StringWriter 写入
-     */
-    protected abstract void templateMerge(VelocityContext context, StringWriter writer);
 
     /**
      * 生成代码模板
@@ -44,7 +31,6 @@ public abstract class AbstractTemplateGenerator {
      * 准备Velocity上下文数据
      */
     private void prepareVelocityContext(VelocityContext context, TableMetaData tableMeta, List<ColumnMetaData> columns) {
-        // 特殊字符处理
         context.put("leftBrace", "{");
         context.put("tableName", tableMeta.getTableName());
         context.put("columnInfoList", columns);
@@ -71,4 +57,13 @@ public abstract class AbstractTemplateGenerator {
         return writer;
     }
 
+    /**
+     * 添加生成内容（由子类实现）
+     */
+    protected abstract void addContext(VelocityContext context);
+
+    /**
+     * 模板合并（由子类实现）
+     */
+    protected abstract void templateMerge(VelocityContext context, StringWriter writer);
 }

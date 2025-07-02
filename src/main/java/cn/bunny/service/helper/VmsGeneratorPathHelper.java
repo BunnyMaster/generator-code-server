@@ -1,6 +1,7 @@
-package cn.bunny.utils;
+package cn.bunny.service.helper;
 
 import cn.bunny.domain.dto.VmsArgumentDto;
+import cn.bunny.utils.MysqlTypeConvertUtil;
 import com.google.common.base.CaseFormat;
 
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Map;
 /**
  * 代码生成工具类
  */
-public class VmsUtil {
+public class VmsGeneratorPathHelper {
     private static final Map<String, String> FILE_TYPE_SUFFIXES = Map.of(
             "controller", "Controller",
             "service", "Service",

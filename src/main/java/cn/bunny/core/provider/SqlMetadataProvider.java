@@ -26,18 +26,18 @@ public class SqlMetadataProvider implements IMetadataProvider {
      * 解析 sql 表信息
      * 先解析SQL语句，解析列字段信息
      *
-     * @param identifier 表名称或sql
+     * @param sqlStatement sql语句
      * @return 表西悉尼
      * @see CCJSqlParserUtil 使用这个工具进行SQL的解析
      */
     @Override
-    public TableMetaData getTableMetadata(String identifier) {
+    public TableMetaData getTableMetadata(String sqlStatement) {
         TableMetaData tableInfo = new TableMetaData();
 
         // 解析sql
         Statement statement;
         try {
-            statement = CCJSqlParserUtil.parse(identifier);
+            statement = CCJSqlParserUtil.parse(sqlStatement);
         } catch (JSQLParserException e) {
             throw new GeneratorCodeException("SQL解析失败");
         }
@@ -62,15 +62,15 @@ public class SqlMetadataProvider implements IMetadataProvider {
     /**
      * 获取当前表的列属性
      *
-     * @param identifier 表名称或sql
+     * @param sqlStatement sql语句
      * @return 当前表所有的列内容
      */
     @Override
-    public List<ColumnMetaData> getColumnInfoList(String identifier) {
+    public List<ColumnMetaData> getColumnInfoList(String sqlStatement) {
         // 解析sql
         Statement statement;
         try {
-            statement = CCJSqlParserUtil.parse(identifier);
+            statement = CCJSqlParserUtil.parse(sqlStatement);
         } catch (JSQLParserException e) {
             throw new SqlParseException("Fail parse sql", e.getCause());
         }
@@ -101,7 +101,7 @@ public class SqlMetadataProvider implements IMetadataProvider {
                     // 列字段转成 下划线 -> 小驼峰
                     String lowercaseName = MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), false);
                     columnInfo.setLowercaseName(lowercaseName);
-                    
+
                     // 列字段转成 下划线 -> 大驼峰名称
                     String uppercaseName = MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), true);
                     columnInfo.setUppercaseName(uppercaseName);

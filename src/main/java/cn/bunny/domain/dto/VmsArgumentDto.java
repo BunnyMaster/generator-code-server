@@ -1,8 +1,8 @@
 package cn.bunny.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,13 +21,13 @@ public class VmsArgumentDto {
     String author;
 
     @Schema(name = "packageName", description = "包名称")
+    @NotBlank(message = "包名不能为空")
     String packageName;
 
     @Schema(name = "requestMapping", description = "requestMapping 名称")
     String requestMapping;
 
-    @NotNull(message = "表名称不能为空")
-    @NotEmpty(message = "表名称不能为空")
+    @Schema(name = "tableNames", description = "表名列表")
     private List<String> tableNames;
 
     @Schema(name = "simpleDateFormat", description = "时间格式")
@@ -37,6 +37,7 @@ public class VmsArgumentDto {
     private String tablePrefixes;
 
     @Schema(name = "path", description = "路径")
+    @NotEmpty(message = "表名称不能为空")
     private List<String> path;
 
     @Schema(name = "sql", description = "SQL 语句")

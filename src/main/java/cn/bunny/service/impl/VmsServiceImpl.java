@@ -1,16 +1,9 @@
 package cn.bunny.service.impl;
 
-import cn.bunny.core.vms.VmsCodeGeneratorService;
-import cn.bunny.core.vms.VmsZipService;
-import cn.bunny.domain.dto.VmsArgumentDto;
-import cn.bunny.domain.vo.GeneratorVo;
 import cn.bunny.domain.vo.VmsPathVo;
 import cn.bunny.service.VmsService;
 import cn.bunny.utils.ResourceFileUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,81 +18,48 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VmsServiceImpl implements VmsService {
 
-    private final VmsCodeGeneratorService codeGeneratorService;
-    private final VmsZipService zipService;
-
-    @Override
-    public Map<String, List<GeneratorVo>> generator(VmsArgumentDto dto) {
-        return codeGeneratorService.generateCode(dto);
-    }
-
     /**
      * 获取VMS资源文件路径列表并按类型分组
      *
      * @return 按类型分组的VMS路径Map，key为类型，value为对应类型的VMS路径列表
      * @throws RuntimeException 当获取资源路径失败时抛出
      */
+    @Override
     public Map<String, List<VmsPathVo>> vmsResourcePathList() {
         try {
             // 1. 获取vms目录下所有相对路径文件列表
             List<String> vmsRelativeFiles = ResourceFileUtil.getRelativeFiles("vms");
 
-            // 2. 处理文件路径并分组
-            return vmsRelativeFiles.stream()
-                    .map(this::convertToVmsPathVo)  // 转换为VO对象
+            // 2. 处理文件路径并分组，将文件路径字符串转换为VmsPathVo对象
+            return vmsRelativeFiles.parallelStream()
+                    .map(vmFile -> {
+                        // 分割文件路径
+                        String[] filepathList = vmFile.split("/");
+
+                        // 获取文件名（不含扩展名）
+                        String filename = filepathList[filepathList.length - 1].replace(".vm", "");
+
+                        /*
+                          生成前端可用的唯一DOM元素ID
+                          格式: "id-" + 无横线的UUID (例如: "id-550e8400e29b41d4a716446655440000")
+                          用途:
+                          1. 用于关联label标签和input元素的for属性
+                          2. 确保列表项在前端有唯一标识
+                         */
+                        String id = "id-" + UUID.randomUUID().toString().replace("-", "");
+
+                        return VmsPathVo.builder()
+                                .id(id)
+                                .name(vmFile)
+                                .label(filename)
+                                .type(filepathList[0])  // 使用路径的第一部分作为类型
+                                .build();
+                    })
+                    // 转换为VO对象
                     .collect(Collectors.groupingBy(VmsPathVo::getType));  // 按类型分组
         } catch (Exception e) {
             throw new RuntimeException("Failed to get VMS resource paths: " + e.getMessage(), e);
         }
     }
 
-    /**
-     * 将文件路径字符串转换为VmsPathVo对象
-     *
-     * @param vmFile 文件相对路径字符串
-     * @return 转换后的VmsPathVo对象
-     */
-    private VmsPathVo convertToVmsPathVo(String vmFile) {
-        // 分割文件路径
-        String[] filepathList = vmFile.split("/");
-
-        // 获取文件名（不含扩展名）
-        String filename = filepathList[filepathList.length - 1].replace(".vm", "");
-
-        /*
-          生成前端可用的唯一DOM元素ID
-          格式: "id-" + 无横线的UUID (例如: "id-550e8400e29b41d4a716446655440000")
-
-          用途:
-          1. 用于关联label标签和input元素的for属性
-          2. 确保列表项在前端有唯一标识
-         */
-        String id = "id-" + UUID.randomUUID().toString().replace("-", "");
-
-        return VmsPathVo.builder()
-                .id(id)
-                .name(vmFile)
-                .label(filename)
-                .type(filepathList[0])  // 使用路径的第一部分作为类型
-                .build();
-    }
-
-    @Override
-    public ResponseEntity<byte[]> downloadByZip(VmsArgumentDto dto) {
-        // 创建ZIP文件
-        byte[] zipBytes = zipService.createZipFile(dto);
-
-        // 下载文件名称
-        String uuid = UUID.randomUUID().toString().split("-")[0];
-        String generateZipFilename = "code-" + uuid + ".zip";
-
-        // 设置响应头
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=" + generateZipFilename);
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
-
-        return new ResponseEntity<>(zipBytes, headers, HttpStatus.OK);
-    }
 }

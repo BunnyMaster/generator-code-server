@@ -13,26 +13,39 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * SQL解析控制器
+ * 提供SQL语句解析功能，提取表和列元数据
+ */
 @Tag(name = "解析SQL", description = "解析SQL接口")
 @RestController
 @RequestMapping("/api/sqlParser")
 @RequiredArgsConstructor
 public class SqlParserController {
 
-    private final SqlMetadataProvider sqlParserService;
+    private final SqlMetadataProvider sqlMetadataProvider;
 
-    @Operation(summary = "解析SQL成表信息", description = "解析SQL成表信息")
+    /**
+     * 解析SQL获取表信息
+     *
+     * @param sql SQL语句
+     * @return 表元数据
+     */
+    @Operation(summary = "解析SQL表信息", description = "解析SQL语句提取表结构信息")
     @PostMapping("tableInfo")
     public Result<TableMetaData> tableInfo(String sql) {
-        TableMetaData vo = sqlParserService.getTableMetadata(sql);
-        return Result.success(vo);
+        return Result.success(sqlMetadataProvider.getTableMetadata(sql));
     }
 
-    @Operation(summary = "解析SQL成列数据", description = "解析SQL成列数据")
+    /**
+     * 解析SQL获取列信息
+     *
+     * @param sql SQL语句
+     * @return 列元数据列表
+     */
+    @Operation(summary = "解析SQL列数据", description = "解析SQL语句提取列结构信息")
     @PostMapping("columnMetaData")
     public Result<List<ColumnMetaData>> columnMetaData(String sql) {
-        List<ColumnMetaData> vo = sqlParserService.getColumnInfoList(sql);
-        return Result.success(vo);
+        return Result.success(sqlMetadataProvider.getColumnInfoList(sql));
     }
-
 }

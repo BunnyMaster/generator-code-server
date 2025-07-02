@@ -33,7 +33,8 @@ public class TableServiceImpl implements TableService {
                     TableMetaData tableInfoVo = tableInfoVos.get(0);
                     tableInfoVo.setTableName(null);
                     return tableInfoVo;
-                }).toList();
+                })
+                .toList();
 
         DatabaseInfoMetaData databaseInfoMetaData = databaseMetadataProvider.databaseInfoMetaData();
         databaseInfoMetaData.setDatabaseList(databaseList);
