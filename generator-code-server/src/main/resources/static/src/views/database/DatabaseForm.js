@@ -134,8 +134,7 @@ const DatabaseForm = {
                                 <span aria-hidden="true" class="spinner-grow spinner-grow-sm"></span>
                                 <span role="status">生成选中表...</span>
                             </button>
-                            <button v-else class="btn btn-primary" data-bs-title="生成全部已经选择的数据表" data-bs-toggle="tooltip"
-                                type="submit">
+                            <button v-else class="btn btn-primary" type="submit">
                                 生成选中表
                             </button>
                             <button class="btn btn-warning" type="button" data-bs-title="取消全部已经选择的数据表" data-bs-toggle="tooltip" 

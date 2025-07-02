@@ -30,7 +30,7 @@ const DatabaseGeneratorPage = defineComponent({
                                  role="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-' + item.id" aria-expanded="false">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-bi-file-earmark-code me-2 text-primary fs-5"></i>
-                                    <span class="text-truncate" style="max-width: 90%">
+                                    <span class="text-truncate" style="max-width: 99%" :title="item.path">
                                         【{{item.comment}}】{{item.path}}
                                     </span>
                                 </div>
