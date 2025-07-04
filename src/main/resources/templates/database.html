@@ -169,21 +169,32 @@
         },
         watch: {
             /* 数据表选择 */
-            dbSelect: {
-                handler() {
-                    this.getDatabaseTableList();
-                }
-            },
+            dbSelect: "getDatabaseTableList",
 
             /* 过滤数据表 */
-            tableSelect: {
-                handler(val) {
-                    this.tableList = this.rawTableList;
-                    // 根据表名进行过滤筛选或者根据注释内容进行筛选
-                    this.tableList = this.tableList.filter(table => table.tableName.includes(val) || table.comment.includes(val));
-                }
+            tableSelect(val) {
+                this.tableList = this.rawTableList;
+                // 根据表名进行过滤筛选或者根据注释内容进行筛选
+                this.tableList = this.tableList.filter(table => table.tableName.includes(val) || table.comment.includes(val));
             },
+
+            /**
+             * 监听form表单放到 localStorage
+             * 不要使用 immediate 否则初始话加载的时候会将 localStorage 改成 原始表单
+             */
+            form: {
+                deep: true,
+                handler(val) {
+                    localStorage.setItem("form", JSON.stringify(val));
+                },
+            }
         },
+        mounted() {
+            const form = localStorage.getItem("form");
+            if (form !== null) {
+                this.form = JSON.parse(form);
+            }
+        }
     });
 
     // 注册组件

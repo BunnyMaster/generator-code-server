@@ -34,6 +34,8 @@ axiosInstance.interceptors.response.use(
             } else {
                 antd.message.error(message || '系统出错');
             }
+
+            return error.response.data;
         }
         return Promise.reject(error.message);
     }

@@ -288,11 +288,12 @@ const DatabaseForm = {
         async onDownloadZip() {
             this.downloadLoading = true;
             try {
+                // 重要：指定响应类型为blob
                 const response = await axiosInstance({
                     url: "/generator/downloadByZip",
                     method: "POST",
                     data: this.form,
-                    responseType: 'blob' // 重要：指定响应类型为blob
+                    responseType: 'blob'
                 });
 
                 // 从响应头中获取文件名
