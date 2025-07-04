@@ -1,13 +1,21 @@
+package ${package}.domain.vo;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "${classUppercaseName}VO对象", title = "${comment}", description = "${comment}的VO对象")
 public class ${classUppercaseName}Vo {
 
-    #foreach($field in ${columnInfoList})
-        @Schema(name = "${field.lowercaseName}", title = "${field.comment}")
-        private ${field.javaType} ${field.lowercaseName};
+#foreach($field in ${columnInfoList})
+    @Schema(name = "${field.lowercaseName}", title = "${field.comment}")
+    private ${field.javaType} ${field.lowercaseName};
 
-    #end
+#end
 }
 

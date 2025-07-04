@@ -1,6 +1,5 @@
 package ${package}.service.impl;
 
-import cn.bunny.domain.pojo.result.PageResult;
 import ${package}.mapper.${classUppercaseName}Mapper;
 import ${package}.service.${classUppercaseName}Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -20,6 +19,7 @@ import java.util.List;
  * @since ${date}
  */
 @Service
+@Transactional
 public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUppercaseName}Mapper, ${classUppercaseName}> implements ${classUppercaseName}Service {
 
     /**
@@ -47,7 +47,7 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      * @param dto ${comment}添加
      */
     @Override
-    public void add${classUppercaseName}(@Valid ${classUppercaseName}AddDto dto) {
+    public void add${classUppercaseName}(@Valid ${classUppercaseName}Dto dto) {
         ${classUppercaseName} ${classLowercaseName} =new ${classUppercaseName}();
         BeanUtils.copyProperties(dto, ${classLowercaseName});
         save(${classLowercaseName});
@@ -59,7 +59,7 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      * @param dto ${comment}更新
      */
     @Override
-    public void update${classUppercaseName}(@Valid ${classUppercaseName}UpdateDto dto) {
+    public void update${classUppercaseName}(@Valid ${classUppercaseName}Dto dto) {
         ${classUppercaseName} ${classLowercaseName} =new ${classUppercaseName}();
         BeanUtils.copyProperties(dto, ${classLowercaseName});
         updateById(${classLowercaseName});

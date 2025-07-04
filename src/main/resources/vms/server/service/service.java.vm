@@ -1,10 +1,7 @@
 package ${package}.service;
 
-import cn.bunny.domain.entity.system.MenuIcon;
-import cn.bunny.domain.pojo.result.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -28,16 +25,16 @@ public interface ${classUppercaseName}Service extends IService<${classUppercaseN
     /**
      * 添加${comment}
      *
-     * @param dto 添加表单
+     * @param dto {@link ${classUppercaseName}Dto} 添加表单
      */
-    void add${classUppercaseName}(${classUppercaseName}AddDto dto);
+    void add${classUppercaseName}(${classUppercaseName}Dto dto);
 
     /**
      * 更新${comment}
      *
-     * @param dto {@link ${classUppercaseName}UpdateDto}
+     * @param dto {@link ${classUppercaseName}Dto} 更新表单
      */
-    void update${classUppercaseName}(${classUppercaseName}UpdateDto dto);
+    void update${classUppercaseName}(${classUppercaseName}Dto dto);
 
     /**
      * 删除|批量删除${comment}类型
