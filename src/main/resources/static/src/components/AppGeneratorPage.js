@@ -95,6 +95,8 @@ const AppGeneratorPage = defineComponent({
          * 几秒后恢复原状
          */
         async onCopyToClipboard(code) {
+            this.copied = true;
+
             try {
                 await navigator.clipboard.writeText(code);
                 antd.notification.open({
@@ -118,6 +120,13 @@ const AppGeneratorPage = defineComponent({
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
+            }
+
+            // 显示已复制图标时长
+            if (this.copied) {
+                setTimeout(() => {
+                    this.copied = false;
+                }, 2000)
             }
         },
 
