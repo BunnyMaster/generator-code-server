@@ -30,12 +30,6 @@ public class GeneratorController {
 
     private final GeneratorService generatorService;
 
-    /**
-     * 生成代码
-     *
-     * @param dto 生成参数DTO
-     * @return 生成的代码结果，按表名分组
-     */
     @Operation(summary = "生成代码", description = "根据SQL或数据库表生成代码")
     @PostMapping
     public Result<Map<String, List<GeneratorVo>>> generator(@Valid @RequestBody VmsArgumentDto dto) {
@@ -48,18 +42,12 @@ public class GeneratorController {
         return Result.success(result);
     }
 
-    /**
-     * 打包代码为ZIP下载
-     *
-     * @param dto 生成参数DTO
-     * @return ZIP文件响应实体
-     */
     @Operation(summary = "打包下载", description = "将生成的代码打包为ZIP文件下载")
     @PostMapping("downloadByZip")
     public ResponseEntity<byte[]> downloadByZip(@Valid @RequestBody VmsArgumentDto dto) {
         // 判断当前是使用 SQL语句 生成还是 数据库生成
         String sql = dto.getSql();
-        
+
         return Strings.isEmpty(sql)
                 ? generatorService.downloadByZipByDatabase(dto)
                 : generatorService.downloadByZipBySqL(dto);

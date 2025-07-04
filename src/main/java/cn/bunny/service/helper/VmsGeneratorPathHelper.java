@@ -1,6 +1,5 @@
 package cn.bunny.service.helper;
 
-import cn.bunny.domain.dto.VmsArgumentDto;
 import cn.bunny.utils.MysqlTypeConvertUtil;
 import com.google.common.base.CaseFormat;
 
@@ -23,36 +22,25 @@ public class VmsGeneratorPathHelper {
     /**
      * 处理模板文件路径和命名
      *
-     * @param dto       生成参数
      * @param path      原始模板路径
      * @param tableName 数据库表名
      * @return 处理后的文件路径
      */
-    public static String processVmPath(VmsArgumentDto dto, String path, String tableName) {
-        String className = removeTablePrefixes(dto, tableName);
+    public static String processVmPath(String path, String tableName) {
         String lowerCamelCase = MysqlTypeConvertUtil.convertToCamelCase(tableName, false);
-        String[] pathParts = path.replace("$className", lowerCamelCase).split("/");
 
-        // 处理文件名
-        pathParts[pathParts.length - 1] = processFilename(
-                pathParts[pathParts.length - 1],
-                className
-        );
+        if (lowerCamelCase != null) {
+            String[] pathParts = path.replace("$className", lowerCamelCase).split("/");
+            // 处理文件名
+            pathParts[pathParts.length - 1] = processFilename(
+                    pathParts[pathParts.length - 1],
+                    lowerCamelCase
+            );
 
-        return String.join("/", pathParts);
-    }
-
-    /**
-     * 移除表前缀
-     */
-    private static String removeTablePrefixes(VmsArgumentDto dto, String tableName) {
-        String[] prefixes = dto.getTablePrefixes().split("[,，]");
-        for (String prefix : prefixes) {
-            if (tableName.startsWith(prefix)) {
-                return tableName.substring(prefix.length());
-            }
+            return String.join("/", pathParts);
         }
-        return tableName;
+
+        return path;
     }
 
     /**

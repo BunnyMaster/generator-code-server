@@ -56,10 +56,12 @@ public class GeneratorServiceImpl implements GeneratorService {
      */
     @Override
     public Map<String, List<GeneratorVo>> generateCodeBySql(VmsArgumentDto dto) {
+        // 根据Sql语句进行分析表的属性和表列字段
         String sql = dto.getSql();
         TableMetaData tableMeta = sqlMetadataProvider.getTableMetadata(sql);
         List<ColumnMetaData> columns = sqlMetadataProvider.getColumnInfoList(sql);
 
+        // 生成代码
         List<GeneratorVo> generatorVoList = getGeneratorStream(dto, tableMeta, columns).toList();
 
         Map<String, List<GeneratorVo>> map = new HashMap<>();
@@ -68,11 +70,23 @@ public class GeneratorServiceImpl implements GeneratorService {
         return map;
     }
 
+    /**
+     * 根据数据库进行生成
+     *
+     * @param dto 生成参数
+     * @return 生成的ZIP文件
+     */
     @Override
     public ResponseEntity<byte[]> downloadByZipByDatabase(VmsArgumentDto dto) {
         return downloadByZip(dto, this::generateCodeByDatabase);
     }
 
+    /**
+     * 根据Sql语句及逆行生成
+     *
+     * @param dto 生成参数
+     * @return 生成的ZIP文件
+     */
     @Override
     public ResponseEntity<byte[]> downloadByZipBySqL(VmsArgumentDto dto) {
         return downloadByZip(dto, this::generateCodeBySql);
@@ -117,16 +131,22 @@ public class GeneratorServiceImpl implements GeneratorService {
      * @return 生成器流
      */
     public Stream<GeneratorVo> getGeneratorStream(VmsArgumentDto dto, TableMetaData tableMeta, List<ColumnMetaData> columns) {
+        // 因为这里使用到了并行流，对 tableMeta 操作正常是会拿到修改后的值，但是在并行流会有线程安全问题，所以直接要手动实现深拷贝
+
         return dto.getPath().parallelStream().map(path -> {
+            // 创建生成模板
             VmsTBaseTemplateGenerator generator = new VmsTBaseTemplateGenerator(dto, path, tableMeta);
+
+            // 生成好的模板
             String code = generator.generateCode(tableMeta, columns).toString();
+            String processVmPath = VmsGeneratorPathHelper.processVmPath(path, tableMeta.getCleanTableName());
 
             return GeneratorVo.builder()
                     .id(UUID.randomUUID().toString())
                     .code(code)
                     .comment(tableMeta.getComment())
                     .tableName(tableMeta.getTableName())
-                    .path(VmsGeneratorPathHelper.processVmPath(dto, path, tableMeta.getTableName()))
+                    .path(processVmPath)
                     .build();
         });
     }

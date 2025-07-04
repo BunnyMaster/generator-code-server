@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -13,10 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "TableMetaData", description = "表信息数据")
-public class TableMetaData {
+public class TableMetaData implements Serializable {
 
     @Schema(name = "tableName", description = "表名")
     private String tableName;
+
+    @Schema(name = "handlerTableName", description = "处理后的表名称")
+    private String cleanTableName;
 
     @Schema(name = "comment", description = "注释内容")
     private String comment;
@@ -32,5 +36,6 @@ public class TableMetaData {
 
     @Schema(name = "columns", description = "列名称")
     private List<ColumnMetaData> columns = List.of();
+
 
 }
