@@ -3,6 +3,7 @@ package cn.bunny.core.template;
 import cn.bunny.domain.dto.VmsArgumentDto;
 import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.utils.MysqlTypeConvertUtil;
+import com.google.common.base.CaseFormat;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -77,6 +78,10 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
         // 将类名称转成大驼峰
         String upperCameCase = MysqlTypeConvertUtil.convertToCamelCase(handlerTableName, true);
         context.put("classUppercaseName", upperCameCase);
+
+        // 添加中划线
+        String lowerHyphenName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, lowerCamelCase);
+        context.put("lowerHyphenName", lowerHyphenName);
     }
 
     /**

@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Tag(name = "${comment}", description = "${comment}相关接口")
 @RestController
-@RequestMapping("${requestMapping}/${classLowercaseName}")
+@RequestMapping("${requestMapping}/${lowerHyphenName}")
 @RequiredArgsConstructor
 public class ${classUppercaseName}Controller {
 

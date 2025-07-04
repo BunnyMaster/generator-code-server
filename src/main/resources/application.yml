@@ -18,3 +18,7 @@ spring:
     hikari:
       maximum-pool-size: 20
       connection-timeout: 30000
+
+logging:
+  file:
+    path: "logs/${spring.application.name}"

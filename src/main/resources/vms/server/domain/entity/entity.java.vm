@@ -2,22 +2,27 @@ package ${package}.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
 @Accessors(chain = true)
 @TableName("${tableName}")
 @Schema(name = "${classUppercaseName}对象", title = "${comment}", description = "${comment}的实体类对象")
-public class ${classUppercaseName} extends BaseEntity {
+public class ${classUppercaseName} {
 
-    #foreach($field in ${columnInfoList})
-        @Schema(name = "${field.lowercaseName}", title = "${field.comment}")
-        private ${field.javaType} ${field.lowercaseName};
+#foreach($field in ${columnInfoList})
 
+    @Schema(name = "${field.lowercaseName}", title = "${field.comment}")
+    #if($field.isPrimaryKey)
+    @TableId(type = IdType.ASSIGN_ID)
     #end
+    private ${field.javaType} ${field.lowercaseName};
+
+#end
 }
