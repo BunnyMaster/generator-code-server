@@ -1,7 +1,11 @@
 package ${package}.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import ${package}.domain.dto.${classUppercaseName}Dto;
+import ${package}.domain.entity.${classUppercaseName};
+import ${package}.domain.vo.${classUppercaseName}Vo;
 
 import java.util.List;
 

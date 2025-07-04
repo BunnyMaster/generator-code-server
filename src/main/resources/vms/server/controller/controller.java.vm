@@ -1,11 +1,17 @@
 package ${package}.controller;
 
+import ${package}.domain.dto.${classUppercaseName}Dto;
+import ${package}.domain.entity.${classUppercaseName};
+import ${package}.domain.vo.${classUppercaseName}Vo;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.RequiredArgsConstructor;
+import ${package}.service.${classUppercaseName}Service;
 
 import java.util.List;
 
@@ -20,10 +26,10 @@ import java.util.List;
 @Tag(name = "${comment}", description = "${comment}相关接口")
 @RestController
 @RequestMapping("${requestMapping}/${classLowercaseName}")
+@RequiredArgsConstructor
 public class ${classUppercaseName}Controller {
 
-    @Resource
-    private ${classUppercaseName}Service ${classLowercaseName}Service;
+    private final ${classUppercaseName}Service ${classLowercaseName}Service;
 
     @Operation(summary = "分页查询${comment}", description = "分页${comment}")
     @GetMapping("{page}/{limit}")

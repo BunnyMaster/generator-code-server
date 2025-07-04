@@ -7,6 +7,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ${package}.service.${classUppercaseName}Service;
+import ${package}.domain.dto.${classUppercaseName}Dto;
+import ${package}.domain.entity.${classUppercaseName};
+import ${package}.domain.vo.${classUppercaseName}Vo;
 
 import java.util.List;
 
@@ -47,7 +52,7 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      * @param dto ${comment}添加
      */
     @Override
-    public void add${classUppercaseName}(@Valid ${classUppercaseName}Dto dto) {
+    public void add${classUppercaseName}(${classUppercaseName}Dto dto) {
         ${classUppercaseName} ${classLowercaseName} =new ${classUppercaseName}();
         BeanUtils.copyProperties(dto, ${classLowercaseName});
         save(${classLowercaseName});
@@ -59,7 +64,7 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      * @param dto ${comment}更新
      */
     @Override
-    public void update${classUppercaseName}(@Valid ${classUppercaseName}Dto dto) {
+    public void update${classUppercaseName}(${classUppercaseName}Dto dto) {
         ${classUppercaseName} ${classLowercaseName} =new ${classUppercaseName}();
         BeanUtils.copyProperties(dto, ${classLowercaseName});
         updateById(${classLowercaseName});
