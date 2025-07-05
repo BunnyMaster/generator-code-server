@@ -7,6 +7,7 @@ import com.google.common.base.CaseFormat;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.springframework.util.StringUtils;
 
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -28,10 +29,6 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
      * @param tableMetaData 表名称
      */
     public VmsTBaseTemplateGenerator(VmsArgumentDto dto, String path, TableMetaData tableMetaData) {
-        this.dto = dto;
-        this.path = path;
-        this.tableMetaData = tableMetaData;
-
         // 处理表名称，替换前缀
         String tableName = tableMetaData.getTableName();
         String[] prefixes = dto.getTablePrefixes().split("[,，]");
@@ -41,6 +38,11 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
                 tableMetaData.setCleanTableName(handlerTableName);
             }
         }
+
+        this.dto = dto;
+        this.path = path;
+        this.tableMetaData = tableMetaData;
+
     }
 
     /**
@@ -52,6 +54,7 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
     public void addContext(VelocityContext context) {
         // 当前的表名
         String handlerTableName = tableMetaData.getCleanTableName();
+        handlerTableName = StringUtils.hasText(handlerTableName) ? handlerTableName : tableMetaData.getTableName();
         // 表的注释内容
         String comment = tableMetaData.getComment();
 

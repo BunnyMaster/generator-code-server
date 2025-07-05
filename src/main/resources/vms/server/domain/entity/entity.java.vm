@@ -9,6 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.Date;
+
 @Getter
 @Setter
 @Accessors(chain = true)
@@ -17,7 +21,6 @@ import lombok.experimental.Accessors;
 public class ${classUppercaseName} {
 
 #foreach($field in ${columnInfoList})
-
     @Schema(name = "${field.lowercaseName}", title = "${field.comment}")
     #if($field.isPrimaryKey)
     @TableId(type = IdType.ASSIGN_ID)

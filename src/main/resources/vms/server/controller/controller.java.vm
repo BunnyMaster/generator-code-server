@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import ${package}.service.${classUppercaseName}Service;
-
+import ${package}.domain.vo.result.PageResult;
+import ${package}.domain.vo.result.Result;
+import ${package}.domain.vo.result.ResultCodeEnum;
 import java.util.List;
 
 /**
