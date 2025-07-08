@@ -16,6 +16,7 @@ public class VmsGeneratorPathHelper {
             "mapper", "Mapper",
             "resourceMapper", "Mapper",
             "dto", "Dto",
+            "entity", "Entity",
             "vo", "Vo"
     );
 
