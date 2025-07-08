@@ -32,6 +32,9 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
         // 处理表名称，替换前缀
         String tableName = tableMetaData.getTableName();
         String[] prefixes = dto.getTablePrefixes().split("[,，]");
+
+        tableMetaData.setCleanTableName(tableName);
+
         for (String prefix : prefixes) {
             if (tableName.startsWith(prefix)) {
                 String handlerTableName = tableName.replace(prefix, "");
@@ -42,7 +45,6 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
         this.dto = dto;
         this.path = path;
         this.tableMetaData = tableMetaData;
-
     }
 
     /**
@@ -53,8 +55,9 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
     @Override
     public void addContext(VelocityContext context) {
         // 当前的表名
-        String handlerTableName = tableMetaData.getCleanTableName();
-        handlerTableName = StringUtils.hasText(handlerTableName) ? handlerTableName : tableMetaData.getTableName();
+        String cleanTableName = tableMetaData.getCleanTableName();
+        cleanTableName = StringUtils.hasText(cleanTableName) ? cleanTableName : tableMetaData.getTableName();
+
         // 表的注释内容
         String comment = tableMetaData.getComment();
 
@@ -75,11 +78,11 @@ public class VmsTBaseTemplateGenerator extends AbstractTemplateGenerator {
         context.put("package", dto.getPackageName());
 
         // 将类名称转成小驼峰
-        String lowerCamelCase = MysqlTypeConvertUtil.convertToCamelCase(handlerTableName, false);
+        String lowerCamelCase = MysqlTypeConvertUtil.convertToCamelCase(cleanTableName, false);
         context.put("classLowercaseName", lowerCamelCase);
 
         // 将类名称转成大驼峰
-        String upperCameCase = MysqlTypeConvertUtil.convertToCamelCase(handlerTableName, true);
+        String upperCameCase = MysqlTypeConvertUtil.convertToCamelCase(cleanTableName, true);
         context.put("classUppercaseName", upperCameCase);
 
         // 添加中划线

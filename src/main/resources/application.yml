@@ -6,6 +6,11 @@ spring:
     active: prod
   application:
     name: generator-code
+  devtools:
+    livereload:
+      enabled: true
+      port: 8880
+
   thymeleaf:
     check-template-location: false
 
