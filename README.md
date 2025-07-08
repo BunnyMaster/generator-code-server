@@ -432,6 +432,6 @@ pie
 
 如果这个项目对您有帮助，可以考虑支持我们：
 
-![WeChat & Alipay](D:\Project\Mine\generator-template\v2\generator-code-server\images\wx_alipay.png)
+![WeChat & Alipay](.\images\wx_alipay.png)
 
 **Happy Coding!** 🎉
