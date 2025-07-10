@@ -3,7 +3,7 @@
 <mapper namespace="${package}.mapper.${classUppercaseName}Mapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="${package}.domain.entity.${classUppercaseName}">
+    <resultMap id="BaseResultMap" type="${package}.domain.entity.${classUppercaseName}Entity">
         #foreach($field in ${columnInfoList})
             <id column="${field.columnName}" property="${field.lowercaseName}"/>
         #end

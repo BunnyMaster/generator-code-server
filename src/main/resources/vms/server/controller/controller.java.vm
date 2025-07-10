@@ -1,7 +1,7 @@
 package ${package}.controller;
 
 import ${package}.domain.dto.${classUppercaseName}Dto;
-import ${package}.domain.entity.${classUppercaseName};
+import ${package}.domain.entity.${classUppercaseName}Entity;
 import ${package}.domain.vo.${classUppercaseName}Vo;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +41,7 @@ public class ${classUppercaseName}Controller {
             @Parameter(name = "limit", description = "每页记录数", required = true)
             @PathVariable("limit") Integer limit,
             ${classUppercaseName}Dto dto) {
-        Page<${classUppercaseName}> pageParams = new Page<>(page, limit);
+        Page<${classUppercaseName}Entity> pageParams = new Page<>(page, limit);
         PageResult<${classUppercaseName}Vo> pageResult = ${classLowercaseName}Service.get${classUppercaseName}Page(pageParams, dto);
         return Result.success(pageResult);
     }

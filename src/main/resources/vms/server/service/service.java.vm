@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import ${package}.domain.dto.${classUppercaseName}Dto;
-import ${package}.domain.entity.${classUppercaseName};
+import ${package}.domain.entity.${classUppercaseName}Entity;
 import ${package}.domain.vo.${classUppercaseName}Vo;
 import ${package}.domain.vo.result.PageResult;
 import ${package}.domain.vo.result.Result;
@@ -19,14 +19,14 @@ import java.util.List;
  * @author Bunny
  * @since ${date}
  */
-public interface ${classUppercaseName}Service extends IService<${classUppercaseName}> {
+public interface ${classUppercaseName}Service extends IService<${classUppercaseName}Entity> {
 
     /**
      * 分页查询${comment}
      *
      * @return {@link ${classUppercaseName}Vo}
      */
-    PageResult<${classUppercaseName}Vo> get${classUppercaseName}Page(Page<${classUppercaseName}> pageParams, ${classUppercaseName}Dto dto);
+    PageResult<${classUppercaseName}Vo> get${classUppercaseName}Page(Page<${classUppercaseName}Entity> pageParams, ${classUppercaseName}Dto dto);
 
     /**
      * 添加${comment}

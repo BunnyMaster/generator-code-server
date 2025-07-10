@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ${package}.service.${classUppercaseName}Service;
 import ${package}.domain.dto.${classUppercaseName}Dto;
-import ${package}.domain.entity.${classUppercaseName};
+import ${package}.domain.entity.${classUppercaseName}Entity;
 import ${package}.domain.vo.${classUppercaseName}Vo;
 import ${package}.domain.vo.result.PageResult;
 import ${package}.domain.vo.result.Result;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUppercaseName}Mapper, ${classUppercaseName}> implements ${classUppercaseName}Service {
+public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUppercaseName}Mapper, ${classUppercaseName}Entity> implements ${classUppercaseName}Service {
 
     /**
      * * ${comment} 服务实现类
@@ -37,7 +37,7 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      * @return 查询分页${comment}返回对象
      */
     @Override
-    public PageResult<${classUppercaseName}Vo> get${classUppercaseName}Page(Page<${classUppercaseName}> pageParams, ${classUppercaseName}Dto dto) {
+    public PageResult<${classUppercaseName}Vo> get${classUppercaseName}Page(Page<${classUppercaseName}Entity> pageParams, ${classUppercaseName}Dto dto) {
         IPage<${classUppercaseName}Vo> page = baseMapper.selectListByPage(pageParams, dto);
 
         return PageResult.<${classUppercaseName}Vo>builder()
@@ -55,7 +55,7 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      */
     @Override
     public void add${classUppercaseName}(${classUppercaseName}Dto dto) {
-        ${classUppercaseName} ${classLowercaseName} =new ${classUppercaseName}();
+            ${classUppercaseName}Entity ${classLowercaseName} = new ${classUppercaseName}Entity();
         BeanUtils.copyProperties(dto, ${classLowercaseName});
         save(${classLowercaseName});
     }
@@ -67,7 +67,7 @@ public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUpperca
      */
     @Override
     public void update${classUppercaseName}(${classUppercaseName}Dto dto) {
-        ${classUppercaseName} ${classLowercaseName} =new ${classUppercaseName}();
+            ${classUppercaseName}Entity ${classLowercaseName} = new ${classUppercaseName}Entity();
         BeanUtils.copyProperties(dto, ${classLowercaseName});
         updateById(${classLowercaseName});
     }
