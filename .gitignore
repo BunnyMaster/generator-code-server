@@ -12,13 +12,6 @@ dist-ssr
 .eslintcache
 report.html
 vite.config.*.timestamp*
-application-prod.yml
-bunny-web.site.csr
-bunny-web.site.key
-bunny-web.site_bundle.crt
-bunny-web.site_bundle.pem
-
-application-prod.yml
 
 yarn.lock
 npm-debug.log*
@@ -71,3 +64,13 @@ lerna-debug.log*
 
 # Editor directories and files
 tsconfig.tsbuildinfo
+
+# 本地
+
+bunny-web.site.csr
+bunny-web.site.key
+bunny-web.site_bundle.crt
+bunny-web.site_bundle.pem
+
+application-prod.yml
+application-company.yml

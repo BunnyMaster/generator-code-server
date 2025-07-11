@@ -85,7 +85,8 @@ public class SqlMetadataProvider implements IMetadataProvider {
                     ColumnMetaData columnInfo = new ColumnMetaData();
 
                     // 列名称
-                    columnInfo.setColumnName(column.getColumnName());
+                    String columnName = column.getColumnName().replaceAll("`", "");
+                    columnInfo.setColumnName(columnName);
 
                     // 设置 JDBC 类型
                     String dataType = column.getColDataType().getDataType();
@@ -99,11 +100,11 @@ public class SqlMetadataProvider implements IMetadataProvider {
                     columnInfo.setJavascriptType(StringUtils.uncapitalize(javaType));
 
                     // 列字段转成 下划线 -> 小驼峰
-                    String lowercaseName = MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), false);
+                    String lowercaseName = MysqlTypeConvertUtil.convertToCamelCase(columnName, false);
                     columnInfo.setLowercaseName(lowercaseName);
 
                     // 列字段转成 下划线 -> 大驼峰名称
-                    String uppercaseName = MysqlTypeConvertUtil.convertToCamelCase(column.getColumnName(), true);
+                    String uppercaseName = MysqlTypeConvertUtil.convertToCamelCase(columnName, true);
                     columnInfo.setUppercaseName(uppercaseName);
 
                     // 解析注释
