@@ -3,7 +3,7 @@
 <mapper namespace="${package}.mapper.${classUppercaseName}Mapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="${package}.domain.entity.${classUppercaseName}Entity">
+    <resultMap id="BaseResultMap" type="${package}.model.entity.${classUppercaseName}Entity">
         #foreach($field in ${columnInfoList})
             <id column="${field.columnName}" property="${field.lowercaseName}"/>
         #end
@@ -15,7 +15,7 @@
     </sql>
 
     <!-- 分页查询${comment}内容 -->
-    <select id="selectListByPage" resultType="${package}.domain.vo.${classUppercaseName}Vo">
+    <select id="selectListByPage" resultType="${package}.model.vo.${classUppercaseName}Vo">
         select
         base.*,
         create_user.username as create_username,

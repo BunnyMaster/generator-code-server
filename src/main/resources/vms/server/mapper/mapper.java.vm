@@ -4,14 +4,14 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
-import ${package}.domain.dto.${classUppercaseName}Dto;
-import ${package}.domain.entity.${classUppercaseName}Entity;
-import ${package}.domain.vo.${classUppercaseName}Vo;
+import ${package}.model.dto.${classUppercaseName}Dto;
+import ${package}.model.entity.${classUppercaseName}Entity;
+import ${package}.model.vo.${classUppercaseName}Vo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Param;
-import ${package}.domain.vo.result.PageResult;
-import ${package}.domain.vo.result.Result;
-import ${package}.domain.vo.result.ResultCodeEnum;
+import ${package}.model.vo.result.PageResult;
+import ${package}.model.vo.result.Result;
+import ${package}.model.vo.result.ResultCodeEnum;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ import java.util.List;
 public interface ${classUppercaseName}Mapper extends BaseMapper<${classUppercaseName}Entity> {
 
     /**
-     * * 分页查询${comment}内容
+     * 分页查询${comment}内容
      *
      * @param pageParams ${comment}分页参数
      * @param dto        ${comment}查询表单

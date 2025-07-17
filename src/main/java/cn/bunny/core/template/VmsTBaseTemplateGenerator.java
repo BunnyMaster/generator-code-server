@@ -1,7 +1,7 @@
 package cn.bunny.core.template;
 
-import cn.bunny.domain.dto.VmsArgumentDto;
-import cn.bunny.domain.entity.TableMetaData;
+import cn.bunny.model.dto.VmsArgumentDto;
+import cn.bunny.model.entity.TableMetaData;
 import cn.bunny.utils.MysqlTypeConvertUtil;
 import com.google.common.base.CaseFormat;
 import org.apache.velocity.Template;

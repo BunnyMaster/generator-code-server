@@ -1,8 +1,8 @@
 package cn.bunny.service.impl;
 
 import cn.bunny.core.provider.DatabaseMetadataProvider;
-import cn.bunny.domain.entity.DatabaseInfoMetaData;
-import cn.bunny.domain.entity.TableMetaData;
+import cn.bunny.model.entity.DatabaseInfoMetaData;
+import cn.bunny.model.entity.TableMetaData;
 import cn.bunny.service.TableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

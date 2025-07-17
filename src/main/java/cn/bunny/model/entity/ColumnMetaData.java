@@ -1,4 +1,4 @@
-package cn.bunny.domain.entity;
+package cn.bunny.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,10 +1,10 @@
 package cn.bunny.core.provider;
 
 import cn.bunny.core.dialect.DatabaseDialect;
-import cn.bunny.domain.entity.ColumnMetaData;
-import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.exception.GeneratorCodeException;
 import cn.bunny.exception.SqlParseException;
+import cn.bunny.model.entity.ColumnMetaData;
+import cn.bunny.model.entity.TableMetaData;
 import cn.bunny.utils.MysqlTypeConvertUtil;
 import lombok.RequiredArgsConstructor;
 import net.sf.jsqlparser.JSQLParserException;

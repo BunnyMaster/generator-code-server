@@ -1,8 +1,8 @@
 package cn.bunny.exception;
 
 
-import cn.bunny.domain.result.Result;
-import cn.bunny.domain.result.ResultCodeEnum;
+import cn.bunny.model.result.Result;
+import cn.bunny.model.result.ResultCodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.util.StringUtils;

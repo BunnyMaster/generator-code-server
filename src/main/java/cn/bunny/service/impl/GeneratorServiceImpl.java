@@ -2,10 +2,10 @@ package cn.bunny.service.impl;
 
 import cn.bunny.core.provider.IMetadataProvider;
 import cn.bunny.core.template.VmsTBaseTemplateGenerator;
-import cn.bunny.domain.dto.VmsArgumentDto;
-import cn.bunny.domain.entity.ColumnMetaData;
-import cn.bunny.domain.entity.TableMetaData;
-import cn.bunny.domain.vo.GeneratorVo;
+import cn.bunny.model.dto.VmsArgumentDto;
+import cn.bunny.model.entity.ColumnMetaData;
+import cn.bunny.model.entity.TableMetaData;
+import cn.bunny.model.vo.GeneratorVo;
 import cn.bunny.service.GeneratorService;
 import cn.bunny.service.helper.VmsGeneratorPathHelper;
 import cn.bunny.utils.ZipFileUtil;

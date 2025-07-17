@@ -1,7 +1,7 @@
 package cn.bunny.service;
 
-import cn.bunny.domain.dto.VmsArgumentDto;
-import cn.bunny.domain.vo.GeneratorVo;
+import cn.bunny.model.dto.VmsArgumentDto;
+import cn.bunny.model.vo.GeneratorVo;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 

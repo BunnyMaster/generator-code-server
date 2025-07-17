@@ -1,9 +1,9 @@
 package cn.bunny.controller;
 
 import cn.bunny.core.provider.SqlMetadataProvider;
-import cn.bunny.domain.entity.ColumnMetaData;
-import cn.bunny.domain.entity.TableMetaData;
-import cn.bunny.domain.result.Result;
+import cn.bunny.model.entity.ColumnMetaData;
+import cn.bunny.model.entity.TableMetaData;
+import cn.bunny.model.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
