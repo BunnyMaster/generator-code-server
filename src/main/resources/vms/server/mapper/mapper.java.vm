@@ -26,7 +26,7 @@ import java.util.List;
 public interface ${classUppercaseName}Mapper extends BaseMapper<${classUppercaseName}Entity> {
 
     /**
-     * * 分页查询${comment}内容
+     * 分页查询${comment}内容
      *
      * @param pageParams ${comment}分页参数
      * @param dto        ${comment}查询表单
