@@ -1,6 +1,6 @@
 package cn.bunny.service;
 
-import cn.bunny.domain.entity.DatabaseInfoMetaData;
+import cn.bunny.model.entity.DatabaseInfoMetaData;
 
 public interface TableService {
 
@@ -10,5 +10,5 @@ public interface TableService {
      * @return 当前连接的数据库信息属性
      */
     DatabaseInfoMetaData databaseInfoMetaData();
-    
+
 }

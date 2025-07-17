@@ -1,4 +1,4 @@
-package cn.bunny.domain.entity;
+package cn.bunny.model.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

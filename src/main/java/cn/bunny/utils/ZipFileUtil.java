@@ -1,6 +1,6 @@
 package cn.bunny.utils;
 
-import cn.bunny.domain.vo.GeneratorVo;
+import cn.bunny.model.vo.GeneratorVo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

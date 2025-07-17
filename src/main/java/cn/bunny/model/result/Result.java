@@ -1,4 +1,4 @@
-package cn.bunny.domain.result;
+package cn.bunny.model.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

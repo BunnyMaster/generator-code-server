@@ -1,7 +1,7 @@
 package cn.bunny.core.provider;
 
-import cn.bunny.domain.entity.ColumnMetaData;
-import cn.bunny.domain.entity.TableMetaData;
+import cn.bunny.model.entity.ColumnMetaData;
+import cn.bunny.model.entity.TableMetaData;
 
 import java.util.List;
 

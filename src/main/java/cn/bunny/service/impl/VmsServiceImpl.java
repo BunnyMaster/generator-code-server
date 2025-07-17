@@ -1,6 +1,6 @@
 package cn.bunny.service.impl;
 
-import cn.bunny.domain.vo.VmsPathVo;
+import cn.bunny.model.vo.VmsPathVo;
 import cn.bunny.service.VmsService;
 import cn.bunny.utils.ResourceFileUtil;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package cn.bunny.core.template;
 
-import cn.bunny.domain.entity.ColumnMetaData;
-import cn.bunny.domain.entity.TableMetaData;
+import cn.bunny.model.entity.ColumnMetaData;
+import cn.bunny.model.entity.TableMetaData;
 import org.apache.velocity.VelocityContext;
 
 import java.io.StringWriter;

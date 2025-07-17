@@ -1,7 +1,7 @@
 package cn.bunny.controller;
 
-import cn.bunny.domain.result.Result;
-import cn.bunny.domain.vo.VmsPathVo;
+import cn.bunny.model.result.Result;
+import cn.bunny.model.vo.VmsPathVo;
 import cn.bunny.service.VmsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

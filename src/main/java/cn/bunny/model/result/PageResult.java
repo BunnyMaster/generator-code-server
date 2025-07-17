@@ -1,4 +1,4 @@
-package cn.bunny.domain.result;
+package cn.bunny.model.result;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

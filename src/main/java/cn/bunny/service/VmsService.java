@@ -1,6 +1,6 @@
 package cn.bunny.service;
 
-import cn.bunny.domain.vo.VmsPathVo;
+import cn.bunny.model.vo.VmsPathVo;
 
 import java.util.List;
 import java.util.Map;

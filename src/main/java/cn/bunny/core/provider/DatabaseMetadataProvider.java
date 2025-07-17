@@ -1,11 +1,11 @@
 package cn.bunny.core.provider;
 
-import cn.bunny.domain.entity.ColumnMetaData;
-import cn.bunny.domain.entity.DatabaseInfoMetaData;
-import cn.bunny.domain.entity.TableMetaData;
 import cn.bunny.exception.GeneratorCodeException;
 import cn.bunny.exception.MetadataNotFoundException;
 import cn.bunny.exception.MetadataProviderException;
+import cn.bunny.model.entity.ColumnMetaData;
+import cn.bunny.model.entity.DatabaseInfoMetaData;
+import cn.bunny.model.entity.TableMetaData;
 import cn.bunny.utils.MysqlTypeConvertUtil;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
