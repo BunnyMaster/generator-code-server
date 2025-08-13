@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${package}.mapper.${classUppercaseName}Mapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="${package}.model.vo.${classUppercaseName}PageVO">
+        <id column="id" property="id"/>
+        #foreach($field in ${columnInfoList})
+            <id column="${field.columnName}" property="${field.lowercaseName}"/>
+        #end
+        <id column="create_time" property="createTime"/>
+        <id column="update_time" property="updateTime"/>
+        <id column="create_user" property="createUser"/>
+        <id column="update_user" property="updateUser"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, ${baseColumnList}, create_time, update_time, create_user, update_user
+    </sql>
+
+    <!-- 分页查询${comment}内容 -->
+    <select id="selectListByPage" resultType="${package}.model.vo.${classUppercaseName}PageVO">
+        select
+        <include refid="Base_Column_List"/>
+        from $tableName
+        <where>
+            is_deleted = 0
+            #foreach($field in $columnInfoList)
+                <if test="query.${field.lowercaseName} != null and query.${field.lowercaseName} != ''">
+                    and ${field.columnName} like CONCAT('%',#{query.${field.lowercaseName}},'%')
+                </if>
+            #end
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,7 @@
+bunny:
+  master:
+    host: 172.19.21.33
+    port: 30331
+    database: bms_contract
+    username: bms_contract
+    password: "bms_contract"

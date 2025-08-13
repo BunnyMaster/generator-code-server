@@ -1,0 +1,58 @@
+import {reactive} from 'vue';
+import { ElAvatar, ElButton, type FormRules } from 'element-plus';
+import { selectUserinfo } from '@/components/RePureTableBar/Userinfo/columns';
+import type { ${classUppercaseName}ListItem } from '@/types/system/${classLowercaseName}DataType';
+
+export const columns: TableColumnList = [
+    {type: 'selection', align: 'left'},
+    {type: 'index', index: (index: number) => index + 1, label: '序号', width: 60},
+    #foreach($field in $columnInfoList)
+        // $field.comment
+        {label: "$field.comment", prop: '$field.lowercaseName'},
+    #end
+    {label: "更新时间", prop: 'updateTime', sortable: true, width: 160},
+    {label: "创建时间", prop: 'createTime', sortable: true, width: 160},
+    {
+    label: '创建用户',
+    prop: 'createUser',
+    width: 130,
+    formatter(row: UserListItem) {
+    return (
+    row.createUser && (
+      <ElButton link type="primary" onClick={() => selectUserinfo(row.createUser)}>
+        {row.createUsername}
+      </ElButton>
+    )
+    );
+    },
+    },
+    {
+    label: '更新用户',
+    prop: 'updateUser',
+    width: 130,
+    formatter(row: UserListItem) {
+    return (
+    row.updateUser && (
+      <ElButton link type="primary" onClick={() => selectUserinfo(row.updateUser)}>
+        {row.updateUsername}
+      </ElButton>
+    )
+    );
+    },
+    },
+    {label: "操作", fixed: 'right', width: 220, slot: 'operation'},
+];
+
+// 添加规则
+export const rules = reactive < FormRules > ({
+    #foreach($field in $columnInfoList)
+        // $field.comment
+    $field.lowercaseName: [{
+            required: true,
+            message: `需要输入${field.comment}`,
+            trigger: 'blur'
+        }],
+    #end
+});
+
+

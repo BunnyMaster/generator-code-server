@@ -1,0 +1,85 @@
+import {defineStore} from 'pinia';
+import {query${classUppercaseName}Page,get${classUppercaseName}Detail, create${classUppercaseName}, update${classUppercaseName}ById,batchDelete${classUppercaseName}} from '@/api${webBasePath}/${classLowercaseName}';
+import { storePagination } from "@/utils/pageResultUtil";
+import { storeMessage, storePagination } from '@/utils/base/resultUtil';
+import { pageSizes } from '@/enums/PaginationEnums';
+import { store } from '@/store';
+
+/**
+* ${comment} Store
+* 数据库表名称：${tableName}
+*
+* @author ${author}
+* @since ${date}
+*/
+export const use${classUppercaseName}Store = defineStore('${classLowercaseName}Store', {
+    state() {
+        return {
+            // ${comment}列表
+            datalist: [],
+            // 查询表单
+            form: {
+                #foreach($item in $columnInfoList)
+                /* $!{item.comment} */
+                $!{item.lowercaseName}: undefined,
+                #end
+            },
+            // 分页查询结果
+            pagination: {
+                currentPage: 1,
+                pageSize: 30,
+                total: 1,
+                pageSizes,
+            },
+            // 加载
+            loading: false,
+        };
+    },
+    getters: {},
+    actions: {
+        /** 获取${comment} */
+        async fetch${classUppercaseName}Page() {
+            // 整理请求参数
+            const pageParams = { pageIndex: this.pagination.currentPage, pageSize: this.pagination.pageSize };
+            const data = { ...pageParams, ...this.form } as any;
+            delete data.pageSizes;
+            delete data.total;
+            delete data.background;
+
+            // 获取${comment}列表
+            const result = await query${classUppercaseName}Page(data);
+
+            // 公共页面函数hook
+            const pagination = storePagination.bind(this);
+            return pagination(result);
+        },
+
+        /** 查看${comment}详情 */
+        async get${classUppercaseName}Detail(data:any){
+             const result = await get${classUppercaseName}Detail(data);
+             return result.data;
+        },
+
+        /** 添加${comment} */
+        async create${classUppercaseName}(data: any) {
+            const result = await create${classUppercaseName}(data);
+            return storeMessage(result);
+        },
+
+        /** 修改${comment} */
+        async update${classUppercaseName}ById(data: any) {
+            const result = await update${classUppercaseName}ById(data);
+            return storeMessage(result);
+        },
+
+        /** 删除${comment} */
+        async batchDelete${classUppercaseName}(data: any) {
+            const result = await batchDelete${classUppercaseName}(data);
+            return storeMessage(result);
+        },
+    },
+});
+
+export function use${classUppercaseName}StoreHook() {
+  return use${classUppercaseName}Store(store);
+}

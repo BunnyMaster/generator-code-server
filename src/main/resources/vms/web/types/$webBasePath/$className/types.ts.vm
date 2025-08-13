@@ -1,0 +1,52 @@
+import type { BaseModel } from "@/types/base";
+
+/**
+* ${comment}列表
+* 数据库表名称：${tableName}
+*
+* @author ${author}
+* @since ${date}
+*/
+export interface ${classUppercaseName}ListItem extends BaseModel{
+#foreach($field in $columnInfoList)
+     /* $field.comment */
+     $field.lowercaseName:  $field.javascriptType;
+
+#end
+};
+
+/**
+* ${comment}提交表单
+* 数据库表名称：${tableName}
+*
+* @author ${author}
+* @since ${date}
+*/
+export interface ${classUppercaseName}Form {
+    /* 主键 */
+    id: string;
+
+#foreach($field in $columnInfoList)
+     /* $field.comment */
+     $field.lowercaseName:  $field.javascriptType;
+
+#end
+};
+
+/**
+* ${comment}详情
+* 数据库表名称：${tableName}
+*
+* @author ${author}
+* @since ${date}
+*/
+export interface ${classUppercaseName}Info {
+    /* 主键 */
+    id: string;
+
+#foreach($field in $columnInfoList)
+     /* $field.comment */
+     $field.lowercaseName:  $field.javascriptType | undefined;
+
+#end
+};

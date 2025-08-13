@@ -1,0 +1,31 @@
+
+import java.util.Date;
+import java.math.BigDecimal;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Schema(name = "${classUppercaseName}VO", title = "${comment}", description = "${comment}的VO对象")
+public class ${classUppercaseName}VO {
+
+@Schema(name = "id", title = "主键")
+@JsonFormat(shape = JsonFormat.Shape.STRING)
+@JsonSerialize(using = ToStringSerializer.class)
+private Long id;
+
+#foreach($field in ${columnInfoList})
+@Schema(name = "${field.lowercaseName}", title = "${field.comment}")
+private ${field.javaType} ${field.lowercaseName};
+
+#end
+}
+

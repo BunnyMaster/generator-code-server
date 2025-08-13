@@ -1,0 +1,27 @@
+
+import java.util.Date;
+import java.math.BigDecimal;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Schema(name = "${classUppercaseName}PageVO", title = "${comment}", description = "${comment}的PageVO对象")
+public class ${classUppercaseName}PageVO extends BaseVo {
+
+#foreach($field in ${columnInfoList})
+@Schema(name = "${field.lowercaseName}", title = "${field.comment}")
+private ${field.javaType} ${field.lowercaseName};
+
+#end
+}
+

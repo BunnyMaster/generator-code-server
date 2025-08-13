@@ -1,0 +1,28 @@
+import type { ResultPage, Result } from "@/types/base";
+import type { ${classUppercaseName}ListItem } from "@/types${webBasePath}/${classLowercaseName}DataType.ts";
+import { http } from "@/utils/http";
+
+/** ${comment}---获取${comment}列表 */
+export const query${classUppercaseName}Page = (params: any) => {
+    return http.request<ResultPage<${classUppercaseName}ListItem>>('get', `${requestMapping}/${classLowercaseName}`, {params});
+};
+
+/** ${comment}---获取${comment}详情 */
+export const get${classUppercaseName}Detail = (params: any) => {
+  return http.request<Result<${classUppercaseName}ListItem>>("get", `${requestMapping}/${classLowercaseName}/${params.id}`);
+};
+
+/** ${comment}---添加${comment} */
+export const create${classUppercaseName} = (data: any) => {
+    return http.request<Result<string>>('post', '${requestMapping}/${classLowercaseName}', {data});
+};
+
+/** ${comment}---更新${comment} */
+export const update${classUppercaseName}ById = (data: any) => {
+    return http.request<Result<string>>('put', '${requestMapping}/${classLowercaseName}', {data});
+};
+
+/** ${comment}---删除${comment} */
+export const batchDelete${classUppercaseName} = (data: any) => {
+    return http.request<Result<string>>('delete', '${requestMapping}/${classLowercaseName}', {data});
+};

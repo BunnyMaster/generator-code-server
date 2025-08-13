@@ -1,0 +1,30 @@
+import com.auth.common.model.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.v3.oas.annotations.media.Schema;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.Date;
+
+@Getter
+@Setter
+@Accessors(chain = true)
+@TableName("${tableName}")
+@Schema(name = "${classUppercaseName}Entity", title = "${comment}", description = "${comment}的实体类对象")
+public class ${classUppercaseName}Entity extends BaseEntity {
+
+    #foreach($field in ${columnInfoList})
+        @Schema(name = "${field.lowercaseName}", title = "${field.comment}")
+            #if($field.isPrimaryKey)
+            @TableId(type = IdType.ASSIGN_ID)
+            #end
+        private ${field.javaType} ${field.lowercaseName};
+
+    #end
+}

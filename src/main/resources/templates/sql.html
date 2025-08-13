@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>代码生成器-SQL语句生成</title>
+    <!-- 本地引入 Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/src/lib/css/index.css}">
+    <!-- 本地引入 Vue.js -->
+    <script th:src="@{/src/lib/js/vue/vue.global.js}"></script>
+    <!-- 本地引入 Bootstrap JS -->
+    <script th:src="@{/src/lib/js/boostrap/bootstrap.bundle.min.js}"></script>
+    <!-- 本地引入 popper JS -->
+    <script th:src="@{/src/lib/js/boostrap/popper.min.js}"></script>
+    <!-- 本地引入 axios JS -->
+    <script th:src="@{/src/lib/js/axios/axios.min.js}"></script>
+    <!-- 引入dayjs -->
+    <script th:src="@{/src/lib/js/dayjs/dayjs.min.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/customParseFormat.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/weekday.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/localeData.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/weekOfYear.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/weekYear.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/advancedFormat.js}"></script>
+    <script th:src="@{/src/lib/js/dayjs/quarterOfYear.js}"></script>
+    <!-- 引入 antd JS -->
+    <script th:src="@{/src/lib/js/dayjs/antd.min.js}"></script>
+</head>
+
+<body>
+<div id="app">
+    <div class="container-fluid my-4">
+        <!-- 主标题 -->
+        <app-header></app-header>
+
+        <sql-form :generator-code-loading="generatorCodeLoading" :on-clear-generator-data="onClearGeneratorData"
+                  :on-generator-code="onGeneratorCode" ref="mainFormRef" v-model:column-meta-list="columnMetaList"
+                  v-model:form="form" v-model:table-info="tableInfo"></sql-form>
+
+        <!-- 数据库信息展示区域 -->
+        <sql-parser-info :column-meta-list="columnMetaList" :table-info="tableInfo"></sql-parser-info>
+
+        <!-- 模板生成页面 -->
+        <app-generator-page :generator-data="generatorData"
+                            v-model:generator-page-flag="generatorPageFlag"></app-generator-page>
+    </div>
+</div>
+</body>
+
+<!-- 引入Highlight.js -->
+<script th:src="@{/src/lib/js/highlightjs/highlight.min.js}"></script>
+<script th:src="@{/src/lib/js/highlightjs/javascript.min.js}"></script>
+<!-- 初始化 Highlight.js -->
+<script th:src="@{/src/config/highlight-config.js}"></script>
+<!-- 设置 popper 提示框 -->
+<script th:src="@{/src/config/popper-config.js}"></script>
+<!-- 加载全局axios配置 -->
+<script th:src="@{/src/config/axios-config.js}"></script>
+
+<!-- 引入组件 -->
+<script th:src="@{/src/components/AppHeader.js}"></script>
+<script th:src="@{/src/views/sql/SqlForm.js}"></script>
+<script th:src="@{/src/views/sql/SqlParserInfo.js}"></script>
+<script th:src="@{/src/components/AppGeneratorPage.js}"></script>
+<script>
+    const {createApp, ref} = Vue
+
+    const app = createApp({
+        setup() {
+            return {
+                // 是否正在生成
+                generatorCodeLoading: ref(false),
+                // 提交的表单
+                form: ref({
+                    // 作者名称
+                    author: "Bunny",
+                    // requestMapping名称
+                    requestMapping: "/api",
+                    // 包名称
+                    packageName: "cn.bunny",
+                    // 时间格式
+                    simpleDateFormat: "yyyy-MM-dd HH:mm:ss",
+                    // 去除开头前缀
+                    tablePrefixes: "t_,sys_,qrtz_,log_",
+                    // 生成代码路径
+                    path: [],
+                    sql: "",
+                }),
+                // 是否显示生成页面
+                generatorPageFlag: ref(false),
+                // 生成的数据
+                generatorData: ref({}),
+                // sql语句中表信息
+                tableInfo: ref({}),
+                // sql语句中列信息
+                columnMetaList: ref([]),
+            };
+        },
+        methods: {
+
+            /**
+             * 生成代码
+             * @returns {Promise<void>}
+             */
+            async onGeneratorCode() {
+                this.generatorCodeLoading = true;
+                // 验证表单是否通过
+                const isValidate = this.$refs.mainFormRef.validateForm();
+                if (!isValidate) return;
+
+                // 请求生成模板
+                const {data, code, message} = await axiosInstance.post("/generator", this.form);
+
+                // 判断是否请求成功
+                if (code !== 200) {
+                    this.generatorCodeLoading = false;
+                    return;
+                } else antd.message.success(message);
+
+                // 显示生成的页面
+                this.generatorData = data;
+                this.generatorPageFlag = true;
+                this.generatorCodeLoading = false;
+
+                // 等待 DOM 更新，之后手动更新代码高亮
+                await this.$nextTick();
+                hljs.highlightAll();
+            },
+
+            /* 清空已经生成的内容 */
+            onClearGeneratorData() {
+                this.generatorData = {};
+                antd.message.success("清除完成")
+            },
+        },
+    });
+
+    // 注册组件
+    app.component('AppHeader', AppHeader);
+    app.component('SqlForm', SqlForm);
+    app.component('SqlParserInfo', SqlParserInfo);
+    app.component('AppGeneratorPage', AppGeneratorPage);
+
+    app.mount('#app');
+</script>
+
+</html>

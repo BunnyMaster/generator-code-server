@@ -1,0 +1,61 @@
+package ${package}.service;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
+import ${package}.model.dto.${classUppercaseName}QueryDto;
+import ${package}.model.dto.${classUppercaseName}CreateDto;
+import ${package}.model.dto.${classUppercaseName}UpdateDto;
+import ${package}.model.entity.${classUppercaseName}Entity;
+import ${package}.model.vo.${classUppercaseName}Vo;
+import com.auth.common.model.vo.result.PageResult;
+import com.auth.common.model.vo.result.Result;
+import com.auth.common.model.vo.result.ResultCodeEnum;
+import java.util.List;
+
+/**
+ * <p>
+ * ${comment} 服务类
+ * </p>
+ *
+ * @author Bunny
+ * @since ${date}
+ */
+public interface ${classUppercaseName}Service extends IService<${classUppercaseName}Entity> {
+
+    /**
+     * 分页查询${comment}
+     *
+     * @return ${comment}分页结果 {@link ${classUppercaseName}PageVO}
+     */
+    PageResult<${classUppercaseName}PageVO> get${classUppercaseName}Page(IPage<${classUppercaseName}Entity> pageParams, ${classUppercaseName}Query query);
+
+    /**
+     * 根据id查询${comment}详情
+     *
+     * @param id 主键
+     * @return ${comment}详情}
+     */
+    ${classUppercaseName}VO getById(Long id);
+
+    /**
+     * 添加${comment}
+     *
+     * @param dto 添加表单
+     */
+    void create(${classUppercaseName}DTO dto);
+
+    /**
+     * 更新${comment}
+     *
+     * @param dto 更新表单
+     */
+    void update(${classUppercaseName}DTO dto);
+
+    /**
+     * 删除|批量删除${comment}类型
+     *
+     * @param ids 删除id列表
+     */
+    void batchDelete(List<Long> ids);
+}

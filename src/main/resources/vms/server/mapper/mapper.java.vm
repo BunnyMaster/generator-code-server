@@ -1,0 +1,38 @@
+package ${package}.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Param;
+import ${package}.model.dto.${classUppercaseName}QueryDto;
+import ${package}.model.dto.${classUppercaseName}CreateDto;
+import ${package}.model.dto.${classUppercaseName}UpdateDto;
+import ${package}.model.entity.${classUppercaseName}Entity;
+import ${package}.model.vo.${classUppercaseName}Vo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.Param;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
+
+/**
+ * <p>
+ * ${comment} Mapper 接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Mapper
+public interface ${classUppercaseName}Mapper extends BaseMapper<${classUppercaseName}Entity> {
+
+    /**
+     * 分页查询${comment}内容
+     *
+     * @param pageParams ${comment}分页参数
+     * @param query        ${comment}查询表单
+     * @return ${comment}分页结果
+     */
+    IPage<${classUppercaseName}PageVO> selectListByPage(@Param("page") IPage<${classUppercaseName}Entity> pageParams, @Param("query") ${classUppercaseName}Query query);
+
+}

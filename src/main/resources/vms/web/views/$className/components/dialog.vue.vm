@@ -1,0 +1,47 @@
+<script lang="ts" setup>
+import {ref} from 'vue';
+import {FormInstance} from 'element-plus';
+import { ${classUppercaseName}Info } from '@/types${webBasePath}/${classLowercaseName}/${classLowercaseName}DataType';
+import { rules } from '../utils/${classLowercaseName}-columns';
+import { ${classUppercaseName}Form } from '@/types/${webBasePath}/${classLowercaseName}DataType';
+import { FormInline } from '@/types/base';
+
+const props = withDefaults(defineProps<FormInline<${classUppercaseName}Form>>(), {
+    formInline: () => ({
+        /**
+         * 主键
+         */
+        id:undefined,
+        #foreach($item in $columnInfoList)
+    #if(${item.lowercaseName})
+        /**
+         * $!{item.comment}
+         */
+        ${item.lowercaseName}: undefined,
+            #end
+#end
+    }),
+  });
+
+  const formRef = ref<FormInstance>();
+  const form = ref(props.formInline);
+
+  defineExpose({formRef});
+</script>
+
+<template>
+  <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
+      <el-row :gutter="14">
+      #foreach($item in $columnInfoList)
+
+        <!-- $item.comment -->
+        <el-col :lg="6" :md="8" :sm="12" :xs="24">
+            <el-form-item label="${item.comment}" prop="$item.lowercaseName">
+              <el-input v-model="form.$item.lowercaseName" autocomplete="off" type="text"
+                        placeholder="输入${item.comment}"/>
+            </el-form-item>
+        </el-col>
+      #end
+      </el-row>
+  </el-form>
+</template>

@@ -1,0 +1,101 @@
+package ${package}.service.impl;
+
+import ${package}.mapper.${classUppercaseName}Mapper;
+import ${package}.service.${classUppercaseName}Service;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ${package}.service.${classUppercaseName}Service;
+import ${package}.model.dto.${classUppercaseName}QueryDTO;
+import ${package}.model.dto.${classUppercaseName}CreateDTO;
+import ${package}.model.dto.${classUppercaseName}UpdateDTO;
+import ${package}.model.entity.${classUppercaseName}Entity;
+import ${package}.model.vo.${classUppercaseName}VO;
+import com.auth.common.model.vo.result.PageResult;
+import com.auth.common.model.vo.result.Result;
+import com.auth.common.model.vo.result.ResultCodeEnum;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
+
+/**
+ * <p>
+ * ${comment} 服务实现类
+ * </p>
+ *
+ * @author Bunny
+ * @since ${date}
+ */
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class ${classUppercaseName}ServiceImpl extends ServiceImpl<${classUppercaseName}Mapper, ${classUppercaseName}Entity> implements ${classUppercaseName}Service {
+
+    /**
+     *${comment} 服务实现类
+     *
+     * @param pageParams ${comment}分页查询page对象
+     * @param query        ${comment}分页查询对象
+     * @return 查询分页${comment}返回对象
+     */
+    @Override
+    public PageResult<${classUppercaseName}PageVO> get${classUppercaseName}Page(Page<${classUppercaseName}Entity> pageParams, ${classUppercaseName}Query query) {
+        IPage<${classUppercaseName}PageVO> page = baseMapper.selectListByPage(pageParams, query);
+
+        return PageResult.of(page);
+    }
+
+    /**
+     * 根据id查询${comment}详情
+     *
+     * @param id 主键
+     * @return ${comment}详情 ${classUppercaseName}VO}
+     */
+    public ${classUppercaseName}VO getById(Long id) {
+            ${classUppercaseName}Entity ${classLowercaseName}Entity = super.getById(id);
+
+            ${classUppercaseName}VO ${classLowercaseName}VO = new ${classUppercaseName}VO();
+        BeanUtils.copyProperties(${classLowercaseName}Entity, ${classLowercaseName}VO);
+
+        return ${classLowercaseName}VO;
+    }
+
+    /**
+     * 添加${comment}
+     *
+     * @param dto ${comment}添加
+     */
+    @Override
+    public void create(${classUppercaseName}CreateDTO dto) {
+            ${classUppercaseName}Entity ${classLowercaseName} = new ${classUppercaseName}Entity();
+        BeanUtils.copyProperties(dto, ${classLowercaseName});
+
+        save(${classLowercaseName});
+    }
+
+    /**
+     * 更新${comment}
+     *
+     * @param dto ${comment}更新
+     */
+    @Override
+    public void update(${classUppercaseName}UpdateDTO dto) {
+            ${classUppercaseName}Entity ${classLowercaseName} = new ${classUppercaseName}Entity();
+        BeanUtils.copyProperties(dto, ${classLowercaseName});
+
+        updateById(${classLowercaseName});
+    }
+
+    /**
+     * 删除|批量删除${comment}
+     *
+     * @param ids 删除id列表
+     */
+    @Override
+    public void batchDelete(List<Long> ids) {
+        removeByIds(ids);
+    }
+}

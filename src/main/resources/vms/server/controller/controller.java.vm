@@ -1,0 +1,81 @@
+package ${package}.controller;
+
+import ${package}.model.dto.${classUppercaseName}QueryDto;
+import ${package}.model.dto.${classUppercaseName}CreateDto;
+import ${package}.model.dto.${classUppercaseName}UpdateDto;
+import ${package}.model.entity.${classUppercaseName}Entity;
+import ${package}.model.vo.${classUppercaseName}VO;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.RequiredArgsConstructor;
+import ${package}.service.${classUppercaseName}Service;
+import com.auth.common.model.vo.result.PageResult;
+import com.auth.common.model.vo.result.Result;
+import com.auth.common.model.vo.result.ResultCodeEnum;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
+
+/**
+ * <p>
+ * ${comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Tag(name = "${comment}", description = "${comment}相关接口")
+@RestController
+@RequestMapping("${requestMapping}/${lowerHyphenName}")
+@RequiredArgsConstructor
+public class ${classUppercaseName}Controller {
+
+    private final ${classUppercaseName}Service ${classLowercaseName}Service;
+
+    @PreAuthorize("@auth.decide('${classLowercaseName}:query')")
+    @Operation(summary = "分页查询${comment}", description = "分页查询${comment}")
+    @GetMapping()
+    public Result<PageResult<${classUppercaseName}PageVO>> get${classUppercaseName}Page(${classUppercaseName}Query query) {
+        IPage<${classUppercaseName}Entity> pageParams = new Page<>(query.getPageIndex(), query.getPageSize());
+        PageResult<${classUppercaseName}PageVO> pageResult = ${classLowercaseName}Service.get${classUppercaseName}Page(pageParams, query);
+        return Result.success(pageResult);
+    }
+
+    @PreAuthorize("@auth.decide('${classLowercaseName}:query')")
+    @Operation(summary = "根据id查询${comment}详情", description = "根据id查询${comment}详情")
+    @GetMapping("{id}")
+    public Result<${classUppercaseName}VO> getById(@PathVariable("id") Long id) {
+        ${classUppercaseName}VO ${classLowercaseName}VO = ${classLowercaseName}Service.getById(id);
+
+        return Result.success(${classLowercaseName}VO);
+    }
+
+    @PreAuthorize("@auth.decide('${classLowercaseName}:create')")
+    @Operation(summary = "添加${comment}", description = "添加${comment}")
+    @PostMapping()
+    public Result<String> create(@Valid @RequestBody ${classUppercaseName}DTO dto) {
+            ${classLowercaseName}Service.create(dto);
+        return Result.success(ResultCodeEnum.ADD_SUCCESS);
+    }
+
+    @PreAuthorize("@auth.decide('${classLowercaseName}:update')")
+    @Operation(summary = "更新${comment}", description = "更新${comment}")
+    @PutMapping()
+    public Result<String> update(@Valid @RequestBody ${classUppercaseName}DTO dto) {
+            ${classLowercaseName}Service.update(dto);
+        return Result.success(ResultCodeEnum.UPDATE_SUCCESS);
+    }
+
+    @PreAuthorize("@auth.decide('${classLowercaseName}:delete')")
+    @Operation(summary = "删除${comment}", description = "删除${comment}")
+    @DeleteMapping()
+    public Result<String> batchDelete(@RequestBody List<Long> ids) {
+            ${classLowercaseName}Service.batchDelete(ids);
+        return Result.success(ResultCodeEnum.DELETE_SUCCESS);
+    }
+}
