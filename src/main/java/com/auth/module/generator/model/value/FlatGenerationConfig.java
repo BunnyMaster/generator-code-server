@@ -10,14 +10,18 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
-@Schema(title = "扁平化生成配置")
+/**
+ * 扁平化生成配置
+ *
+ * @param <T> 表单
+ * @author bunny
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class FlatGenerationConfig<T> extends TemplateRule implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    // 基友表单
     @Schema(title = "表单")
     private transient T extra;
 
@@ -33,7 +37,6 @@ public class FlatGenerationConfig<T> extends TemplateRule implements Serializabl
     @Schema(description = "基础输出根目录")
     private String baseOutputDir;
 
-    // 生成器的配置
     @Schema(title = "显示名称")
     private String displayName;
 

@@ -36,7 +36,7 @@ public class SQLParserMetadataProvider extends AbstractDatabaseMetadataProvider 
 
     private final TemplateDataModelBuilder<SQLConfigEntity> templateDataModelBuilder;
 
-    public SQLParserMetadataProvider(@Qualifier("mySQLDialect") GeneratorCategoryDialect mySqlDialect,
+    public SQLParserMetadataProvider(@Qualifier("mySqlDialect") GeneratorCategoryDialect mySqlDialect,
                                      FreeMarkerConfigurer freeMarkerConfigurer,
                                      TemplateDataModelBuilder<SQLConfigEntity> templateDataModelBuilder,
                                      ValidationService validationService) {

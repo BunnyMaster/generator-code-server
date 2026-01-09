@@ -5,6 +5,8 @@ import lombok.Getter;
 
 /**
  * 文件名命名格式枚举
+ *
+ * @author bunny
  */
 @Getter
 public enum FilenameTypeEnum {

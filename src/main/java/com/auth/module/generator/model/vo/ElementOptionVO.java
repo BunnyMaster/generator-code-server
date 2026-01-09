@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Schema(description = "元素选项 DTO")
+/**
+ * 元素选项
+ *
+ * @author bunny
+ */
 @Data
 @Builder
 @NoArgsConstructor

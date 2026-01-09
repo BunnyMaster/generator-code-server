@@ -21,6 +21,11 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * 下载Zip 文件
+ *
+ * @author bunny
+ */
 @Component
 public class DownloadZipModeStrategy implements ModeStrategy<ResponseEntity<byte[]>> {
 
@@ -57,15 +62,15 @@ public class DownloadZipModeStrategy implements ModeStrategy<ResponseEntity<byte
     /**
      * 获取字节数组
      *
-     * @param resultVOS 配置
+     * @param resultList 配置
      * @return 字节数组
      */
     @NotNull
-    private byte[] getBytes(List<GenerationResultVO> resultVOS) {
+    private byte[] getBytes(List<GenerationResultVO> resultList) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
              ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream, StandardCharsets.UTF_8)) {
 
-            for (GenerationResultVO resultVO : resultVOS) {
+            for (GenerationResultVO resultVO : resultList) {
                 for (GeneratedFileItemVO itemVO : resultVO.getChildren()) {
                     addToZip(zipOutputStream, itemVO.getOutputDirFile(), itemVO.getCode());
                 }

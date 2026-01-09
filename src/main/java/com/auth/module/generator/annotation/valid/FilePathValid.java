@@ -5,6 +5,11 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
+/**
+ * 文件路径校验注解
+ *
+ * @author bunny
+ */
 @Constraint(validatedBy = {FilePathValidator.class})
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

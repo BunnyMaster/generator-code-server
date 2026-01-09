@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 配置接口
+ *
+ * @author bunny
+ */
 @Tag(name = "配置接口")
 @RequestMapping("/api/config")
 @RestController

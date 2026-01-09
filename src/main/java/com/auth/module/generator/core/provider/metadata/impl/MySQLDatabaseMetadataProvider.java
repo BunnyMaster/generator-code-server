@@ -67,7 +67,7 @@ public class MySQLDatabaseMetadataProvider extends AbstractDatabaseMetadataProvi
     private final TemplateDataModelBuilder<DatabaseConfigEntity> templateDataModelBuilder;
 
     public MySQLDatabaseMetadataProvider(FreeMarkerConfigurer freeMarkerConfigurer,
-                                         @Qualifier("mySQLDialect") GeneratorCategoryDialect mySqlDialect,
+                                         @Qualifier("mySqlDialect") GeneratorCategoryDialect mySqlDialect,
                                          HikariDataSource dataSource,
                                          TemplateDataModelBuilder<DatabaseConfigEntity> templateDataModelBuilder,
                                          ValidationService validationService) {

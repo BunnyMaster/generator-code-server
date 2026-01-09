@@ -5,7 +5,11 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@Schema(description = "应用信息")
+/**
+ * 应用信息
+ *
+ * @author bunny
+ */
 @Data
 @ConfigurationProperties(prefix = "bunny.app-info")
 @Configuration

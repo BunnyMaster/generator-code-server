@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * 数据库元数据提供者抽象类
+ *
+ * @author bunny
+ */
 @Component
 public abstract class AbstractDatabaseMetadataProvider implements MetadataProvider {
 

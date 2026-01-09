@@ -16,6 +16,11 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 配置服务实现类
+ *
+ * @author bunny
+ */
 @Slf4j
 @Service
 public class ConfigServiceImpl implements ConfigService {

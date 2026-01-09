@@ -10,11 +10,14 @@ import java.util.regex.Pattern;
 
 /**
  * Mysql 数据库方言
+ *
+ * @author bunny
  */
 @Component
-public class MySQLDialect implements GeneratorCategoryDialect {
+public class MySqlDialect implements GeneratorCategoryDialect {
     private static final Pattern COMMENT_EQUALS = Pattern.compile("COMMENT\\s*=\\s*'(.*?)'", Pattern.CASE_INSENSITIVE);
     private static final Pattern COMMENT = Pattern.compile("COMMENT\\s*'(.*?)'", Pattern.CASE_INSENSITIVE);
+    private static final String OBJECT = "object";
 
     /**
      * 提取表注释
@@ -76,7 +79,7 @@ public class MySQLDialect implements GeneratorCategoryDialect {
      */
     @Override
     public String convertToJavaScriptType(String columnType) {
-        if (columnType == null || "object".equals(columnType)) {
+        if (columnType == null || OBJECT.equals(columnType)) {
             return "any";
         }
 

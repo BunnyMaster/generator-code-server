@@ -6,12 +6,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
 
+/**
+ * 文件路径验证器
+ *
+ * @author bunny
+ */
 public class FilePathValidator implements ConstraintValidator<FilePathValid, String> {
 
-    // 基础路径验证：允许字母、数字、中文、下划线、连字符、点、斜杠、空格
+    /**
+     * 基础路径验证：允许字母、数字、中文、下划线、连字符、点、斜杠、空格
+     */
     private static final Pattern BASIC_PATH_PATTERN = Pattern.compile("^[a-zA-Z0-9\\u4e00-\\u9fa5_\\-./\\\\ :]+$");
 
-    // 最大路径长度
+    /**
+     * 最大路径长度
+     */
     private int maxLength;
 
     @Override

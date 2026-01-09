@@ -17,8 +17,8 @@ public interface ModeStrategy<T> {
     /**
      * 生成的扣件
      *
-     * @param resultVOS 生成器配置
+     * @param resultList 生成器配置
      * @return 生成结果
      */
-    T operation(List<GenerationResultVO> resultVOS);
+    T operation(List<GenerationResultVO> resultList);
 }

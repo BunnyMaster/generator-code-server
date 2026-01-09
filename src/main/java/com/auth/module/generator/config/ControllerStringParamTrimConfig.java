@@ -14,6 +14,8 @@ import java.io.IOException;
 
 /**
  * 去除前端传递的空格
+ *
+ * @author bunny
  */
 @ControllerAdvice
 public class ControllerStringParamTrimConfig {

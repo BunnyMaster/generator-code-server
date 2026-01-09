@@ -23,11 +23,11 @@ public class ResultViewModeStrategy implements ModeStrategy<Result<List<Generati
     /**
      * 获取结果视图
      *
-     * @param resultVOS 配置
+     * @param resultList 配置
      * @return 结果视图
      */
     @Override
-    public Result<List<GenerationResultVO>> operation(List<GenerationResultVO> resultVOS) {
-        return Result.success(resultVOS);
+    public Result<List<GenerationResultVO>> operation(List<GenerationResultVO> resultList) {
+        return Result.success(resultList);
     }
 }

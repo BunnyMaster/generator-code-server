@@ -15,6 +15,8 @@ import java.util.TimeZone;
 
 /**
  * 覆盖默认的 FreeMarker 配置
+ *
+ * @author bunny
  */
 @Configuration
 public class FreemarkerConfig implements ApplicationListener<ApplicationReadyEvent> {

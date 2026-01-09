@@ -11,7 +11,11 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Schema(name = "ColumnMetaData 列属性数据", title = "字段列属性")
+/**
+ * 字段列属性
+ *
+ * @author bunny
+ */
 @Data
 @Builder
 @NoArgsConstructor

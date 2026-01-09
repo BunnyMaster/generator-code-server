@@ -31,12 +31,12 @@ public class WriteModeStrategy implements ModeStrategy<Result<String>> {
     /**
      * 写入
      *
-     * @param resultVOS 生成器配置
+     * @param resultList 生成器配置
      * @return 生成结果
      */
     @Override
-    public Result<String> operation(List<GenerationResultVO> resultVOS) {
-        for (GenerationResultVO resultVO : resultVOS) {
+    public Result<String> operation(List<GenerationResultVO> resultList) {
+        for (GenerationResultVO resultVO : resultList) {
             List<GeneratedFileItemVO> children = resultVO.getChildren();
             for (GeneratedFileItemVO itemVO : children) {
                 write(itemVO.getOutputDirFile(), itemVO.getOverwrite(), itemVO.getCode());

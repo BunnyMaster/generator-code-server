@@ -13,7 +13,12 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-@Schema(name = "GenerationConfigDTO", description = "生成配置参数")
+/**
+ * 生成配置参数
+ *
+ * @param <T> 表单（表单不能为空）
+ * @author bunny
+ */
 @Data
 public class GenerationConfigDTO<T> implements Serializable {
 

@@ -7,6 +7,11 @@ import com.auth.module.generator.model.vo.SupportEnumsVO;
 
 import java.util.List;
 
+/**
+ * 配置服务
+ *
+ * @author bunny
+ */
 public interface ConfigService {
     /**
      * 获取数据库配置

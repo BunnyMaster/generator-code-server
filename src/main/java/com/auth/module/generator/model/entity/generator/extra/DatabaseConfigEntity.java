@@ -9,7 +9,11 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
-@Schema(name = "DatabaseFormEntity", description = "数据库表单参数")
+/**
+ * 数据库表单参数
+ *
+ * @author bunny
+ */
 @Data
 public class DatabaseConfigEntity implements Serializable {
 

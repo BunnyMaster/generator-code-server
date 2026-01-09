@@ -26,13 +26,13 @@ public class PrintModeStrategy implements ModeStrategy<Result<List<GenerationRes
     /**
      * 生成的扣件
      *
-     * @param resultVOS 生成器配置
+     * @param resultList 生成器配置
      * @return 生成结果
      */
     @Override
-    public Result<List<GenerationResultVO>> operation(List<GenerationResultVO> resultVOS) {
-        log.info("打印结果：{}", JSON.toJSONString(resultVOS));
+    public Result<List<GenerationResultVO>> operation(List<GenerationResultVO> resultList) {
+        log.info("打印结果：{}", JSON.toJSONString(resultList));
 
-        return Result.success(resultVOS);
+        return Result.success(resultList);
     }
 }

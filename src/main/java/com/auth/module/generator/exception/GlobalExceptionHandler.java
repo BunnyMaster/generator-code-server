@@ -18,10 +18,14 @@ import java.util.stream.Collectors;
 
 /**
  * 全局异常拦截器
+ *
+ * @author bunny
  */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final String DUPLICATE_ENTRY = "Duplicate entry";
 
     /**
      * 自定义异常信息
@@ -127,7 +131,7 @@ public class GlobalExceptionHandler {
         log.error("GlobalExceptionHandler===>处理SQL异常:{}", exception.getMessage());
 
         String message = exception.getMessage();
-        if (message.contains("Duplicate entry")) {
+        if (message.contains(DUPLICATE_ENTRY)) {
             // 错误信息
             return Result.error(ResultCodeEnum.USER_IS_EMPTY);
         } else {
