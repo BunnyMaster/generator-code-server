@@ -1,0 +1,176 @@
+bunny:
+  generator:
+    author: System
+    database: ${bunny.generator.database}
+    ignore-table-prefixes:
+      - log_
+      - qrtz_
+      - sys_
+      - t_
+    generator-time-formatter: yyyy-MM-dd
+    base-output-dir: /generator/out
+    type-map:
+      server:
+        display-name: 后端
+        request-prefix: /api/system/v1
+        package-path: com.auth.service.system
+        type-output-dir: Server/
+        templates:
+          controller:
+            file-extension: .java
+            filename-type: upper_camel
+            outputSubDir: controller/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: Controller
+            templatePath: generator/server/controller/controller.ftl
+          mapper:
+            file-extension: .java
+            filename-type: upper_camel
+            outputSubDir: mapper/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: Mapper
+            templatePath: generator/server/mapper/mapper.ftl
+          xml-mapper:
+            file-extension: .xml
+            filename-type: upper_camel
+            outputSubDir: src/main/resources/mapper/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: Mapper
+            templatePath: generator/server/mapper/mapper-xml.ftl
+          service:
+            file-extension: .java
+            filename-type: upper_camel
+            outputSubDir: service/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: Service
+            templatePath: generator/server/service/service.ftl
+          service-impl:
+            file-extension: .java
+            filename-type: upper_camel
+            outputSubDir: service/impl/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: ServiceImpl
+            templatePath: generator/server/service/serviceImpl.ftl
+          dto:
+            file-extension: .java
+            filename-type: upper_camel
+            outputSubDir: model/dto/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: DTO
+            templatePath: generator/server/model/dto.ftl
+          entity:
+            file-extension: .java
+            filename-type: upper_camel
+            outputSubDir: model/entity/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: Entity
+            templatePath: generator/server/model/entity.ftl
+          vo:
+            file-extension: .java
+            filename-type: upper_camel
+            outputSubDir: model/vo/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: VO
+            templatePath: generator/server/model/vo.ftl
+          page-vo:
+            file-extension: .java
+            filename-type: upper_camel
+            outputSubDir: model/vo/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: PageVO
+            templatePath: generator/server/model/pageVo.ftl
+          query:
+            file-extension: .java
+            filename-type: upper_camel
+            outputSubDir: model/query/
+            overwrite: true
+            is-generate: true
+            suffix: Query
+            templatePath: generator/server/model/query.ftl
+      web:
+        display-name: 前端
+        request-prefix: /system/v1
+        package-path: src/
+        type-output-dir: Web/src/
+        templates:
+          api:
+            file-extension: .ts
+            filename-type: kebab_case
+            outputSubDir: api/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: ""
+            templatePath: generator/web/api.ftl
+          store:
+            file-extension: .ts
+            filename-type: kebab_case
+            outputSubDir: store/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: ""
+            templatePath: generator/web/store.ftl
+          types:
+            file-extension: .ts
+            filename-type: upper_camel
+            outputSubDir: types/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: ""
+            templatePath: generator/web/types.ftl
+          views-index:
+            file-extension: .vue
+            filename-type: kebab_case
+            outputSubDir: views/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: ""
+            templatePath: generator/web/views/index.ftl
+          views-utils-actions:
+            file-extension: .tsx
+            filename-type: kebab_case
+            outputSubDir: views/utils/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: -actions
+            templatePath: generator/web/views/utils/actions.ftl
+          views-utils-columns:
+            file-extension: .tsx
+            filename-type: kebab_case
+            outputSubDir: views/utils/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: -columns
+            templatePath: generator/web/views/utils/columns.ftl
+          views-components-dialog:
+            file-extension: .vue
+            filename-type: kebab_case
+            outputSubDir: views/components/
+            overwrite: true
+            is-generate: true
+            prefix: ""
+            suffix: ""
+            templatePath: generator/web/views/components/dialog.ftl

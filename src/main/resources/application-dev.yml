@@ -1,0 +1,28 @@
+spring:
+  freemarker:
+    # 缓存设置（开发时关闭，生产开启）
+    cache: false
+
+  devtools:
+    restart:
+      enabled: true
+      # 监控模板目录
+      additional-paths: src/main/java,src/main/resources/
+      additional-exclude: public/**
+    livereload:
+      enabled: true
+
+logging:
+  file:
+    path: "logs/${spring.application.name}"
+  level:
+    root: info
+    com.auth: debug
+
+bunny:
+  generator:
+    host: localhost
+    port: 3306
+    database: auth_admin
+    username: root
+    password: Dev1234!

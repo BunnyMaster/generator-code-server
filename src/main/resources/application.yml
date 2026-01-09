@@ -1,0 +1,56 @@
+server:
+  port: 8077
+
+spring:
+  profiles:
+    active: dev
+    include:
+      - generator
+  application:
+    name: generator-code
+
+  datasource:
+    url: jdbc:mysql://${bunny.generator.host}:${bunny.generator.port}/${bunny.generator.database}?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+    username: ${bunny.generator.username}
+    password: ${bunny.generator.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      pool-name: HikariCP
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  freemarker:
+    # 模板文件位置
+    template-loader-path: classpath:/templates/
+    # 文件后缀
+    suffix: .ftl
+    # 编码
+    charset: UTF-8
+    # 缓存设置（开发时关闭，生产开启）
+    cache: true
+    # 其他配置
+    content-type: text/html
+    check-template-location: true
+    enabled: true
+    expose-request-attributes: true
+    expose-session-attributes: true
+    expose-spring-macro-helpers: true
+    prefer-file-system-access: false
+
+logging:
+  file:
+    path: "logs/${spring.application.name}"
+  level:
+    root: info
+    com.auth: debug
+
+bunny:
+  app-info:
+    title: Bunny-Generator-Code
+    description: Bunny代码生成器
+    summary: Bunny代码生成器
+    version: v0.0.2

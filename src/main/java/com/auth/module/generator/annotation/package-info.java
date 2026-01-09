@@ -1,0 +1,1 @@
+package com.auth.module.generator.annotation;

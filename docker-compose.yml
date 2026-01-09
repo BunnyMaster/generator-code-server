@@ -1,0 +1,176 @@
+# 定义整个开发栈的名称
+name: generator-dev
+
+services:
+  # ==================== MySQL 主从复制集群 ====================
+  mysql-master:
+    container_name: mysql-master
+    image: mysql:8.0.33
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=Dev1234!
+      - MYSQL_DATABASE=auth_db
+      - MYSQL_USER=dev_user
+      - MYSQL_PASSWORD=Dev1234!
+      - TZ=Asia/Shanghai
+      - MYSQL_ROOT_HOST=%
+    volumes:
+      - ~/develop/docker-compose/develop/mysql/master/conf:/etc/mysql/conf.d
+      - ~/develop/docker-compose/develop/mysql/master/data:/var/lib/mysql
+      - ~/develop/docker-compose/develop/mysql/master/backup:/backup
+    command:
+      - "--server-id=1"
+      - "--log-bin=mysql-bin"
+      - "--binlog-format=ROW"
+      - "--gtid-mode=ON"
+      - "--enforce-gtid-consistency=ON"
+    networks:
+      - microservices-net
+    restart: no
+
+  # ==================== PostgreSQL ====================
+  postgresql:
+    container_name: postgresql-primary
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=auth_service
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Dev1234!
+      - TZ=Asia/Shanghai
+    volumes:
+      - ~/develop/docker-compose/develop/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - microservices-net
+    restart: no
+
+  # ==================== Redis ====================
+  redis-master:
+    container_name: redis-master
+    image: redis:7.0-alpine
+    ports:
+      - "6379:6379"
+    command: |
+      redis-server
+      --requirepass Dev1234!
+      --masterauth Dev1234!
+      --appendonly yes
+    volumes:
+      - ~/develop/docker-compose/develop/redis/master/data:/data
+    networks:
+      - microservices-net
+    restart: no
+
+  # ==================== GitLab ====================
+  gitlab:
+    container_name: gitlab
+    image: gitlab/gitlab-ce:latest
+    hostname: 'gitlab.local'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://localhost:8929'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+        gitlab_rails['time_zone'] = 'Asia/Shanghai'
+        gitlab_rails['gitlab_email_enabled'] = true
+        gitlab_rails['gitlab_email_from'] = 'gitlab@local.dev'
+        gitlab_rails['smtp_enable'] = false
+        gitlab_rails['gitlab_default_can_create_group'] = true
+        gitlab_rails['gitlab_username_changing_enabled'] = true
+        gitlab_rails['initial_root_password'] = 'Dev1234!'
+        gitlab_rails['initial_shared_runners_registration_token'] = 'GR1348941'
+        gitlab_rails['gitlab_default_projects_features_issues'] = true
+        gitlab_rails['gitlab_default_projects_features_merge_requests'] = true
+        gitlab_rails['gitlab_default_projects_features_wiki'] = true
+        gitlab_rails['gitlab_default_projects_features_snippets'] = true
+        gitlab_rails['gitlab_default_projects_features_builds'] = true
+    ports:
+      - "8929:8929"   # HTTP端口
+      - "2224:22"     # SSH端口
+      - "8443:443"     # HTTPS端口
+    volumes:
+      - ~/develop/docker-compose/develop/gitlab/config:/etc/gitlab
+      - ~/develop/docker-compose/develop/gitlab/logs:/var/log/gitlab
+      - ~/develop/docker-compose/develop/gitlab/data:/var/opt/gitlab
+    networks:
+      - microservices-net
+    restart: no
+    shm_size: '256m'
+
+  # ==================== GitLab Runner ====================
+  gitlab-runner:
+    container_name: gitlab-runner
+    image: gitlab/gitlab-runner:latest
+    volumes:
+      - ~/develop/docker-compose/develop/gitlab-runner/config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    networks:
+      - microservices-net
+    restart: no
+    depends_on:
+      - gitlab
+
+  # ==================== SonarQube (代码质量检查) ====================
+  sonarqube:
+    container_name: sonarqube
+    image: sonarqube:lts-community
+    ports:
+      - "9001:9000"
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://postgresql:5432/sonarqube
+      - SONAR_JDBC_USERNAME=postgres
+      - SONAR_JDBC_PASSWORD=Dev1234!
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+      - SONAR_WEB_JAVAADDITIONALOPTS=-Djava.security.egd=file:/dev/./urandom
+    volumes:
+      - ~/develop/docker-compose/develop/sonarqube/data:/opt/sonarqube/data
+      - ~/develop/docker-compose/develop/sonarqube/extensions:/opt/sonarqube/extensions
+      - ~/develop/docker-compose/develop/sonarqube/logs:/opt/sonarqube/logs
+    depends_on:
+      - postgresql
+    networks:
+      - microservices-net
+    restart: no
+    # 添加健康检查
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/api/system/status" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==================== Nacos ====================
+  nacos:
+    container_name: nacos-server
+    image: nacos/nacos-server:v3.1.0
+    ports:
+      - "8081:8080"
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
+    environment:
+      - MODE=standalone
+      - NACOS_AUTH_TOKEN=QnVubnktQXV0aC1TZXJ2ZXItUHJpdmF0ZS1TZWNyZXRLZXk=
+      - NACOS_AUTH_IDENTITY_KEY=nacosAdmin
+      - NACOS_AUTH_IDENTITY_VALUE=Dev1234!
+      - MYSQL_SERVICE_HOST=mysql-master
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_DB_NAME=nacos
+      - MYSQL_SERVICE_USER=dev_user
+      - MYSQL_SERVICE_PASSWORD=Dev1234!
+    volumes:
+      - ~/develop/docker-compose/develop/nacos/logs:/home/nacos/logs
+      - ~/develop/docker-compose/develop/nacos/data:/home/nacos/data
+      - ~/develop/docker-compose/develop/nacos/config:/home/nacos/config
+    depends_on:
+      - mysql-master
+    networks:
+      - microservices-net
+    restart: no
+
+networks:
+  microservices-net:
+    name: microservices-dev-network
+    driver: bridge

@@ -1,0 +1,91 @@
+image: maven:3.9.9-eclipse-temurin-21
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dhttps.protocols=TLSv1.2"
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  GIT_DEPTH: "0"
+
+stages:
+  - sonarqube
+
+cache:
+  paths:
+    - .m2/repository
+    - .sonar/cache
+
+sonarqube-analysis-dev:
+  stage: sonarqube
+  script:
+    # 验证 Maven 是否可用
+    - mvn --version
+    - |
+      mvn clean compile sonar:sonar \
+        -s ci-settings.xml \
+        -Dsonar.projectKey=generator-code-server-dev \
+        -Dsonar.projectName="Generator Code Serve Dev" \
+        -Dsonar.host.url=$SONAR_HOST_URL \
+        -Dsonar.login=$SONAR_TOKEN \
+        -Dsonar.projectVersion=$CI_COMMIT_SHORT_SHA \
+        -Dsonar.java.source=8 \
+        -Dsonar.java.target=8 \
+        -Dsonar.sources=src/main/java \
+        -Dsonar.java.binaries=target/classes \
+        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+        -Dsonar.coverage.exclusions=**/annotation/**,**/config/**,**/model/**,**/exception/**,**/handler/**,**/core/**,**/freemarker/*Freemarker.java,**/*Application.java \
+        -DskipTests=true
+  only:
+    - merge-requests
+    - dev
+  artifacts:
+    paths:
+      - target/
+    expire_in: 1 hour
+  tags:
+    - microservices
+    - docker
+
+sonarqube-analysis:
+  stage: sonarqube
+  script:
+    # 验证 Maven 是否可用
+    - mvn --version
+    - |
+      mvn clean compile sonar:sonar \
+        -s ci-settings.xml \
+        -Dsonar.projectKey=generator-code-server \
+        -Dsonar.projectName="Generator Code Serve" \
+        -Dsonar.host.url=$SONAR_HOST_URL \
+        -Dsonar.login=$SONAR_TOKEN \
+        -Dsonar.projectVersion=$CI_COMMIT_SHORT_SHA \
+        -Dsonar.java.source=8 \
+        -Dsonar.java.target=8 \
+        -Dsonar.sources=src/main/java \
+        -Dsonar.java.binaries=target/classes \
+        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+        -Dsonar.coverage.exclusions=**/annotation/**,**/config/**,**/model/**,**/exception/**,**/handler/**,**/core/**,**/freemarker/*Freemarker.java,**/*Application.java \
+        -DskipTests=true
+  only:
+    - merge-requests
+    - master
+  artifacts:
+    paths:
+      - target/
+    expire_in: 1 hour
+  tags:
+    - microservices
+    - docker
+
+  # 本地测试推送
+  #       mvn sonar:sonar \
+  #         -Dsonar.host.url=http://172.17.0.1:9001/ \
+  #         -Dsonar.login=squ_fb84742f593cb0cdf4fbc7158770d8c4fe35e43b \
+  #         -Dsonar.projectVersion=1.0.$BUILD_NUMBER \
+  #         -Dsonar.sourceEncoding=UTF-8
+
+  # 本地测试推送
+  # mvn sonar:sonar \
+  # -Dsonar.host.url=http://localhost:9001 \
+  # -Dsonar.login=squ_ab2cc3fe0015bd825b40ff813095855e8f2a4dd8 \
+  # -Dsonar.projectVersion=1.0.$BUILD_NUMBER \
+  # -Dsonar.sourceEncoding=UTF-8 \
+  # -DskipTests=true
